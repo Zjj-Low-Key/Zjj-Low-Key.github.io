@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><link rel="shortcut icon" href="/about/img/logo.png"><link rel="stylesheet" href="/about/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.0/css/all.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><header id="page_header"><div class="header_wrap"><div id="blog_name"><a class="blog_title" id="site-name" href="/about/">Zhu Low Key</a></div><button class="menus_icon"><div class="navicon"></div></button><ul class="menus_items"><li class="menus_item"><a class="site-page" href="/about/#%E4%B8%AA%E4%BA%BA%E7%AE%80%E4%BB%8B"> 个人简介</a></li><li class="menus_item"><a class="site-page" href="/about/#%E6%95%99%E8%82%B2%E7%BB%8F%E5%8E%86"> 教育经历</a></li><li class="menus_item"><a class="site-page" href="/about/#%E8%8E%B7%E5%A5%96%E6%83%85%E5%86%B5"> 获奖情况</a></li><li class="menus_item"><a class="site-page" href="/about/#%E7%A0%94%E7%A9%B6%E6%96%B9%E5%90%91"> 研究方向</a></li><li class="menus_item"><a class="site-page" href="/about/#%E6%96%B0%E9%97%BB"> 新闻</a></li></ul></div></header><main id="page_main"><div class="side-card sticky"><div class="card-wrap" itemscope itemtype="http://schema.org/Person"><div class="author-avatar"><img class="avatar-img" src="/about/img/myphoto.jpg" onerror="this.onerror=null;this.src='/about/img/profile.png'" alt="avatar"></div><div class="author-discrip"><h3>Zhu Jiajun</h3><p class="author-bio">North-Western Polytechnical University.</p></div><div class="author-links"><button class="btn m-social-links">Links</button><ul class="social-icons"><li><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank"><i class="fab fa-github" aria-hidden="true"></i></a></li><li><a class="social-icon" href="/img/wechat.png" target="_blank"><i class="fab fa-weixin" aria-hidden="true"></i></a></li><li><a class="social-icon" href="/img/qq.png" target="_blank"><i class="fab fa-qq" aria-hidden="true"></i></a></li><li><a class="social-icon" href="zhujiajun@mail.nwpu.edu.cn" target="_blank"><i class="fas fa-envelope" aria-hidden="true"></i></a></li></ul></div></div></div><div class="page" itemscope itemtype="http://schema.org/CreativeWork"><h2 class="page-title">[模拟电子技术基础]第四章：集成运算放大器内部电路设计</h2><article><h2 id="4-1集成运算放大器电路概述"><a href="#4-1集成运算放大器电路概述" class="headerlink" title="4.1集成运算放大器电路概述"></a>4.1集成运算放大器电路概述</h2><ul>
+<li><p>集成电路是在同一块微小的硅片上经过氧化、光刻、扩散、外延、蒸铝等工艺，将电阻、二极管、晶体管、场效应管及小电容和它们之间的连线组成的完整电路制作在一起，最后再进行封装，形成的一个实现特定功能的完整电路。</p>
+</li>
+<li><p>为适应各种特殊要求而设计的专用运放：高阻型、高速型、高精度型、低温漂型、低/微功耗型和高压大功率型运算放大器</p>
+</li>
+<li><p>为特定功能设计生产的运放：仪表用放大器、缓冲放大器、隔离放大器等</p>
+</li>
+<li><p>主要特点</p>
+<ul>
+<li><p>（1）级间采用直接耦合的方式。利用二极管等器件进行温度补偿和电位偏移。</p>
+</li>
+<li><p>（2）尽可能用有源器件代替无源元件。避免使用大电阻和大电容，尽可能使用有源器件。</p>
+</li>
+<li><p>（3）用对称结构改善电路性能。尽可能使电路性能取决于元器件参数比值，不依赖于元器件参数本身，保证电路参数的准确与性能稳定。</p>
+</li>
+<li><p>（4）横向PNP晶体管的β小，耐压高，纵向NPN三极管的β大。广泛采用复合管提高电路的放大性能。</p>
+</li>
+<li><p>（5）二极管多用双极型晶体管代替，多用于温度补偿和电位移动电路。温度稳定性较高。</p>
+</li>
+<li><p>（6）集成度高，功耗小，偏置电流比分立元件电路小很多</p>
+</li>
+</ul>
+</li>
+<li><p>集成运放的组成</p>
+<p><img src="/img/md4-1.png" alt="md4-1" title="md4-1"></p>
+<ul>
+<li><p>（1）输入级：前置级，要求输入电阻高、差模电压放大倍数大、共模信号抑制能力强、静态电流和失调偏差小。</p>
+</li>
+<li><p>（2）中间级：提供足够大的电压放大倍数，多采用共发射极或共源级放大电路，要求有较高的电压增益和较大的输入电阻。</p>
+</li>
+<li><p>（3）输出级：提高输出功率、降低输出电阻、减小非线性失真和增大输出电压的动态范围。另外需要过载保护。</p>
+</li>
+<li><p>（4）偏置电路：采用恒流源电路，为各级放大电路提供合适的静态电流，确定静态工作点。</p>
+</li>
+</ul>
+</li>
+<li><p>两个输入端和一个输入端</p>
+<p><img src="/img/md4-2.png" alt="md4-2" title="md4-2"></p>
+<ul>
+<li><p>反相输入端：—表示，输入端与输出端反相</p>
+</li>
+<li><p>同相输入端：+表示，输入端与输出端同相</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-2集成运放电路中的电流源电路"><a href="#4-2集成运放电路中的电流源电路" class="headerlink" title="4.2集成运放电路中的电流源电路"></a>4.2集成运放电路中的电流源电路</h2><p>电流源电路是一种能输出比较稳定电流的电子电路，要求有</p>
+<ul>
+<li><p>（1）能够输出符合要求的恒定直流电流</p>
+</li>
+<li><p>（2）交流输出电阻尽可能大</p>
+</li>
+<li><p>（3）对温度的灵敏度低</p>
+</li>
+<li><p>（4）受电源电压等因素的影响小</p>
+</li>
+</ul>
+<h3 id="4-2-1双极型晶体管组成的电流源"><a href="#4-2-1双极型晶体管组成的电流源" class="headerlink" title="4.2.1双极型晶体管组成的电流源"></a>4.2.1双极型晶体管组成的电流源</h3><ul>
+<li><h4 id="1-单管电流源"><a href="#1-单管电流源" class="headerlink" title="1.单管电流源"></a>1.单管电流源</h4><p><img src="/img/md4-3.png" alt="md4-3" title="md4-3"></p>
+<script type="math/tex; mode=display">
+U_{B} \approx\frac{R_{2}} {R_{1}+R_{2}} U_{C}</script><script type="math/tex; mode=display">
+I_{C} \approx I_{E}=\frac{U_{B}-U_{B E}} {R_{3}}</script><script type="math/tex; mode=display">
+R_{o}=\frac{\dot{U}} {\dot{I}_{o}} \approx r_{c e} [ 1+\frac{\beta R_{3}} {r_{b e+R_{3}+R_{1} / / R_{2}}} ]</script></li>
+<li><p>缺点：受电源波动影响大，电阻多，不利于集成，恒流特性不好</p>
+</li>
+<li><h4 id="2-镜像电流源"><a href="#2-镜像电流源" class="headerlink" title="2.镜像电流源"></a>2.镜像电流源</h4><ul>
+<li><p>由两个参数完全相同的NPN三极管和R组成</p>
+<p><img src="/img/md4-4.png" alt="md4-4" title="md4-4"></p>
+<script type="math/tex; mode=display">
+I_{R E F}=\frac{U_{C C}-U_{B E 1}} {R}</script><script type="math/tex; mode=display">
+\beta_{1}=\beta_{2}, U_{B E 1}=U_{B E 2}, I_{B 1}=I_{B 2}=I_{B}, I_{C 1}=I_{C 2}=I_{C}</script><script type="math/tex; mode=display">
+I_{C 1}=I_{C 2}=I_{R E F}-2 I_{B}=I_{R E F}-2 \frac{I_{C 2}} {\beta}</script><script type="math/tex; mode=display">
+I_{R E F}=I_{C 2}+2 \frac{I_{C 2}} {\beta}=I_{C 2} ( 1+\frac{2} {\beta} )</script><script type="math/tex; mode=display">
+I_{C 2}=I_{R E F} \frac{1} {( 1+\frac{2} {\beta} )}</script><script type="math/tex; mode=display">
+当 \beta\gg2 时， I_{C 2} \approx I_{R E F} \approx\frac{U_{C C}} {R}</script></li>
+<li><p>具有温度补偿作用，稳定性更高</p>
+<p><img src="/img/md4-5.png" alt="md4-5" title="md4-5"></p>
+</li>
+<li><p>多路镜像电流源</p>
+<p><img src="/img/md4-6.png" alt="md4-6" title="md4-6"></p>
+</li>
+<li><p>其输出电流表达式即将镜像电流源中的2变成N。</p>
+</li>
+<li><p>缺点：若UCC不变要提高输出电流，则IREF必须增大，从而会提高电阻R消耗的功率。若输出电流较小，则R要增大，不利于集成</p>
+</li>
+</ul>
+</li>
+<li><h4 id="3-比例电流源"><a href="#3-比例电流源" class="headerlink" title="3.比例电流源"></a>3.比例电流源</h4><p><img src="/img/md4-7.png" alt="md4-7" title="md4-7"></p>
+<script type="math/tex; mode=display">
+U_{B E 1}+I_{E 1} R_{E 1}=U_{B E 2}+I_{E 2} R_{E 2}</script><script type="math/tex; mode=display">
+其中 U_{B E 1} \approx U_{B E 2}</script><script type="math/tex; mode=display">
+则 I_{E 1} R_{E 1}=I_{E 2} R_{E 2}</script><script type="math/tex; mode=display">
+当β> 2,I_{C 2} \approx I_{E 2} \approx\frac{R_{E 1}} {R_{E 2}} I_{C 1} \approx\frac{R_{E 1}} {R_{E 2}} I_{R E F}</script><script type="math/tex; mode=display">
+其中 I_{R E F}=\frac{U_{C C}-U_{B E 1}} {R+R_{E 1}}</script><ul>
+<li><p>优点：RE1和RE2是电流负反馈电阻，温度稳定性更好，同时RE2提高了输出电阻，提高了恒流特性。</p>
+</li>
+<li><p>缺点：所需电流较小时仍需要较大基准电阻R，不利于集成</p>
+</li>
+</ul>
+</li>
+<li><h4 id="4-微电流源"><a href="#4-微电流源" class="headerlink" title="4.微电流源"></a>4.微电流源</h4><p><img src="/img/md4-8.png" alt="md4-8" title="md4-8"></p>
+<p><img src="/img/md4-9.png" alt="md4-9" title="md4-9"></p>
+</li>
+<li><p>上述几种电流源存在的问题：存在晶体管基区宽度调制效应，实际电流源的输出阻抗总是一个有限值，导致输出电流与参考电流的比例关系产生很大误差。受β值影响大。</p>
+</li>
+<li><h4 id="5-负反馈型电流源——威尔逊电流源"><a href="#5-负反馈型电流源——威尔逊电流源" class="headerlink" title="5.负反馈型电流源——威尔逊电流源"></a>5.负反馈型电流源——威尔逊电流源</h4><ul>
+<li><p>引入电流负反馈进一步提高传输精度和输出电流的稳定性：当IC3发生变化时，下部的镜像电流源自动调整防止IC3变化。</p>
+<p><img src="/img/md4-10.png" alt="md4-10" title="md4-10"></p>
+<p><img src="/img/md4-11.png" alt="md4-11" title="md4-11"></p>
+</li>
+<li><p>优点：输出电阻提高，受β影响减小，增强了恒流源的稳定性</p>
+</li>
+</ul>
+</li>
+<li><h4 id="6-改进型电流源——加射随器隔离的电流源"><a href="#6-改进型电流源——加射随器隔离的电流源" class="headerlink" title="6.改进型电流源——加射随器隔离的电流源"></a>6.改进型电流源——加射随器隔离的电流源</h4><ul>
+<li><p>上述电流源存在的问题：均要求β值足够大</p>
+<p><img src="/img/md4-12.png" alt="md4-12" title="md4-12"></p>
+</li>
+<li><p>T3接成射随器，起到隔离和电流放大作用，减少了基极电流IB1和IB2对基准电流IREF的分流作用，提高了IC2与IREF互成镜像的精度。</p>
+<script type="math/tex; mode=display">
+I_{C 2}=\frac{( 1+\beta) \beta} {2+( 1+\beta) \beta} I_{R E F}</script></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-2-2场效应管组成的电流源"><a href="#4-2-2场效应管组成的电流源" class="headerlink" title="4.2.2场效应管组成的电流源"></a>4.2.2场效应管组成的电流源</h3><p><img src="/img/md4-13.png" alt="md4-13" title="md4-13"></p>
+<h3 id="4-2-3电流源的主要应用——有源负载"><a href="#4-2-3电流源的主要应用——有源负载" class="headerlink" title="4.2.3电流源的主要应用——有源负载"></a>4.2.3电流源的主要应用——有源负载</h3><ul>
+<li><p>在放大器中要提高电压增益需选择直流电阻小而交流电阻很大的原件代替RC，因此采用电流源代替</p>
+</li>
+<li><p>特点</p>
+<ul>
+<li><p>由很高的电压增益</p>
+</li>
+<li><p>在正常放大状态下，有源负载放大器的增益与电源电压无关。</p>
+</li>
+<li><p>有源负载放大器中不需要大电阻，利于集成</p>
+</li>
+</ul>
+</li>
+<li><p>有源负载共射放大器</p>
+<p><img src="/img/md4-14.png" alt="md4-14" title="md4-14"></p>
+</li>
+<li><p>由镜像电流源中所得结果可知，空载时T1管的静态集电极电流为</p>
+<script type="math/tex; mode=display">
+I_{C 2}=\frac{\beta} {2+\beta} I_{R E F}</script></li>
+<li><p>基准电流为</p>
+<script type="math/tex; mode=display">
+I_{R E F}=\frac{U_{C C}-U_{B E 2}} {R}</script></li>
+<li><p>电压放大倍数为</p>
+<script type="math/tex; mode=display">
+A_{u}=-\frac{\beta_{1} ( r_{c e 1} / / r_{c e 2} / / R_{L} )} {R_{B}+r_{b e 1}}</script></li>
+<li><p>有源负载射级跟随器</p>
+<p><img src="/img/md4-15.png" alt="md4-15" title="md4-15"></p>
+</li>
+</ul>
+<h2 id="4-3差分放大电路"><a href="#4-3差分放大电路" class="headerlink" title="4.3差分放大电路"></a>4.3差分放大电路</h2><h3 id="4-3-1零点漂移现象"><a href="#4-3-1零点漂移现象" class="headerlink" title="4.3.1零点漂移现象"></a>4.3.1零点漂移现象</h3><ul>
+<li><p>零点漂移：当输入信号为零时，输出信号是一个随时间变化、漂移不定的非零信号。</p>
+</li>
+<li><p>原因：环境温度变化（主要），电源电压波动，器件老化和参数变化。又称为温漂。</p>
+</li>
+<li><p>影响：在直流耦合电路中将严重干扰正常信号的放大和传输</p>
+</li>
+<li><p>抑制温漂的方法</p>
+<ul>
+<li><p>利用热敏电阻进行温度补偿</p>
+</li>
+<li><p>采用负反馈稳定静态工作点</p>
+</li>
+<li><p>采用差分式放大电路</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-3-2一般差分放大电路的特性分析"><a href="#4-3-2一般差分放大电路的特性分析" class="headerlink" title="4.3.2一般差分放大电路的特性分析"></a>4.3.2一般差分放大电路的特性分析</h3><ul>
+<li><p>长尾式差分放大电路</p>
+<p><img src="/img/md4-16.png" alt="md4-16" title="md4-16"></p>
+</li>
+<li><p>抑制温漂原理：当两管分别产生温差时，由于电路具有对称性，两管同时发生变化，输出电压为两管输出电压之差，所以输出电压仍为零</p>
+<p><img src="/img/md4-17.png" alt="md4-17" title="md4-17"></p>
+</li>
+<li><p>差模信号和共模信号</p>
+<ul>
+<li><p>差模信号：两端输入信号大小相同，极性相反的信号，uid=ui1-ui2</p>
+</li>
+<li><p>共模信号：两端输入完全相同的信号称为共模信号，两信号的平均值称为共模信号uic</p>
+</li>
+<li><p>任意信号：两端输入信号大小不同。可分解为差模信号与共模信号之和</p>
+</li>
+</ul>
+</li>
+<li><p>差模增益和共模增益</p>
+<ul>
+<li><p>差模电压增益：</p>
+<script type="math/tex; mode=display">
+A_{d}=\frac{u_{o d}} {u_{i d}}</script></li>
+<li><p>共模电压增益：</p>
+<script type="math/tex; mode=display">
+A_{c}=\frac{u_{o c}} {u_{i c}}</script></li>
+</ul>
+</li>
+<li><p>共模抑制比</p>
+<ul>
+<li><p>要求差模电压增益大，共模电压增益小</p>
+</li>
+<li><p>共模抑制比：</p>
+<script type="math/tex; mode=display">
+K_{C M R}=| \frac{A_{d}} {A_{c}} |</script></li>
+<li><p>分贝表示：</p>
+<script type="math/tex; mode=display">
+K_{C M R} \ ( d B ) \ =2 0 l g | \frac{A_{d}} {A_{c}} |</script></li>
+</ul>
+</li>
+<li><p>典型差分放大电路及四种工作方式</p>
+</li>
+<li><p>差分放大电路有两个输入端口，一个同相输入端，一个反相输入端。</p>
+</li>
+<li><p>有两个输出端，分别为集电极c1和c2。</p>
+</li>
+<li><p>双端输入：同时加到同相输入端和反相输入端</p>
+</li>
+<li><p>单端输入：仅从一个输入端对公共参考地加入</p>
+</li>
+<li><p>双端输出：从c1和c2同时输出</p>
+</li>
+<li><p>单端输出：从其中一个集电极对公共参考地输出</p>
+</li>
+<li><p>两两组合形成四种工作方式</p>
+<p><img src="/img/md4-18.png" alt="md4-18" title="md4-18"></p>
+</li>
+<li><p>基本工作原理</p>
+<ul>
+<li><p>静态分析</p>
+<p><img src="/img/md4-19.png" alt="md4-19" title="md4-19"></p>
+</li>
+<li><p>输入信号为零，有</p>
+<script type="math/tex; mode=display">
+u_{i 1}=u_{i 2}=0</script><script type="math/tex; mode=display">
+U_{E}=-\; U_{B E} \approx-\; 0. 7 V</script><script type="math/tex; mode=display">
+I_{E 1 Q}=I_{E 2 Q} \approx\frac{I_{R E}} {2}=\frac{1} {2} \times\frac{U_{E}-( \ -U_{E E} )} {R_{E}}=\frac{U_{E E}-0. 7 V} {2 R_{E}}</script><script type="math/tex; mode=display">
+I_{\mathrm{C 1 Q}}=I_{\mathrm{C 2 Q}} \approx I_{\mathrm{E 1 Q}}=I_{\mathrm{E 2 Q}}</script><script type="math/tex; mode=display">
+U_{\mathrm{C 1 Q}}=U_{\mathrm{C 2 Q}}=U_{\mathrm{C C}}-I_{\mathrm{C 1 Q}} R_{\mathrm{C}}</script><script type="math/tex; mode=display">
+U_{\mathrm{C E 1 Q}}=U_{\mathrm{C E 2 Q}} \approx U_{\mathrm{C C}}+0. 7 \mathrm{~ V}-I_{\mathrm{C 1 Q}} R</script></li>
+<li><p>动态分析</p>
+<p><img src="/img/md4-20.png" alt="md4-20" title="md4-20"></p>
+<p><img src="/img/md4-21.png" alt="md4-21" title="md4-21"></p>
+</li>
+</ul>
+</li>
+</ul>
+</article></div></main><div class="nav-wrap"><div class="nav"><button class="site-nav"><div class="navicon"></div></button><ul class="nav_items"><li class="nav_item"><a class="nav-page" href="/about/#%E4%B8%AA%E4%BA%BA%E7%AE%80%E4%BB%8B"> 个人简介</a></li><li class="nav_item"><a class="nav-page" href="/about/#%E6%95%99%E8%82%B2%E7%BB%8F%E5%8E%86"> 教育经历</a></li><li class="nav_item"><a class="nav-page" href="/about/#%E8%8E%B7%E5%A5%96%E6%83%85%E5%86%B5"> 获奖情况</a></li><li class="nav_item"><a class="nav-page" href="/about/#%E7%A0%94%E7%A9%B6%E6%96%B9%E5%90%91"> 研究方向</a></li><li class="nav_item"><a class="nav-page" href="/about/#%E6%96%B0%E9%97%BB"> 新闻</a></li></ul></div><div class="cd-top"><i class="fa fa-arrow-up" aria-hidden="true"></i></div></div><footer id="page_footer"><div class="footer_wrap"><div class="copyright">&copy;2020 - 2025 by Zhu Jiajun</div><div class="theme-info">Powered by <a target="_blank" href="https://hexo.io" rel="nofollow noopener">Hexo</a> & <a target="_blank" href="https://github.com/PhosphorW/hexo-theme-academia" rel="nofollow noopener">Academia Theme</a></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery-pjax@latest/jquery.pjax.min.js"></script><script src="/about/js/main.js"></script></body></html>
