@@ -1,0 +1,523 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换 | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="原书PDF链接：Computer Vision: Algorithms and Applications, 2nd ed. 2.1 几何图元与变换​       在这一节将介绍这本书中所用到的基础的二维和三维图元，即点、线、面，也将描述三维特征是如何投影到二维特征。 有关这些话题更细致的描述可以在关于多视图几何的教科书中找到 《Multiple View Geometry in Computer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换">
+<meta property="og:url" content="http://example.com/2024/12/10/cvaa2-1/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="原书PDF链接：Computer Vision: Algorithms and Applications, 2nd ed. 2.1 几何图元与变换​       在这一节将介绍这本书中所用到的基础的二维和三维图元，即点、线、面，也将描述三维特征是如何投影到二维特征。 有关这些话题更细致的描述可以在关于多视图几何的教科书中找到 《Multiple View Geometry in Computer">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/cvaacover.png">
+<meta property="article:published_time" content="2024-12-10T09:59:11.000Z">
+<meta property="article:modified_time" content="2024-12-10T13:13:50.579Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="计算机视觉：算法和应用（第二版）">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/cvaacover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换",
+  "url": "http://example.com/2024/12/10/cvaa2-1/",
+  "image": "http://example.com/img/cvaacover.png",
+  "datePublished": "2024-12-10T09:59:11.000Z",
+  "dateModified": "2024-12-10T13:13:50.579Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://blog.csdn.net/ZJJLowKey"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="http://example.com/2024/12/10/cvaa2-1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/cvaacover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">[计算机视觉：算法和应用]第二章：图像形成——2.1 几何图元与变换</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-10T09:59:11.000Z" title="发表于 2024-12-10 17:59:11">2024-12-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-10T13:13:50.579Z" title="更新于 2024-12-10 21:13:50">2024-12-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%EF%BC%9A%E7%AE%97%E6%B3%95%E5%92%8C%E5%BA%94%E7%94%A8%EF%BC%88%E7%AC%AC%E4%BA%8C%E7%89%88%EF%BC%89/">计算机视觉：算法和应用（第二版）</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">13.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>51分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h3 id="原书PDF链接："><a href="#原书PDF链接：" class="headerlink" title="原书PDF链接："></a>原书PDF链接：</h3><p><a target="_blank" rel="noopener" href="https://szeliski.org/Book/">Computer Vision: Algorithms and Applications, 2nd ed.</a></p>
+<h2 id="2-1-几何图元与变换"><a href="#2-1-几何图元与变换" class="headerlink" title="2.1 几何图元与变换"></a>2.1 几何图元与变换</h2><p>​       在这一节将介绍这本书中所用到的基础的二维和三维图元，即点、线、面，也将描述三维特征是如何投影到二维特征。</p>
+<p>有关这些话题更细致的描述可以在关于多视图几何的教科书中找到</p>
+<p>《Multiple View Geometry in Computer Vision Second Edition》：<a target="_blank" rel="noopener" href="https://assets.cambridge.org/97805215/40513/frontmatter/9780521540513_frontmatter.pdf">https://assets.cambridge.org/97805215/40513/frontmatter/9780521540513_frontmatter.pdf</a></p>
+<p>《The Geometry of Multiple Images》：</p>
+<p><a target="_blank" rel="noopener" href="https://www.researchgate.net/profile/Theodore-Papadopoulo/publication/239060566_The_Geometry_of_Multiple_Images/links/00b49531f6c8f5ad22000000/The-Geometry-of-Multiple-Images.pdf">https://www.researchgate.net/profile/Theodore-Papadopoulo/publication/239060566_The_Geometry_of_Multiple_Images/links/00b49531f6c8f5ad22000000/The-Geometry-of-Multiple-Images.pdf</a></p>
+<p>几何图元构成了用于描述三维形状的基本构建模块。在这一节中，我们将介绍点、线、面。在书后续的章节中将会讨论曲线（章节7.3和12.2），表面（章节13.3）和体（章节13.5）。</p>
+<h4 id="二维点"><a href="#二维点" class="headerlink" title="二维点"></a>二维点</h4><p>二维点（一幅图像中的像素坐标）可以用一对值描述为</p>
+<script type="math/tex; mode=display">
+\mathbf{x}=(x,y)\in \mathbf{R^{2}}</script><p>或者为</p>
+<script type="math/tex; mode=display">
+\mathbf{x}=\begin{bmatrix} x\\ y \end{bmatrix}</script><p>（我们使用$(x_{1},x_{2},…)$来表示列向量）</p>
+<p>二维点也可以使用其次坐标来表示</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}=(\tilde{x},\tilde{y},\tilde{w})\in \mathbf{P^{2}}</script><p>其中，仅有尺度不同的向量被认为是等价的，$P^{2}=R^{3}-(0,0,0)$称之为二维投影空间。</p>
+<p> 一个齐次向量$\tilde{X}$能够通过除以最后一个元素$\tilde{w}$转换回非齐次向量$X$</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}=(\tilde{x},\tilde{y},\tilde{w})=\tilde{w}(x,y,1)=\tilde{w}\bar{\mathbf{x}}</script><p>其中$\bar{X}=(x,y,1)$是增向量。最后一个元素$\tilde{w}=0$的其次点称之为理想点或者无穷远点，且没有等价的非齐次表示。</p>
+<h4 id="二维线"><a href="#二维线" class="headerlink" title="二维线"></a>二维线</h4><p>二维线能够用齐次坐标$\tilde{l}=(a,b,c)$表示，对应的直线方程为</p>
+<script type="math/tex; mode=display">
+\bar{\mathbf{x}}\cdot \tilde{\mathbf{l}}=ax+by+c=0</script><p>我们可以对直线方程向量进行归一化，使得</p>
+<script type="math/tex; mode=display">
+\mathbf{l}=(\hat{n_{x}},\hat{n_{y}},d)=(\boldsymbol{\hat{n}},d) with\begin{Vmatrix} \mathbf{\hat{n}} \end{Vmatrix}=1</script><p>其中$\boldsymbol{\hat{n}}$是垂直于直线的法向量，$d$是其到原点的距离。（这种归一化的一个特例是无穷远处的直线$\tilde{\mathbf{l}}=(0,0,1)$，它包括了所有无穷远处的理想点)。</p>
+<p><img src="/img/cvaa2-1-1.png" alt="cvaa2-1-1" title="cvaa2-1-1"></p>
+<p>我们也可以将$\boldsymbol{\hat{n}}$表示为一个旋转角$\theta$的函数，$\mathbf{\hat{n}}=(\hat{n}<em>{x},\hat{n}</em>{y})=(cos\theta,sin\theta)$。这种表示方法通常在霍夫变换寻线算法（Hough transform line-finding algorithm）中使用，这将在7.4.2节中介绍。这种$(\theta,d)$的组合也被称为极坐标。</p>
+<p>在使用齐次坐标时，我们能够计算两条直线的交点为</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}}=\mathbf{\tilde{l}_{1}}\times\mathbf{\tilde{l}_{2}}</script><p>其中$\times$是叉乘操作。相同的，连接两点的一条直线可以写作</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{l}}=\mathbf{\tilde{x}_1}\times\mathbf{\tilde{x}_2}</script><p> 当尝试用一个交点来匹配多条直线，或者相反的，用一条直线来匹配多个点时，可以使用最小二乘法（章节8.1.1和附录A.2）。</p>
+<h4 id="二维圆锥曲线"><a href="#二维圆锥曲线" class="headerlink" title="二维圆锥曲线"></a>二维圆锥曲线</h4><p>还有其他代数曲线能够用简单的多项式齐次方程来表示。例如圆锥截面，也就是圆锥曲线（之所以定义为这个名字，是因为这样的圆锥曲线是由一个平面和一个三维圆锥相交后所有交点的集合）。这样的曲线可以写成一个二次方程</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}^{T}Q\tilde{x}}=0</script><p> 二次方程在多视图集合和相机标定中十分有用。</p>
+<h4 id="三维点"><a href="#三维点" class="headerlink" title="三维点"></a>三维点</h4><p>三维中的点坐标可以用非齐次坐标写作</p>
+<script type="math/tex; mode=display">
+\mathbf{x}=(x,y,z)\in \mathbf{R^3}</script><p>或者用齐次坐标写作</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}}=(\tilde{x},\tilde{y},\tilde{z},\tilde{w})\in\mathbf{P^3}</script><p>正如前文一样，有时也用增广向量来表示三维点</p>
+<script type="math/tex; mode=display">
+\mathbf{\bar{x}}=(x,y,z,1)</script><script type="math/tex; mode=display">
+\mathbf{\tilde{x}}=\tilde{w}\mathbf{\bar{x}}</script><h4 id="三维平面"><a href="#三维平面" class="headerlink" title="三维平面"></a>三维平面</h4><p>三维平面也可以用齐次坐标$\mathbf{\tilde{m}}=(a,b,c,d)$来表示，对应的平面方程为</p>
+<script type="math/tex; mode=display">
+\mathbf{\bar{x}\cdot \tilde{m}}=ax+by+cz+d=0</script><p>我们也可以将平面方程归一化为</p>
+<script type="math/tex; mode=display">
+\mathbf{m}=(\hat{n}_{x},\hat{n}_{y},\hat{n}_{z},d)=(\mathbf{\hat{n}},d)</script><script type="math/tex; mode=display">
+\begin{Vmatrix} \mathbf{\hat{n}} \end{Vmatrix}=1</script><p>其中，$\mathbf{\hat{n}}$是垂直于平面的法向量，$d$是其到原点的距离。与二维线的特例一样，在无穷远处的平面$\mathbf{\tilde{m}}=(0,0,0,1)$包括了所有无穷远点，不能够进行归一化。</p>
+<p><img src="/img/cvaa2-1-2.png" alt="cvaa2-1-2" title="cvaa2-1-2"></p>
+<p>同样的，我们可以将$\mathbf{\hat{n}}$表示为两个角度$(\theta,\phi )$的函数</p>
+<script type="math/tex; mode=display">
+\mathbf{\hat{n}}=(cos\theta cos\phi, sin\theta cos\phi,sin\phi)</script><p>即使用球面坐标。但是这些不如极坐标常用，因为他们不能够对可能的法向量空间进行均匀采样。</p>
+<h4 id="三维直线"><a href="#三维直线" class="headerlink" title="三维直线"></a>三维直线</h4><p>三维中的直线不如二维中的直线和三维平面简洁。一种可能的表示方法是利用线上的两个点，$(\mathbf{p},\mathbf{q})$。线上的其他任意点都能能够用这两个点的线性组合表示</p>
+<script type="math/tex; mode=display">
+\mathbf{r}=(1-\lambda)\mathbf{p}+\lambda\mathbf{q}</script><p><img src="/img/cvaa2-1-3.png" alt="cvaa2-1-3" title="cvaa2-1-3"></p>
+<p> 如果我们限定$0\leq\lambda\leq1$，我们就可以得到连接$\mathbf{p}$和$\mathbf{q}$的线段。</p>
+<p> 如果我们使用齐次坐标，就可以将直线写为</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{r}}=\mu\mathbf{\tilde{p}}+\lambda\mathbf{\tilde{q}}</script><p>一个特例是，当两个点在无穷远处，即$\mathbf{\tilde{q}}=(\hat{d}_{x},\hat{d}_{y},\hat{d}_{z},0)=(\mathbf{\hat{d}},0)$。在这里，我们将视$\mathbf{\hat{d}}$为线的方向。我们可以将非齐次三维直线方程重写为</p>
+<script type="math/tex; mode=display">
+\mathbf{r}=\mathbf{p}+\lambda\mathbf{\hat{d}}</script><p>这种三维直线的端点表示法的一个缺点是有太多自由度，即六个自由度（每个端点三个），而不是三维直线实际的四个自由度。如果我们将线上的两个点放置在特定的平面内，我们就可以得到四个自由度的表示。例如，如果我们要表示垂直线，那么$z=0$和$z=1$就可以形成两个平面,在两个平面上$(x,y)$坐标就能够提供描述直线的四个坐标。这种双平面参数化方法应用在第14章光场和基于Lumigraph的渲染系统中，以表示相机在一个物体前移动时所看到的光线的集合。两端点表示方法也也常用于表示线段，即使不能够看到他们的确切端点（只能猜测）。</p>
+<p>如果我们希望在没有偏置时表示任意特定方向的所有可能的直线，我们可以使用普吕克坐标系$\mathit{(Pl\ddot{u}cker \, coordinates)}$。这些坐标是4$\times$4斜对角阵中得六个独立的非零项</p>
+<script type="math/tex; mode=display">
+\mathbf{L}=\mathbf{\tilde{p}\tilde{q}^{T}}-\mathbf{\tilde{q}\tilde{p}^{T}}</script><p>其中$\mathbf{\tilde{p}}$和$\mathbf{\tilde{q}}$是直线上任意两个不重合的点。这种表示方法只有四个自由度，$\mathbf{L}$是齐次的且满足$\begin{vmatrix} \mathbf{L} \end{vmatrix}=0$，导致了普吕克坐标系中的二次约束。</p>
+<p>在实际中，最小表示法对大多数应用来说不是必须的。通过估计三维直线的方向（这可能是提前知道的）和一些线上可见部分的一些点或者使用两个端点，可以得到一个足够的三维线模型，因为线最常见的是有限长线段。然而，如哦你对最小线参数表示法的更多细节感兴趣的话，讨论了在投影几何中推断和建模三维线的各种方式，以及如何估计这种拟合模型的不确定度。</p>
+<p>《Uncertain Projective Geometry》：</p>
+<p><a href="">Uncertain Projective Geometry - PDF Free Download</a></p>
+<h4 id="三维二次曲面"><a href="#三维二次曲面" class="headerlink" title="三维二次曲面"></a>三维二次曲面</h4><p>三维类圆锥界面是一个二次曲面</p>
+<script type="math/tex; mode=display">
+\mathbf{\bar{x}}^T\mathbf{Q}\mathbf{\bar{x}}=0</script><p>虽然二次曲面在多视角几何中是有用的，并且能够用作有用的建模图元（球体、椭球体、圆柱体），在此书中不会详细研究。</p>
+<h3 id="2-1-1二维变换"><a href="#2-1-1二维变换" class="headerlink" title="2.1.1二维变换"></a>2.1.1二维变换</h3><p>定义了基础的几何图元后，就可以将注意力放在他们如何进行变换上了。在二维平面中进行的最简单的变换如下图所示。</p>
+<p><img src="/img/cvaa2-1-4.png" alt="cvaa2-1-4" title="cvaa2-1-4"></p>
+<h4 id="平移"><a href="#平移" class="headerlink" title="平移"></a>平移</h4><p>二维平移可以写作$\mathbf{x}^{‘}=\mathbf{x}+\mathbf{t}$或</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} \mathbf{I} & \mathbf{t} \end{bmatrix}\bar{\mathbf{x}}</script><p>其中$\mathbf{I}$是$2\times2$的单位矩阵或</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} \mathbf{I} &\mathbf{t} \\ \mathbf{0}^{T}& 1 \end{bmatrix}\bar{\mathbf{x}}</script><p>其中$\mathbf{0}$是零向量。使用一个$2\times3$的矩阵能够得到一个更加紧凑的表述，然而使用一个满秩的$3\times3$的矩阵（能够通过对$2\times3$矩阵增加一行$\begin{bmatrix} \mathbf{0}^{T} &amp;1 \end{bmatrix}$得到）使得利用矩阵乘法进行链变换和计算逆变换成为可能。注意到在任意方程中，若在方程两边都有一个增广向量，如$\bar{\mathbf{x}}$，那么通常用全齐次向量$\tilde{\mathbf{x}}$进行替换。</p>
+<h4 id="旋转-平移"><a href="#旋转-平移" class="headerlink" title="旋转+平移"></a>旋转+平移</h4><p>这种变换也称之为二维刚体运动或者二维欧几里得变换（因为在这当中保留了欧氏距离）。这种变换可以写作$\mathbf{x}^{‘}=\mathbf{Rx+t}$或者</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} \mathbf{R }& \mathbf{t} \end{bmatrix}\mathbf{\bar{x}}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\mathbf{R}=\begin{bmatrix} cos\theta &-sin\theta \\ sin\theta&cos\theta \end{bmatrix}</script><p>是一个正交旋转矩阵，有$\mathbf{RR}^{T}=\mathbf{I}$和$\begin{vmatrix} \mathbf{R} \end{vmatrix}=1$</p>
+<h4 id="缩放旋转"><a href="#缩放旋转" class="headerlink" title="缩放旋转"></a>缩放旋转</h4><p>也称之为相似变换，这种变换能够表示为</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} s\mathbf{R} & \mathbf{t} \end{bmatrix}\mathbf{\bar{x}}=\begin{bmatrix} a & -b & t_{x}\\ b&a &t_{y} \end{bmatrix}\mathbf{\bar{x}}</script><p>在这里，不再需要保证$a^{2}+b^{2}=1$。相似变换保留了两条线之间的角度</p>
+<h4 id="仿射"><a href="#仿射" class="headerlink" title="仿射"></a>仿射</h4><p>仿射变换写作</p>
+<script type="math/tex; mode=display">
+\mathbf{x^{'}=A\bar{x}}</script><p>其中$\mathbf{A}$是任意的$2\times3$矩阵，即</p>
+<script type="math/tex; mode=display">
+\mathbf{x^{'}}=\begin{bmatrix} a_{00} &a_{01} &a_{02} \\ a_{10}&a_{11} &a_{12} \end{bmatrix}\mathbf{\bar{x}}</script><p>在仿射变换下平行线保持平行。</p>
+<h4 id="投影"><a href="#投影" class="headerlink" title="投影"></a>投影</h4><p>这种变换也称之为透视变换或者单应性变，是在齐次坐标系下进行操作的</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}^{'}=\tilde{H}\tilde{x}}</script><p>其中$\mathbf{\tilde{H}}$是一个任意的$3\times3$矩阵。注意到$\mathbf{\tilde{H}}$是齐次的，即它只能在一个尺度上定义，两个仅在尺度上不同的$\mathbf{\tilde{H}}$矩阵是等价的。由此得到的齐次坐标$\mathbf{\tilde{x}}^{‘}$必须进行归一化以获得一个非齐次的结果$\mathbf{x}$，即</p>
+<script type="math/tex; mode=display">
+x^{'}=\frac{h_{00}x+h_{01}y+h_{02}}{h_{20}x+h_{21}y+h_{22}}\;and\;y^{'}= \frac{h_{10}x+h_{11}y+h_{12}}{h_{20}x+h_{21}y+h_{22}}</script><p>在透视变换后直线依旧是直线。</p>
+<h4 id="二维变换的层次结构"><a href="#二维变换的层次结构" class="headerlink" title="二维变换的层次结构"></a>二维变换的层次结构</h4><p><img src="/img/cvaa2-1-5.png" alt="cvaa2-1-5" title="cvaa2-1-5"></p>
+<p>看待各种变换最简单的方法是将他们视为一组$3\times3$的矩阵，作用在二维齐次坐标向量上。</p>
+<p>以上的变换形成了一个嵌套的组集，即他们在组合条件下是封闭的，并且有反变换也是相同群中的一个成员（在3.6节中将这些变换应用于图像时，这一点非常重要）。每一个更简单的群都是更复杂群的一个子群。这种李群（Lie groups）的数学原理和相关的代数（在原点处的切线空间）在最近的一些机器人技术教程中进行了讨论，其中二维旋转和刚体变换被称之为SO(2)和SE(2)，代表特殊的正交群和特殊的欧几里得群。</p>
+<p>《Factor Graphs for Robot Perception》:</p>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/xpl/ebooks/bookPdfWithBanner.jsp?fileName=8187521.pdf&amp;bkn=8187520&amp;pdfType=book">Factor Graphs for Robot Perception | Now Foundations and Trends books | IEEE Xplore</a></p>
+<p>《A tutorial on SE(3) transformation parameterizations and on-manifold optimization》：</p>
+<p><a target="_blank" rel="noopener" href="http://ingmec.ual.es/~jlblanco/papers/jlblanco2010geometry3D_techrep.pdf">http://ingmec.ual.es/~jlblanco/papers/jlblanco2010geometry3D_techrep.pdf</a></p>
+<p>《A micro lie theory for state estimation in robotics》：</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1812.01537.pdf">https://arxiv.org/pdf/1812.01537.pdf</a></p>
+<h4 id="余向量"><a href="#余向量" class="headerlink" title="余向量"></a>余向量</h4><p>虽然上述变换能够直接用于二维平面的点变换，但是它们能够直接被用于对线性方程进行变换么？考虑齐次方程$\mathbf{\tilde{l}\cdot\tilde{x} }=0$，如果我们变换$\mathbf{\tilde{x}^{‘}=\tilde{H}\tilde{x}}$，我们可以得到</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{l}^{'}\cdot\tilde{x}^{'}=}\mathbf{\tilde{l}}^{'\mathit{T}}\mathbf{\tilde{H}\tilde{x}}=(\mathbf{\tilde{H}}^{\mathit{T}}\mathbf{\tilde{l}^{'}})^{\mathit{T}}\mathbf{\tilde{x}}=\mathbf{\tilde{l}\cdot\tilde{x}}=0</script><p>即$\mathbf{\tilde{l}^{‘}}=\mathbf{\tilde{H}}^{\mathit{-T}}\mathbf{\tilde{l}}$。因此，一个投影变换在作用在一个余向量上，如二维线或三维法线可以用矩阵的转置逆来表示，这等同于$\mathbf{\tilde{H}}$的共轭，因为投影变换矩阵是其次的。</p>
+<p>Blinn, J. (1998). Dirty Pixels. Morgan Kaufmann Publishers, San Francisco.</p>
+<p>除了以上那些我们广泛使用的变换，还有一些其他的变换经常用到。</p>
+<h4 id="拉伸-挤压"><a href="#拉伸-挤压" class="headerlink" title="拉伸/挤压"></a>拉伸/挤压</h4><p>这个变换能够改变图像的长宽比.</p>
+<script type="math/tex; mode=display">
+x^{'}=s_{x}x+t_{x}</script><script type="math/tex; mode=display">
+y^{'}=s_{y}y+t_{y}</script><p>是仿射变换的一种受限形式。不幸的是，它不会与上述的群完全嵌套。</p>
+<h4 id="平面表面流"><a href="#平面表面流" class="headerlink" title="平面表面流"></a>平面表面流</h4><p>当一个平面表面发生一个微小三维运动时，会出现这个八参数变换</p>
+<script type="math/tex; mode=display">
+x^{'}=a_{0}+a_{1}x+a_{2}y+a_{6}x^{2}+a_{7}xy</script><script type="math/tex; mode=display">
+y^{'}=a_{3}+a_{4}x+a_{5}y+a_{6}xy+a_{7}y^{2}</script><p>它可以认为是一个全单应性的微小运动近似。其主要吸引人的地方在于，在运动参数上是线性的，通常$a_{k}$是被估计的量。</p>
+<h4 id="双线性插值"><a href="#双线性插值" class="headerlink" title="双线性插值"></a>双线性插值</h4><p>这个八参数变换能够用来对因方形四个角点的运动而产生的变形进行插值</p>
+<script type="math/tex; mode=display">
+x^{'}=a_{0}+a_{1}x+a_{2}y+a_{6}xy</script><script type="math/tex; mode=display">
+y^{'}=a_{3}+a_{4}x+a_{5}y+a_{7}xy</script><p>（事实上，它可以对任意四个不共线的点的运动进行插值）。当运动参数的形变是线性时，它通常不能够保留直线（只有线平行于方形的轴时）。然而，它通常是很有效的，例如用样条曲线对稀疏网格进行插值。</p>
+<h3 id="2-1-2三维变换"><a href="#2-1-2三维变换" class="headerlink" title="2.1.2三维变换"></a>2.1.2三维变换</h3><p>三维坐标变换集和二维变换非常相似，并用以下表格进行了总结</p>
+<p><img src="/img/cvaa2-1-6.png" alt="cvaa2-1-6" title="cvaa2-1-6"></p>
+<p>正如二维中的一样，这些变换形成了一个嵌套的群集。</p>
+<h4 id="平移-1"><a href="#平移-1" class="headerlink" title="平移"></a>平移</h4><p>三维平移可以写成$\mathbf{x}^{‘}=\mathbf{x}+\mathbf{t}$或</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} \mathbf{I} & \mathbf{t} \end{bmatrix}\bar{\mathbf{x}}</script><p>其中$\mathbf{I}$是$3\times3$的单位矩阵</p>
+<h4 id="旋转-平移-1"><a href="#旋转-平移-1" class="headerlink" title="旋转+平移"></a>旋转+平移</h4><p>也称之为三维刚体运动或者三维欧几里得变换或SE(3)，能够写作$\mathbf{x}^{‘}=\mathbf{Rx+t}$或者</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} \mathbf{R }& \mathbf{t} \end{bmatrix}\mathbf{\bar{x}}</script><p>其中$\mathbf{R}$是一个$3\times3$的正交旋转矩阵，有$\mathbf{RR}^{T}=\mathbf{I}$和$\begin{vmatrix} \mathbf{R} \end{vmatrix}=1$。注意到有时用下式来描述一个刚体运动会更加便捷</p>
+<script type="math/tex; mode=display">
+\mathbf{x^{'}=R(x-c)=Rx-Rc}</script><p>其中$c$是旋转中心（通常是相机中心）</p>
+<p>对三维旋转参数化是一个重要的任务，我们将在下面描述更多细节。</p>
+<h4 id="缩放旋转-1"><a href="#缩放旋转-1" class="headerlink" title="缩放旋转"></a>缩放旋转</h4><p>三维的相似性变换可以表达为$\mathbf{x^{‘}}=s\mathbf{Rx+t}$，其中$s$是任意的缩放因子。这种变换能够写作</p>
+<script type="math/tex; mode=display">
+\mathbf{x}^{'}=\begin{bmatrix} s\mathbf{R} & \mathbf{t} \end{bmatrix}\mathbf{\bar{x}}</script><p>这种变换保留了线与线和平面之间的角度。</p>
+<h4 id="仿射-1"><a href="#仿射-1" class="headerlink" title="仿射"></a>仿射</h4><p>仿射变换能够写作$\mathbf{x^{‘}=A\bar{x}}$其中$\mathbf{A}$是任意$3\times4$的矩阵，即</p>
+<script type="math/tex; mode=display">
+\mathbf{x^{'}}=\begin{bmatrix} a_{00} &a_{01} &a_{02} &a_{03}\\ a_{10}&a_{11} &a_{12}&a_{13}\\ a_{20} &a_{21} &a_{22} &a_{23} \end{bmatrix}\mathbf{\bar{x}}</script><p>在仿射变换下平行的线和平面保持平行。</p>
+<h4 id="投影-1"><a href="#投影-1" class="headerlink" title="投影"></a>投影</h4><p>这种变换也被称之为三维透视变换、单应性变换、或者直射变换，在齐次坐标系上操作</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}^{'}=\tilde{H}\tilde{x}}</script><p>其中$\mathbf{\tilde{H}}$是一个任意的$4\times4$矩阵。与二维中的一致，由此得到的齐次坐标$\mathbf{\tilde{x}}^{‘}$必须进行归一化以获得一个非齐次的结果$\mathbf{x}$。透视变换能够保留直线，即在变换后依旧是直线。</p>
+<h3 id="2-1-3三维旋转"><a href="#2-1-3三维旋转" class="headerlink" title="2.1.3三维旋转"></a>2.1.3三维旋转</h3><p>二维和三维坐标变换最大的不同是，三维旋转矩阵$\mathbf{R}$的参数化不是直接得到的，存在着几种不同的可能性。</p>
+<h4 id="欧拉角"><a href="#欧拉角" class="headerlink" title="欧拉角"></a>欧拉角</h4><p>一个旋转矩阵能够通过围绕着三个基本轴的三个旋转相乘得到，例如$x,y$和$z$，或者$x,y$和$x$。但这个思想不太好，因为结果要取决于所进行的变换的顺序。更糟糕的是，其在参数空间中并不总是能够平滑地移动，也就是说，旋转上的一个微小变换有可能导致一个或更多的欧拉角发生剧烈的变化。由于这些原因，我们甚至不能在书中给出欧拉角的公式。注意到在一些应用当中，如果知道旋转是一个单轴变换集，那它们总是可以用一组明确的刚性变换表示。</p>
+<h4 id="轴-角（指数旋转）exponential-twist"><a href="#轴-角（指数旋转）exponential-twist" class="headerlink" title="轴/角（指数旋转）exponential twist"></a>轴/角（指数旋转）exponential twist</h4><p>一个旋转可以用一个旋转轴$\mathbf{\hat{n}}$和一个角度$\theta$表示，或者等价的用一个三维向量$\mathfrak{w}=\theta\mathbf{\hat{n}}$。下图展示了我们如何计算等价的旋转矩阵。</p>
+<p><img src="/img/cvaa2-1-7.png" alt="cvaa2-1-7" title="cvaa2-1-7"></p>
+<p>首先，我们将向量$\mathbf{v}$投影到轴$\mathbf{\hat{n}}$上</p>
+<script type="math/tex; mode=display">
+\mathbf{v_\parallel =\hat{n}(\hat{n}\cdot v)=(\hat{n}\hat{n}^{\mathit{T}})v}</script><p>是不受旋转影响$\mathbf{v}$的一部分。然后，我们计算$\mathbf{v}$相对于$\mathbf{\hat{n}}$的垂直分量</p>
+<script type="math/tex; mode=display">
+\mathbf{v_\perp =v-v_\parallel=(I-\hat{n}\hat{n}^{\mathit{T}})v}</script><p>我们可以使用叉乘将这个向量旋转90°</p>
+<script type="math/tex; mode=display">
+\mathbf{v_\times=\hat{n}\times v_\perp =\hat{n}\times v=[\hat{n}]_\times v}</script><p>其中$\mathbf{[\hat{n}]_\times}$是$\mathbf{\hat{n}}=(\hat{n}_{x},\hat{n}_{y},\hat{n}_{z})$向量叉乘操作的矩阵形式</p>
+<script type="math/tex; mode=display">
+\mathbf{[\hat{n}]_\times}=\begin{bmatrix} 0& -\hat{n}_z&\hat{n}_y \\ \hat{n}_z&0 & -\hat{n}_x\\ -\hat{n}_y& \hat{n}_x & 0 \end{bmatrix}</script><p>注意到对这个矩阵再次旋转90°等价于再次进行叉乘操作</p>
+<script type="math/tex; mode=display">
+\mathbf{v_{\times \times}=\hat{n}\times v_{\times}=[\hat{n}]^2_{\times}v=-v_\perp}</script><p>因此</p>
+<script type="math/tex; mode=display">
+\mathbf{v_{\parallel }=v-v_{\perp}=v+v_{\times \times}=(I+[\hat{n}]^2_{\times})v}</script><p>我们现在能够计算旋转后向量$\mathbf{u}$在平面内的分量</p>
+<script type="math/tex; mode=display">
+\mathbf{u_{\perp}=cos\theta v_{\perp}+sin\theta v_{\times}=(sin\theta [\hat{n}]_{\times}-cos\theta [\hat{n}]^2_{\times})v}</script><p>将这些量汇总在一起，我们可以得到最终旋转过后的向量为</p>
+<script type="math/tex; mode=display">
+\mathbf{u=u_{\perp}+v_{\parallel}=(I+sin\theta [\hat{n}]_{\times}+(1-cos\theta)[\hat{n}]^2_{\times})v}</script><p>因此，我们可以将绕轴$\mathbf{\hat{n}}$旋转角度$\theta$的旋转矩阵写为</p>
+<script type="math/tex; mode=display">
+\mathbf{R}(\mathbf{\hat{n}},\theta)=\mathbf{I}+sin\theta [\mathbf{\hat{n}}]_{\times}+(1-cos\theta)[\mathbf{\hat{n}}]^2_{\times}</script><p>称之为罗德里格斯公式。</p>
+<p>轴$\mathbf{\hat{n}}$与角度$\theta$相乘的结果$\mathbf{\omega }=\theta\mathbf{\hat{n}}=(\omega _x ,\omega _y ,\omega _z)$,是三维旋转的最简表达方式。如果$\theta$以度为单位，那么通过常见角度，例如90°的倍数，进行的旋转，能够精确地表示（并且转换为精确的矩阵）。不幸的是，这种表示不是唯一的，因为我们总可以给增加一个360°的倍数（2$\pi$弧度）得到相同的旋转矩阵。与此同时$(\mathbf{\hat{n}},\theta)$和$(-\mathbf{\hat{n}},-\theta)$也表示相同的旋转。</p>
+<p>然而，对于小的旋转（例如对旋转的修正）来说，这是一个极佳的选择。尤其是对于很小的旋转（无穷小或瞬时），且用弧度表示，那么罗德里格斯公式就能够简化为</p>
+<script type="math/tex; mode=display">
+\mathbf{R}(\mathbf{\hat{n}},\theta)=\mathbf{I}+sin\theta [\mathbf{\hat{n}}]_{\times}\approx \mathbf{I}+\theta [\mathbf{\hat{n}}]_{\times}=\begin{bmatrix} 1 & -\omega _{z}&\omega _{y} \\ \omega _{z}& 1&-\omega _{x} \\ -\omega _{y}& \omega _{x}& 1 \end{bmatrix}</script><p>这给旋转参数$\mathbf{\omega }$和$\mathbf{R}$提供了一个非常好的线性关系。我们也可以写为$\mathbf{R(\omega )v\approx v+\omega\times v}$,当我们想要计算$\mathbf{Rv}$对$\mathbf{\omega}$的导数时，这将会很方便，</p>
+<script type="math/tex; mode=display">
+\frac{\partial \mathbf{Rv}}{\partial \mathbf{\omega}^T}=-[\mathbf{v}]_{\times}=\begin{bmatrix} 0 & z &-y \\ -z& 0 &x \\ y& -x & 0 \end{bmatrix}</script><p>另一种通过有限角推导出一个旋转的方法称之为指数旋转（exponential twist）。一个旋转角度为$\theta$的旋转等同于$k$个角度为$\frac{\theta}{k}$的旋转。若$k\rightarrow \infty$，我们可以得到</p>
+<script type="math/tex; mode=display">
+\mathbf{R}(\mathbf{\hat{n}},\theta)=\lim _{k\rightarrow \infty }(\mathbf{I}+\frac{1}{k}[\theta \mathbf{\hat{n}}]_{\times})^{k}=\mathrm{exp}[\mathbf{\omega}]_\times</script><p>如果我们将矩阵指数展开为泰勒级数（利用恒等式$\mathbf{[\hat{n}]}^{k+2}_{\times}=-\mathbf{[\hat{n}]}^{k}_{\times}$，$k&gt; 0$，并假设$\theta$以弧度为单位）</p>
+<script type="math/tex; mode=display">
+\mathrm{exp}[\mathbf{\omega} ]_{\times}=\mathbf{I}+\theta[\mathbf{\hat{n}}]_{\times}+\frac{\theta^2}{2}[\mathbf{\hat{n}}]_{\times}^2+\frac{\theta^3}{3!}[\mathbf{\hat{n}}]_{\times}^3+\cdot \cdot \cdot \\ =\mathbf{I}+(\theta-\frac{\theta^3}{3!}+\cdot \cdot \cdot )+(\frac{\theta^2}{2}-\frac{\theta^4}{4!}+\cdot \cdot \cdot )[\mathbf{\hat{n}}]_{\times}^2\\ =\mathbf{I}+sin\theta[\mathbf{\hat{n}}]_{\times}+(1-cos\theta)[\mathbf{\hat{n}}]_{\times}^2</script><p>这就得出了我们熟悉的罗德里格斯公式。</p>
+<p>在机器人（和群理论）中，旋转称之为$\mathrm{SO(3)}$，即三维空间中的特殊正交群。增量旋转$\omega$与李代数$se(3)$相联系，是计算旋转倒数和在旋转不确定性估计建模时的首选方法。</p>
+<h4 id="单位四元数"><a href="#单位四元数" class="headerlink" title="单位四元数"></a>单位四元数</h4><p>单位四元数表示法和角度/轴表示法十分相似。一个单位四元数是一个长度为4的单位向量，其组成可以写作$\mathbf{q}=(q_x ,q_y ,q_z ,q_w )$或者简化为$\mathbf{q}=(x,y,z,w)$。单位四元数是由单位圆$\begin{Vmatrix} \mathbf{q} \end{Vmatrix}=1$决定的，且对跖（异号）四元数$\mathbf{q}$和$-\mathbf{q}$表示相同的旋转。除了这个歧义，一个旋转的单位四元数表示是唯一的。更进一步，这个表示是连续的，即随着旋转矩阵的连续变化，能够找到一个连续的四元数表示，尽管在四元数球上的路径在回到原点$\mathbf{q}_o=(0,0,0,1)$前可能一直反复缠绕。由于以下这些和其他原因，四元数在计算机图形学中，是一种非常流行的位姿及位姿插值表示方法。</p>
+<p><img src="/img/cvaa2-1-8.png" alt="cvaa2-1-8" title="cvaa2-1-8"></p>
+<p> 四元数能够通过下式从轴/角表示法中推导得到</p>
+<script type="math/tex; mode=display">
+\mathbf{q}=(\mathbf{v},w)=(\sin{\frac{\theta}{2}}\mathbf{\hat{n}},\cos\frac{\theta}{2})</script><p>其中$\mathbf{\hat{n}}$和$\theta$分别是旋转轴和角。使用三角恒等式$\sin\theta=2\sin\frac{\theta}{2}\cos\frac{\theta}{2}$和$(1-\cos\theta)=2\sin^2\frac{\theta}{2}$，罗德里格斯公式可以转换为</p>
+<script type="math/tex; mode=display">
+\mathbf{R(\hat{n}},\theta)=\mathbf{I}+\sin\theta[\mathbf{\hat{n}}]_{\times}+(1-\cos\theta)[\mathbf{\hat{n}}]_{\times}^2\\ =\mathbf{I}+2w[\mathbf{v}]_{\times}+2[\mathbf{v}]_{\times}^2</script><p>这给出了一种利用一系列叉乘、缩放和加法来通过四元数对向量$\mathbf{v}$进行旋转的快速方法。为了得到一个$(x,y,z,w)$的函数$\mathbf{R(q)}$的公式，根据之前的介绍，可以知道</p>
+<script type="math/tex; mode=display">
+[\mathbf{v}]_{\times}=\begin{bmatrix} 0& -z &y \\ z& 0 & -x\\ -y& x & 0 \end{bmatrix}\quad[\mathbf{v}]_{\times}^2=\begin{bmatrix} -y^2-z^2& xy & xz\\ xy& -x^2-z^2&yz \\ xz& yz & -x^2-y^2 \end{bmatrix}</script><p>由此可以得到</p>
+<script type="math/tex; mode=display">
+\mathbf{R(q)}=\begin{bmatrix} 1-2(y^2+z^2)&2(xy-zw) &x(xz+yw) \\ 2(xy+zw)& 1-2(x^2+z^2) &2(yz-xw) \\ 2(xz-yw)&2(yz+xw) &1-2(x^2+y^2) \end{bmatrix}</script><p>对角量$(x^2+w^2-y^2-z^2)$能够通过用替换$1-2(y^2+z^2)$等变得更加对称。</p>
+<p>单位四元数最好的一方面是，能够用简单的代数来组成用四元数表示的旋转。给定两个四元数$\mathbf{q}_0=(\mathbf{v}_0,w_0)$和$\mathbf{q}_1=(\mathbf{v}_1,w_1)$，那么四元数乘法操作就能够定义为</p>
+<script type="math/tex; mode=display">
+\mathbf{q}_2=\mathbf{q}_0 \mathbf{q}_1=(\mathbf{v}_0 \times\mathbf{v}_1 +w_0\mathbf{v}_1 +w_1\mathbf{v}_0, w_0w_1-\mathbf{v}_0\cdot \mathbf{v}_1)</script><p>有性质$\mathbf{R(q_2)}=\mathbf{R(q_0)}\mathbf{R(q_1)}$。注意到，四元数乘法是不能交换的，就像三维旋转和矩阵乘法一样。</p>
+<p>取四元数的逆也很简单，只需要翻转$\mathbf{v}$或者$w$（但不是同时！）的符号。因此，我们也能够定义四元数除法为</p>
+<script type="math/tex; mode=display">
+\mathbf{q}_2=\frac{\mathbf{q}_0 }{\mathbf{q}_1}=\mathbf{q}_0\mathbf{q}_1^{-1}=(\mathbf{v}_0 \times\mathbf{v}_1 +w_0\mathbf{v}_1 -w_1\mathbf{v}_0, -w_0w_1-\mathbf{v}_0\cdot \mathbf{v}_1)</script><p>当需要在两个旋转之间进行增量旋转时，这一点很有效。</p>
+<p>特别是当我们想要确定一个介于两个给定旋转之间的旋转，我们可以计算增量旋转，取角度的一部分计算新的旋转。这个过程称之为球线性插值或者缩写为$slerp$，并由以下算法给出</p>
+<p><img src="/img/cvaa2-1-9.png" alt="cvaa2-1-9" title="cvaa2-1-9"></p>
+<p>注意到Shoemake在这里给出了两个公式而不是一个。第一个式子用$\mathbf{q}^\alpha_r$与原四元数相乘</p>
+<script type="math/tex; mode=display">
+\mathbf{q}_{2}=\mathbf{q}_{r}^{\alpha} \mathbf{q}_{0},</script><p>同时，第二个式子将四元数视为球体上的4维向量并利用</p>
+<script type="math/tex; mode=display">
+\bf {q}_{2}=\frac{\operatorname{s i n} ( 1-\alpha) \theta} {\operatorname{s i n} \theta} \bf {q}_{0}+\frac{\operatorname{s i n} \alpha\theta} {\operatorname{s i n} \theta} \bf {q}_{1},</script><p>其中$\theta=\operatorname{c o s}^{-1} ( \bf {q}_{0} \cdot \bf {q}_{1} )$，点乘直接作用在两个四元数四维向量之间。所有这些公式都给出了类似的结果，但需要注意当$q_{0}$和$q_{1}$很接近时的情况，这就是为什么我更喜欢用一个反正切来建立旋转角。</p>
+<h4 id="哪一种旋转的表示方法更好？"><a href="#哪一种旋转的表示方法更好？" class="headerlink" title="哪一种旋转的表示方法更好？"></a>哪一种旋转的表示方法更好？</h4><p>三维旋转的表示法的旋转取决于实际的应用。</p>
+<p>轴/角表示法是最简的，因此不需要额外的参数约束（在每次更新后不需要重新归一化）。如果角的单位是度，这种方法能够更加容易理解位姿（例如，绕$x$轴旋转90°）也更容易表示精确的旋转。当角的单位是弧度，$R$关于$\omega$的导数能够很容易计算。</p>
+<p>四元数，在另一方面，如果你想要追踪一个移动的相机，效果会 更好，因为在表示上不存在不连续性。其在旋转插值和进行链式刚性变换时也更简单。</p>
+<p>我通常更青睐使用四元数，但是用增量旋转来更新它们的估计，这将会在11.2.2节进行介绍。</p>
+<h3 id="2-1-4三维至二维投影"><a href="#2-1-4三维至二维投影" class="headerlink" title="2.1.4三维至二维投影"></a>2.1.4三维至二维投影</h3><p>既然我们了解了如何表示二维和三维图元以及如何对它们进行空间转换，我们需要说明三维图元是如何投影到图像平面的。我们可以用一个线性的三维到二维的投影矩阵完成。最简单的模型是正交法，其不需要除法就能够得到最终的（非齐次）结果。更为常用的是透视法，因为其能够更加精确的表示实际的相机。</p>
+<p><img src="/img/cvaa2-1-10.png" alt="cvaa2-1-10" title="cvaa2-1-10"></p>
+<h4 id="正交法和准透视"><a href="#正交法和准透视" class="headerlink" title="正交法和准透视"></a>正交法和准透视</h4><p>一个正交投影仅仅是将三维坐标$\mathrm{p}$的$z$分量去掉以获得二维点$\mathrm{x}$。（在这一节中，我们用<script type="math/tex">\mathrm{p}</script>表示三维点，用$\mathrm{x}$表示二维点）这能够写为</p>
+<script type="math/tex; mode=display">
+\mathbf{x}=[ \mathbf{I}_{2 \times2} | \mathbf{0} ] \ \mathbf{p}.</script><p>如果我们利用齐次坐标，我们可以得到</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}}=\left[ \begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ \end{matrix} \right] \mathbf{\tilde{p}},</script><p>即我们将$z$分量去掉但是保留了$\omega$分量。正交投影是一个长焦镜头和那些的深度相对它们到相机距离很小的物体的近似模型。它只适用于远心镜头。</p>
+<p>在实际中，世界坐标系（可能以米为单位测量尺寸）需要被缩放来适应一个图像传感器（物理测量单位为毫米，但是最终单位为像素）。正因如此，缩放正交投影在实际中更常用</p>
+<script type="math/tex; mode=display">
+\mathbf{x}=[ s \mathbf{I}_{2 \times2} | \mathbf{0} ] \ \mathbf{p}.</script><p>这个模型等同于首先将世界坐标系中的点投影到一个局部正面平行的图像平面，然后用常规透视投影对图像进行缩放。对于场景中的所有部分来说，缩放可以是相同的，或者对于那些独立建模的物体来说可以是不同的。更重要的是，当从运动估计结构时，缩放能够帧到帧地变化，这可以更好地建模物体接近相机时发生的比例变化。</p>
+<p>缩放正交投影是重建远离相机的物体的三维形状的流行模型，因为它极大地简化了某些计算。例如，我们能用简单的最小二乘估计位姿（相机方向）。在正交投影下，能够利用因数分解（奇异值分解）同时估计结构和运动，正如11.4.1节中讨论的。</p>
+<p>一个相近的投影模型是准透视。在这个模型中，物体的点再次首先投影到一个局部正面平行的图像平面。然而，在这里不在是正交地投影到这个平面，而是投影到平行于物体中心的视线上。接下来就是通常投影到最终的图像平面，这也相当于一个缩放，因此，这两种投影的组合是仿射的，能够写作</p>
+<script type="math/tex; mode=display">
+\bf{\tilde{x}}=\left[ \begin{matrix} a_{0 0} & a_{0 1} & a_{0 2} & a_{0 3} \\ a_{1 0} & a_{1 1} & a_{1 2} & a_{1 3} \\ 0 & 0 & 0 & 1\\ \end{matrix} \right] \bf{\tilde{p}}.</script><p>注意到在三维中的平行线在投影后是如何保持平行的。准透视相较于缩放正交提供了一个更加精确的投影模型，不会增加每个像素透视分割的复杂性，这使得传统的因数分解法失效。</p>
+<h4 id="透视"><a href="#透视" class="headerlink" title="透视"></a>透视</h4><p>在计算机图形学和计算机视觉中最常用的投影是真实三维透视。在这，点通过除以它们的$z$分量投影到图像平面上。使用非齐次坐标，这可以写成</p>
+<script type="math/tex; mode=display">
+\bar{\mathbf{x}}=\mathcal{P}_{z} ( \mathbf{p} )=\left[ \begin{matrix} x / z \\ y / z \\ 1 \\ \end{matrix} \right].</script><p>在齐次坐标系中，投影是一个简单的线性形式</p>
+<script type="math/tex; mode=display">
+\mathbf{\tilde{x}}=\left[ \begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ \end{matrix} \right] \mathbf{\tilde{p}},</script><p>即，我们去掉了$\mathbf{p}$中的$\omega$分量。因此，在投影后，不可能从图像中恢复三维点的距离，这对于二维图像传感器来说是有意义的。</p>
+<p>在计算机图形学系统中经常看到一种形式是两步的投影，第一个将三维坐标投影到标准化的设备坐标$( x, y, z ) \in[-1, 1 ] \times[-1, 1 ] \times[ 0, 1 ]$，然后使用视口转换将这些坐标重新缩放到整数像素坐标。然后（初始）透视投影用一个$4\times 4$的矩阵表示</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}=\left[ \begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & -z_{\mathrm{f a r}} / z_{\mathrm{r a n g e}} & z_{\mathrm{n e a r}} z_{\mathrm{f a r}} / z_{\mathrm{r a n g e}} \\ 0 & 0 & 1 & 0 \\ \end{matrix} \right] \tilde{\mathbf{p}},</script><p>其中$z_{\mathrm{n e a r}}$和$z_{\mathrm{far}}$是近和远$z$截平面，且$z_{\mathrm{range}}=z_{\mathrm{far}}-z_{\mathrm{n e a r}}$。注意到前两行事实上使用焦距和纵横比进行缩放，使得可见光映射到$( x, y, z ) \in[-1, 1 ]^{2}$。保持第三行而不是舍去的原因是，例如$z$缓冲这样的可视化操作对于每一个正在渲染的图形元素来说都需要一个深度。</p>
+<p>如果我们设置$z_{\mathrm{n e a r}}=1$，$z_{f a r} \to\infty$，并改变第三行的符号，则归一化的屏幕向量的第三个元素成为了逆深度，即视差。在许多情况下这会变得非常简单，因为对于室外运动的相机来说，相机的逆深度通常相比直接的三维距离是一个更好的参数化。</p>
+<p>尽管一个常规的二维图像传感器无法测量到一个平面点的距离，距离传感器和立体匹配算法能够计算这样的值。然后就能够很简单地利用一个$4\times 4$的逆矩阵，将基于传感器的深度或者视差值$d$直接映射回三维的位置。如果我们用一个满秩的$4\times 4$矩阵来表示透视投影，我们就能做到这一点。</p>
+<h4 id="相机内参"><a href="#相机内参" class="headerlink" title="相机内参"></a>相机内参</h4><p>一旦我们利用一个投影矩阵通过一个理想的小孔投影出一个三维点，我们仍然必须要根据像素传感器间隔和传感器平面相对于原点的位置转换得到的坐标结果。下图展示了所涉及到的几何关系。</p>
+<p><img src="/img/cvaa2-1-11.png" alt="cvaa2-1-11" title="cvaa2-1-11"></p>
+<p>在这一小节，我们首先提出一个用传感单应性矩阵$\mathbf{M}_{s}$从二维像素点坐标到三维射线的映射，因为这更容易用物理上可测量的量来解释。然后我们会将这些量和更常用的相机内参矩阵$\mathbf{K}$联系起来，内参矩阵用来将三维相机中心点$\mathbf{P}_{c}$投影到二维像素坐标$\mathbf{\tilde{x}}_{s}$。</p>
+<p>图像传感器返回由整数坐标$(x_s,y_s)$索引的像素值，通常坐标从图像的左上角开始然后向右下方移动。（并非所有的图像库都遵循这个约定，但是对其他坐标系统的调整是很简单的）。为了将像素中心映射到三维坐标，我们首先用像素间隔$(s_x,s_y)$对$(x_s,y_s)$缩放（优势对固态传感器来说用微米表示），然后用原点$c_s$和一个三维旋转矩阵$\mathbf{R}_s$来描述传感器阵列相对于相机投影中心<script type="math/tex">\mathbf{O}\_c</script>的方向。</p>
+<p>结合起来的二维到三维的投影可以写为</p>
+<script type="math/tex; mode=display">
+\mathbf{p}=\left[ \begin{matrix} \mathbf{R}_{s} & \mathbf{c}_{s} \\ \end{matrix} \right] \left[ \begin{matrix} s_{x} & 0 &0 \\ 0 & s_{y} & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 1 \\ \end{matrix} \right] \left[ \begin{matrix} x_{s} \\ y_{s} \\ 1 \\ \end{matrix} \right]=\mathbf{M}_{s} \mathbf{\bar{x}}_{s}.</script><p>$3\times 3$矩阵$\mathbf{M}_{s}$的前两列是沿$x_s$和$y_s$方向图像像素阵列中单位步骤对应的三维向量，第三列是三维图像阵列的原点$c_s$。</p>
+<p>矩阵$\mathbf{M}_{s}$是由八个未知参数确定的：三个参数描述了旋转$\mathbf{R}_s$，三个参数描述了平移$c_s$，和两个缩放因子$(s_x,s_y)$。注意到我们在这里忽略了图像平面上两个轴之间倾斜的可能性，因为固态制造技术使得这一点可以忽略不记。在实际中，除非我们对传感器间隔或传感器方向有非常精确的认识，否则只有七个自由度，因为如果仅仅基于外部的图像测量，传感器到远点的距离不能够从传感器间隔中分离出来。</p>
+<p>然而，用所需的七个自由度（即经过合适的重新缩放后，前两列是正交的）估计一个相机模型$\mathbf{M}_{s}$是很重要的，所以大多数的从业者会假定一个一般的的齐次矩阵形式。</p>
+<p>三维像素中心$\mathbf{P}$和三维相机中心点$\mathbf{P}_{c}$之间的关系由一个未知的缩放给定，$\mathbf{P}=s\mathbf{P}_{c}$。因此，我们可以将$\mathbf{P}_{c}$和一个齐次形式的像素地址$\mathbf{\tilde{x}}_{s}$之间的完整投影写为</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{s}=\alpha\mathbf{M}_{s}^{-1} \mathbf{p}_{c}=\mathbf{K} \mathbf{p}_{c}.</script><p>$3\times 3$的矩阵$\mathbf{K}$称为标定矩阵，描述了相机的内参（相对于相机在空间中的方向，这称之为外参）。</p>
+<p>综上所述，我们知道在理论上$\mathbf{K}$有七个自由度，在实际上有八个自由度。但为什么在许多三维视觉和多视角几何的教科书中将$\mathbf{K}$视为一个五自由度的上三角矩阵呢？</p>
+<p>虽然在这些书中通常没有明确的说明，但这是因为我们不能够仅仅通过外部的测量就恢复完整的$\mathbf{K}$矩阵。当基于外部三维点或者其他测量方法对相机进行标定时，我们最终要利用一系列测量方法同时估计内参（$\mathbf{K}$）和外参$(\mathbf{R,t})$</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{s}=\mathbf{K} \left[ \begin{matrix} \mathbf{R} & \mathbf{t} \\ \end{matrix} \right] \mathbf{p}_{w}=\mathbf{P} \mathbf{p}_{w},</script><p>其中$\mathbf{p}_{w}$是已知的三维世界坐标，且</p>
+<script type="math/tex; mode=display">
+\mathbf{P}=\mathbf{K} [ \mathbf{R} |\mathbf{t} ]</script><p>被称之为相机矩阵。观察这个等式，我们发现我们能用$\mathbf{R}_1$后乘$\mathbf{K}$，并用$\mathbf{R}^T_1$前乘$[ \mathbf{R} |\mathbf{t} ]$，最终仍然得到一个有效的标定。所以，仅仅基于图像测量不能够知道传感器的正确方向和正确的相机内参。</p>
+<p>为$\mathbf{K}$选择一个上三角形式似乎是常用的。给定一个完整的$3\times 4$的相机矩阵$\mathbf{P}=\mathbf{K} [ \mathbf{R} |\mathbf{t} ]$，我们可以用QR因数分解计算一个上三角$\mathbf{K}$矩阵。（请注意这些术语上的不幸冲突：在矩阵代数教科书中，$\mathbf{R}$表示一个上三角（对角线右侧）矩阵；在计算机视觉中，$\mathbf{R}$是一个正交旋转。）</p>
+<p>这有几种方法可以写出$\mathbf{K}$的上三角形式。其中一种可能的形式为</p>
+<script type="math/tex; mode=display">
+\mathbf{K}=\left[ \begin{matrix} f_{x} & s & c_{x} \\ 0 & f_{y} & c_{y} \\ 0 & 0 & 1 \\ \end{matrix} \right],</script><p>其中使用了传感器$x$和$y$维度上独立的焦距$f_{x}$和$f_{y}$。$s$对因传感器未能垂直于光轴安装而引起的传感器轴之间任意可能的倾斜进行编码。$(c_{x},c_{y})$描述了像素坐标中图像的中心。图像的中心在计算机视觉文献中通常也称之为主点，尽管在光学中，主点通常是透镜中的三维点，位于主平面与主（光）轴相交的位置。另一种可能的形式为</p>
+<script type="math/tex; mode=display">
+\mathbf{K}=\left[ \begin{matrix} f & s & c_{x} \\ 0 & af & c_{y} \\ 0 & 0 & 1 \\ \end{matrix} \right],</script><p>其中缩放因子$a$更加明确，且在这使用了一个共同的焦距.</p>
+<p>在实际中，对于许多应用，通过设置$a=1$和$s=0$可以得到一个更简单的形式</p>
+<script type="math/tex; mode=display">
+\mathbf{K}=\left[ \begin{matrix} f & 0 & c_{x} \\ 0 & f & c_{y} \\ 0 & 0 & 1 \\ \end{matrix} \right],</script><p>通常，设置原点大约在图像的中心，（即$( c_{x}, c_{y} )=( W / 2, H / 2 )$,其中$W$和$H$分别是图像的宽和高）能够获得一个只有一个参数不知道（即焦距$f$）的实用的相机模型。 </p>
+<p><img src="/img/cvaa2-1-12.png" alt="cvaa2-1-12" title="cvaa2-1-12"></p>
+<p>上图展示了这些量如何称为一个简化的成像模型中的一部分。注意到现在我们现在已经将成像平面放在节点（透镜的投影中心）的前面。$y$轴也被翻转以得到一个与大多出成像库处理垂直（行）坐标像兼容的坐标系。</p>
+<h4 id="关于焦距的说明"><a href="#关于焦距的说明" class="headerlink" title="关于焦距的说明"></a>关于焦距的说明</h4><p>如何表示焦距的问题经常会在实现计算机视觉算法和讨论结果时导致困惑。这是因为焦距取决于用来测量像素的单位。</p>
+<p>如果我们用整数值来衡量像素坐标，例如$[ 0, W ) \times[ 0, H )$,那么焦距$f$和相机中心$(c_{x},c_{y})$就能够用像素值表示。那么这些量和摄像师使用的更熟悉的焦距有什么关系呢？ </p>
+<p><img src="/img/cvaa2-1-13.png" alt="cvaa2-1-13" title="cvaa2-1-13"></p>
+<p>上图显示了焦距$f$，传感器宽度$W$，水平视角$\theta_H$之间的关系，其遵循公式</p>
+<script type="math/tex; mode=display">
+\operatorname{t a n} {\frac{\theta_{\mathrm{H}}} {2}}={\frac{W} {2 f}} \qquad{\mathrm{o r}} \qquad f={\frac{W} {2}} \left[ \operatorname{t a n} {\frac{\theta_{\mathrm{H}}} {2}} \right]^{-1}.</script><p>对于一个常见的35mm胶片相机，其主动曝光面积为24mm×36mm，可以得到$W=36mm$，因此$f$也用毫米进行表示。例如，通常配备单反（单镜头反射）相机的普通镜头焦距是50mm，这是一个较好的焦距，与此同时85mm是一个标准的肖像摄影的焦距。既然我们操作的是数字图像，那用像素来表示$W$会更加便捷，使得焦距$f$能在标定矩阵$\mathbf{K}$中直接使用。</p>
+<p>另一种可能性是对像素坐标进行缩放使得它们沿着较长的图像维度的一边限制在$[-1,1)$之间，在较短的一边限制在$[-a^{-1},a^{-1})$之间，$a$是图像纵横比（与之前介绍的传感器纵横比相反）。这可以通过修改后的标准化设备坐标实现</p>
+<p>这样做的好处是，焦距$f$和图像中心$(c_{x},c_{y})$能够独立于图像分辨率，这在使用多分辨率图像处理算法（例如图像金字塔）时很有用。使用$S$而不是$W$也使得景观（水平）和肖像（垂直）照片的焦距相同，就像在35mm摄影中的那样。（在一些计算机图形学教科书和系统中，标准化设备坐标限制在$[-1,1]\times[-1,1]$，需要用两个不同的焦距来描述相机内参）设置$S=W=2$，我们可以得到更简单的关系</p>
+<script type="math/tex; mode=display">
+x_{s}^{\prime}=( 2 x_{s}-W ) / S \quad\mathrm{a n d} \quad y_{s}^{\prime}=( 2 y_{s}-H ) / S, \qquad\mathrm{w h e r e} \qquad S=\operatorname* {m a x} ( W, H ).</script><p> 各种焦距表示方法之间的转换是直接的。例如，从一个无单位的$f$到一个单位为像素的$f$，只需要乘$W/2$，从一个单位为像素的$f$转换为等同于35mm的焦距，乘18mm。</p>
+<h4 id="相机矩阵"><a href="#相机矩阵" class="headerlink" title="相机矩阵"></a>相机矩阵</h4><p>既然我们已经展示了如何对标定矩阵$\mathbf{K}$进行参数化，我们可以将相机内参和外参放到一起来获得一个单独的3×4的相机矩阵</p>
+<script type="math/tex; mode=display">
+\mathbf{P}=\mathbf{K} \left[ \mathbf{R}~\mathbf{t} \right].</script><p>通常使用一个可转置的4×4的矩阵，这可以通过不省略$\mathbf{P}$矩阵的最后一行得到</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{P}}=\left[ \begin{matrix} \mathbf{K} & \mathbf{0} \\ \mathbf{0}^{T} & 1 \\ \end{matrix} \right] \left[ \begin{matrix} \mathbf{R} & \mathbf{t} \\ \mathbf{0}^{T} & 1 \\ \end{matrix} \right]=\tilde{\mathbf{K}} \mathbf{E},</script><p>其中$\mathbf{E}$是一个三维的刚体（欧几里得）转换，$\tilde{\mathbf{K}}$是满秩的标定矩阵。4×4的相机矩阵$\tilde{\mathbf{P}}$能够用来将三维世界坐标$\mathbf{\tilde{p}}_{w}=( x_{w}, y_{w}, z_{w}, 1 )$映射到屏幕坐标（加上视差），$\mathbf{x}_{s}=( x_{s}, y_{s}, 1, d )$，</p>
+<script type="math/tex; mode=display">
+\mathbf{x}_{s} \sim\tilde{\mathbf{P}} \mathbf{\bar{p}}_{w},</script><p>其中~表示按比例计算的相等。注意到在乘$\tilde{\mathbf{P}}$之后，向量被向量的第三个元素除后得到一个标准化的形式$\mathbf{x}_{s}=( x_{s}, y_{s}, 1, d )$。</p>
+<h4 id="平面加视差（投影深度）"><a href="#平面加视差（投影深度）" class="headerlink" title="平面加视差（投影深度）"></a>平面加视差（投影深度）</h4><p>一般来说，在使用4×4的矩阵$\tilde{\mathbf{P}}$时，我们可以自由地根据我们的目的来将最后一行重新映射到其他位置（而不仅仅是将视差标准解释为逆深度）。让我们重写$\tilde{\mathbf{P}}$的最后一行，为$\mathbf{p}_{3}=s_{3} [ \mathbf{\hat{n}}_{0} \mathbf{c}_{0} ]$，其中$\left| \mathbf{\hat{n}}_{0} \right|=1$。我们可以得到以下等式</p>
+<script type="math/tex; mode=display">
+d=\frac{s_{3}} {z} ( \bf{\hat{n}}_{0} \cdot \bf{p}_{w}+c_{0} ),</script><p>其中$z=\bf {p}_{2} \cdot \bf{\bar{p}}_{w}=\bf {r}_{z} \cdot\left( \bf{\bar{p}}_{w}{\bf {c} \right)$是$\bf{p}_{w}$沿着光轴$Z$到相机中心$C$的距离。</p>
+<p>所以我们可以将$d$描述为投影视差或者一个三维场景点$\bf{p}_{w}$到参考平面$\mathbf{\hat{n}}_{0} \cdot\mathbf{p}_{w}+c_{0}=0$的投影深度。（投影深度在重建算法中优势也称之为视差，所用术语为平面加视差）。设定$\mathbf{\hat{n}}_{0}=0$和$c_{0}=1$，即把参考平面放在无穷远处，就可以得到更标准的$d=1/z$版本的视差。</p>
+<p>另一种观察的方法是将$\tilde{\mathbf{P}}$矩阵求逆以至于我们可以将像素加上视差直接映射回三维点</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{p}}_{w}=\tilde{\mathbf{P}}^{-1} \mathbf{x}_{s}.</script><p>一般来说，我们可以选择$\tilde{\mathbf{P}}$来获得任何简易的形式，即用一个随机投影对空间采样。这在设置多视图立体重建算法时特别方便，因为这使得我们在空间中用各种采样扫掠一系列平面，从而最佳匹配感知到的图像运动。</p>
+<h4 id="从一个相机映射到另一个相机"><a href="#从一个相机映射到另一个相机" class="headerlink" title="从一个相机映射到另一个相机"></a>从一个相机映射到另一个相机</h4><p>当我们从不同的相机位置或者方向拍摄了两张三维场景中的图像会发生什么呢？</p>
+<p><img src="/img/cvaa2-1-14.png" alt="cvaa2-1-14" title="cvaa2-1-14"></p>
+<p>使用一个满秩的4×4相机矩阵$\tilde{\mathbf{P}}=\tilde{\mathbf{K}}\mathbf{E}$，我们可以写出从世界到屏幕坐标的投影</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{0} \sim\tilde{\mathbf{K}}_{0} \mathbf{E}_{0} \mathbf{p}=\tilde{\mathbf{P}}_{0} \mathbf{p}.</script><p>假设我们知道一幅图像上一个像素的z缓存或者视差值$d_0$，我们可以使用下式计算三维点位置$\mathbf{p}$</p>
+<script type="math/tex; mode=display">
+\mathbf{p} \sim\mathbf{E}_{0}^{-1} \tilde{\mathbf{K}}_{0}^{-1} \tilde{\mathbf{x}}_{0}</script><p>然后将其投影到另一个图像生成区域</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{1} \sim\tilde{\mathbf{K}}_{1} \mathbf{E}_{1} \mathbf{p}=\tilde{\mathbf{K}}_{1} \mathbf{E}_{1} \mathbf{E}_{0}^{-1} \tilde{\mathbf{K}}_{0}^{-1} \tilde{\mathbf{x}}_{0}=\tilde{\mathbf{P}}_{1} \tilde{\mathbf{P}}_{0}^{-1} \tilde{\mathbf{x}}_{0}=\mathbf{M}_{1 0} \tilde{\mathbf{x}}_{0}.</script><p>不幸的是，在常见的摄影图像中，我们通常不能够得到像素的深度坐标。然而，对于一个平面景物，我们可以用一个一般的平面等式$\mathbf{\hat{n}}_{0} \cdot\mathbf{p}_{w}+c_{0}$替换掉$\mathbf{P}_{0}$的最后一行，能够将平面上的点映射到$d_0=0$的值上。所以，如果我们设置$d_0=0$，我们可以忽略$\mathbf{M}_{1 0}$的最后一列和最后一行，因为我们不关心最终的z缓冲深度。因此映射的公式可以简化为</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{1} \sim\tilde{\mathbf{H}}_{1 0} \tilde{\mathbf{x}}_{0},</script><p>其中$\tilde{\mathbf{H}}_{1 0}$是一个3×3的单应性矩阵，$\tilde{\mathbf{x}}_{1}$和$\tilde{\mathbf{x}}_{0}$现在是二维的齐次坐标（即三维向量）。这证明了使用8参数单应性矩阵作为平面场景拼接的一般对齐模型。</p>
+<p>在另一种特殊的情况下，我们不需要知道深度来执行相机间的映射，就是当相机仅发生旋转时，即当$\mathbf{t}_0=\mathbf{t}_1$。在这种情况下，我们可以写出</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{x}}_{1} \sim\mathbf{K}_{1} \mathbf{R}_{1} \mathbf{R}_{0}^{-1} \mathbf{K}_{0}^{-1} \tilde{\mathbf{x}}_{0}=\mathbf{K}_{1} \mathbf{R}_{1 0} \mathbf{K}_{0}^{-1} \tilde{\mathbf{x}}_{0},</script><p>可以再次用一个3×3的单应性矩阵表示。如果我们假设标定矩阵已知纵横比和投影中心，这个单应性矩阵就能够用旋转量和两个未知的焦距进行参数化。这种特殊的公式通常用于图像拼接的应用。</p>
+<h4 id="对象中心投影"><a href="#对象中心投影" class="headerlink" title="对象中心投影"></a>对象中心投影</h4><p>当使用长焦镜头时，我们很难仅仅从图像测量对焦距进行有效的估计。这是因为焦距和到目标的距离是高度相关的，很难将这两者的影响分离开来。例如，通过变焦长焦镜头看到的物体的比例变换可以是由于变焦变换，也可以是由于相对于用户的运动。（这种效果在阿尔佛雷德·希区柯克的电影《迷魂记》中的一些场景中得到了戏剧性的应用，在这些场景中，变焦和镜头运动的同时变换产生了一种令人不安的效果。）</p>
+<p>如果我们写出对应简单的标定矩阵$\mathbf{K}$的投影方程，这种歧义就会变得更加清晰</p>
+<script type="math/tex; mode=display">
+\begin{array} {l} x_{s}=f \frac{\bf {r}_{x} \cdot \bf {p}+t_{x}} {\bf {r}_{z} \cdot \bf {p}+t_{z}}+c_{x} \\ y_{s}=f \frac{\bf {r}_{y} \cdot\bf {p}+t_{y}} {\bf {r}_{z} \cdot\bf {p}+t_{z}}+c_{y}, \\ \end{array}</script><p>其中$\bf {r}_{x}$，$\bf {r}_{y}$和$\bf {r}_{z}$是$\mathbf{R}$的三行。如果到物体中心的距离$t_{z} \gg\left| \mathbf{p} \right|$(物体的尺寸)，分母就能够近似为$t_z$，投影对象的整体比例就取决于$f$与$t_z$的比。这样就很难解开这两个量了。</p>
+<p>为了更清楚地看到这一点，让$\eta_{z}=t_{z}^{-1}$，$s=\eta_{z}f$。然后我们可以将上述等式重写为</p>
+<script type="math/tex; mode=display">
+x_{s}=s \frac{\mathbf{r}_{x} \cdot\mathbf{p}+t_{x}} {1+\eta_{z} \mathbf{r}_{z} \cdot\mathbf{p}}+c_{x}</script><script type="math/tex; mode=display">
+y_{s}=s \frac{\mathbf{r}_{y} \cdot\mathbf{p}+t_{y}} {1+\eta_{z} \mathbf{r}_{z} \cdot\mathbf{p}}+c_{y}</script><p>如果我们在观察一个已知的对象时（即已知三维坐标$\mathbf{p}$），就可以对投影进行可靠的估计。距离的倒数现在能够从的古籍中解耦出来，且在对象旋转时能够从透视缩短量中进行估计。更进一步，当焦距更长时，即投影模型变得正交时，就不需要用一个正交的模型来替代一透视成像模型了，因为在这里可以使用相同的方程，有$\eta_{z} \to 0$（相反的，$f$和$t_z$趋向于无穷）。这时的我们能够在正交重建技术（例如因数分解）和他们的投影/透视对应技术之间建立一种自然的联系。 </p>
+<h3 id="2-1-5镜头畸变"><a href="#2-1-5镜头畸变" class="headerlink" title="2.1.5镜头畸变"></a>2.1.5镜头畸变</h3><p>上述的成像模型均假设相机遵循一个线性的投影模型，在世界中的直线在图像中仍为直线。（这是将线性矩阵运算应用于齐次坐标的一个自然结果）不幸的是，许多广角镜头有明显的径向畸变，这在直线投影中表现为一个可见的曲率。（阅读2.2.3节获得关于透镜光学，包括色差的更详细的讨论）除非这种畸变是可考虑的，否则就不能创造十分精确的逼真的重建。例如，在不考虑径向畸变时的图像拼接构建通常会由于像素混合前相应特征的配准错误而表现出模糊。</p>
+<p>幸运的是，在实际中补偿径向畸变不会很困难。对于大多数镜头来说，一个简单的四次的畸变模型就能够得到好的结果。令$(x_c,y_c)$为透视除法之后和用焦距$f$缩放及用图像中心$(c_x,c_y)$变换之前的像素坐标，即</p>
+<script type="math/tex; mode=display">
+\begin{aligned} x_{c} & =\frac{\mathbf{r}_{x} \cdot\mathbf{p}+t_{x}} {\mathbf{r}_{z} \cdot\mathbf{p}+t_{z}} \\ y_{c} & =\frac{\mathbf{r}_{y} \cdot\mathbf{p}+t_{y}} {\mathbf{r}_{z} \cdot\mathbf{p}+t_{z}}. \\ \end{aligned}</script><p>径向畸变的模型表示，观察到的图像中的坐标向着（桶失真）或远离（枕失真）图像中心移动，与它们径向距离成正比。</p>
+<p><img src="/img/cvaa2-1-15.png" alt="cvaa2-1-15" title="cvaa2-1-15"></p>
+<p>最简单的径向畸变的模型可以用低阶的多项式表示，例如</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \hat{x}_{c} & =x_{c} ( 1+\kappa_{1} r_{c}^{2}+\kappa_{2} r_{c}^{4} ) \\ \hat{y}_{c} &=y_{c} ( 1+\kappa_{1} r_{c}^{2}+\kappa_{2} r_{c}^{4} ), \\ \end{aligned}</script><p>其中$r_{c}^{2}=x_{c}^{2}+y_{c}^{2}$和$k_1$和$k_2$称之为径向畸变参数。这个模型也包括一个切向分量来解释镜头的中心偏移，是由布朗首次在摄影测量文件中提出来的，所以有时也称之为布朗或布朗-康雷迪模型。然而，畸变的切向分量通常被忽略，因为它们可能会导致不太稳定的估计。</p>
+<p>在径向畸变的步骤之后，最终的像素坐标可以用下式进行计算</p>
+<script type="math/tex; mode=display">
+\begin{aligned} x_{s} &=f \hat{x}_{c}+c_{x} \\ y_{s} &=f \hat{y}_{c}+c_{y}. \\ \end{aligned}</script><p>给定一个镜头，很多技术能够用来估计径向畸变的参数，这将在11.1.4节中讨论。</p>
+<p>有时上述的简化模型不能够对复杂镜头（尤其是在非常大的广角）产生的真实畸变进行足够精确的建模。一个更加完整的分析模型也包括切向畸变和中心偏移畸变。</p>
+<p>鱼眼镜头需要一个模型，不同于径向畸变的传统多项式模型。鱼眼镜头近似为远离光轴角度的等距投影</p>
+<script type="math/tex; mode=display">
+r=f\theta,</script><p>这和极投影是一样的。由于中心（像素）距离和视角之间主要是线性映射，这种镜头有时称为$f-\theta$镜头，这可能是流行的RICOH THETA360°相机得名的地方。熊和图尔库夫斯基描述了如何通过在$\phi$中添加一个额外的二次修正项来拓展模型，以及如何使用一种直接的（基于强度的）非线性最小化算法从一组重叠的鱼眼图像中估计未知参数（投影中心，缩放因子等）。</p>
+<p>对于更大更不规则的畸变来说，利用样条的参数化畸变模型可能是必要的。如果透镜不只有一个投影中心，可能有必要分别对每个像素对应的三维线进行建模。这些技术中一些在11.1.4节中有更加详细的介绍，讨论了如何对镜头畸变进行标定。</p>
+<p>还有一个经常被掩盖的微妙的问题与简单的径向畸变模型有关。我们已经介绍了一个透视投影和最终传感器阵列投影步骤之间的非线性。所以，我们一般来说，我们不能用一个旋转来后乘一个随机的3×3的矩阵来将其变为上三角形式并将其容纳进全局的旋转中去。然而，这种情况并不像一开始出现的那样坏。对于许多应用来说，保持简化的对角形式仍是一个适当的模型。更进一步，如果我们修正了径向和其他畸变，得到了能够保持直线的精度，那么我们本质上就是将传感器转换回一个线性成像器，之前的分解仍然适用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZJJLowKey">Zhu Jiajun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZJJLowKey/article/details/131674056?spm=1001.2014.3001.5501">https://blog.csdn.net/ZJJLowKey/article/details/131674056?spm=1001.2014.3001.5501</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Zhu Low Key</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%EF%BC%9A%E7%AE%97%E6%B3%95%E5%92%8C%E5%BA%94%E7%94%A8%EF%BC%88%E7%AC%AC%E4%BA%8C%E7%89%88%EF%BC%89/">计算机视觉：算法和应用（第二版）</a></div><div class="post-share"><div class="social-share" data-image="/img/cvaacover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/12/10/course-undergraduate/" title="学科资料（百度网盘链接）——本科"><img class="cover" src="/img/1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">学科资料（百度网盘链接）——本科</div></div><div class="info-2"><div class="info-item-1">提示所有文件均来自于博主大学期间学习时收集的课件笔记等，每一个文件的制作与整理都倾注了老师及博主的心血，希望对大家的学习有所帮助，部分科目课件或笔记时间久远有所丢失请谅解。禁止将其中的任何文件用于商业用途，仅供学习使用！ 总链接：https://pan.baidu.com/s/1eEEip_rFuyLBo6lG2qb1CQ?pwd=fpd4提取码: fpd4  按年级分大一上https://pan.baidu.com/s/1ywqPA_lXboM4KTwS03_LkQ?pwd=katw  提取码: katw  大一下https://pan.baidu.com/s/1RPY9myvMeWgmV9tFao43EQ?pwd=mx4b  提取码: mx4b  大二上https://pan.baidu.com/s/1CRqcZtvoe3I0PqspIbDOpw?pwd=te9p  提取码: te9p  大二下https://pan.baidu.com/s/1w7NNdGyhqSHVyZgaMqAxSw?pwd=ygud  提取码: ygud...</div></div></div></a><a class="pagination-related" href="/2024/12/08/EWAVolumeSplatting/" title="EWA Volume Splatting"><img class="cover" src="/img/EWA1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">EWA Volume Splatting</div></div><div class="info-2"><div class="info-item-1">elliptical Gaussian kernels 椭圆高斯核 Splatting algorithms interpret volume data as a set of particles that are absorbing and emitting light. 泼溅算法将体素数据解释为一组吸收和发射光的粒子。 Our method is based on a novel framework to compute the footprint function, which relies on the transformation of the volume data to so-called ray space. This transformation is equivalent to perspective projection. By using its local affine approximation at each voxel, we derive an analytic expression for the EWA footprint in...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E4%B9%A6PDF%E9%93%BE%E6%8E%A5%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">原书PDF链接：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%87%A0%E4%BD%95%E5%9B%BE%E5%85%83%E4%B8%8E%E5%8F%98%E6%8D%A2"><span class="toc-number"></span> <span class="toc-text">2.1 几何图元与变换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E7%82%B9"><span class="toc-number">0.1.</span> <span class="toc-text">二维点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E7%BA%BF"><span class="toc-number">0.2.</span> <span class="toc-text">二维线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E5%9C%86%E9%94%A5%E6%9B%B2%E7%BA%BF"><span class="toc-number">0.3.</span> <span class="toc-text">二维圆锥曲线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E7%82%B9"><span class="toc-number">0.4.</span> <span class="toc-text">三维点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E5%B9%B3%E9%9D%A2"><span class="toc-number">0.5.</span> <span class="toc-text">三维平面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E7%9B%B4%E7%BA%BF"><span class="toc-number">0.6.</span> <span class="toc-text">三维直线</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E7%BB%B4%E4%BA%8C%E6%AC%A1%E6%9B%B2%E9%9D%A2"><span class="toc-number">0.7.</span> <span class="toc-text">三维二次曲面</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1%E4%BA%8C%E7%BB%B4%E5%8F%98%E6%8D%A2"><span class="toc-number">1.</span> <span class="toc-text">2.1.1二维变换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E7%A7%BB"><span class="toc-number">1.1.</span> <span class="toc-text">平移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC-%E5%B9%B3%E7%A7%BB"><span class="toc-number">1.2.</span> <span class="toc-text">旋转+平移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%A9%E6%94%BE%E6%97%8B%E8%BD%AC"><span class="toc-number">1.3.</span> <span class="toc-text">缩放旋转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84"><span class="toc-number">1.4.</span> <span class="toc-text">仿射</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%95%E5%BD%B1"><span class="toc-number">1.5.</span> <span class="toc-text">投影</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E5%8F%98%E6%8D%A2%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">1.6.</span> <span class="toc-text">二维变换的层次结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%99%E5%90%91%E9%87%8F"><span class="toc-number">1.7.</span> <span class="toc-text">余向量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8B%89%E4%BC%B8-%E6%8C%A4%E5%8E%8B"><span class="toc-number">1.8.</span> <span class="toc-text">拉伸&#x2F;挤压</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E9%9D%A2%E8%A1%A8%E9%9D%A2%E6%B5%81"><span class="toc-number">1.9.</span> <span class="toc-text">平面表面流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8C%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC"><span class="toc-number">1.10.</span> <span class="toc-text">双线性插值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2%E4%B8%89%E7%BB%B4%E5%8F%98%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text">2.1.2三维变换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E7%A7%BB-1"><span class="toc-number">2.1.</span> <span class="toc-text">平移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC-%E5%B9%B3%E7%A7%BB-1"><span class="toc-number">2.2.</span> <span class="toc-text">旋转+平移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%A9%E6%94%BE%E6%97%8B%E8%BD%AC-1"><span class="toc-number">2.3.</span> <span class="toc-text">缩放旋转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BF%E5%B0%84-1"><span class="toc-number">2.4.</span> <span class="toc-text">仿射</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%95%E5%BD%B1-1"><span class="toc-number">2.5.</span> <span class="toc-text">投影</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3%E4%B8%89%E7%BB%B4%E6%97%8B%E8%BD%AC"><span class="toc-number">3.</span> <span class="toc-text">2.1.3三维旋转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AC%A7%E6%8B%89%E8%A7%92"><span class="toc-number">3.1.</span> <span class="toc-text">欧拉角</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%B4-%E8%A7%92%EF%BC%88%E6%8C%87%E6%95%B0%E6%97%8B%E8%BD%AC%EF%BC%89exponential-twist"><span class="toc-number">3.2.</span> <span class="toc-text">轴&#x2F;角（指数旋转）exponential twist</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E4%BD%8D%E5%9B%9B%E5%85%83%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">单位四元数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%AA%E4%B8%80%E7%A7%8D%E6%97%8B%E8%BD%AC%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95%E6%9B%B4%E5%A5%BD%EF%BC%9F"><span class="toc-number">3.4.</span> <span class="toc-text">哪一种旋转的表示方法更好？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-4%E4%B8%89%E7%BB%B4%E8%87%B3%E4%BA%8C%E7%BB%B4%E6%8A%95%E5%BD%B1"><span class="toc-number">4.</span> <span class="toc-text">2.1.4三维至二维投影</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E4%BA%A4%E6%B3%95%E5%92%8C%E5%87%86%E9%80%8F%E8%A7%86"><span class="toc-number">4.1.</span> <span class="toc-text">正交法和准透视</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%8F%E8%A7%86"><span class="toc-number">4.2.</span> <span class="toc-text">透视</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E6%9C%BA%E5%86%85%E5%8F%82"><span class="toc-number">4.3.</span> <span class="toc-text">相机内参</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%84%A6%E8%B7%9D%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">4.4.</span> <span class="toc-text">关于焦距的说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E6%9C%BA%E7%9F%A9%E9%98%B5"><span class="toc-number">4.5.</span> <span class="toc-text">相机矩阵</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E9%9D%A2%E5%8A%A0%E8%A7%86%E5%B7%AE%EF%BC%88%E6%8A%95%E5%BD%B1%E6%B7%B1%E5%BA%A6%EF%BC%89"><span class="toc-number">4.6.</span> <span class="toc-text">平面加视差（投影深度）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%9B%B8%E6%9C%BA%E6%98%A0%E5%B0%84%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E7%9B%B8%E6%9C%BA"><span class="toc-number">4.7.</span> <span class="toc-text">从一个相机映射到另一个相机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E4%B8%AD%E5%BF%83%E6%8A%95%E5%BD%B1"><span class="toc-number">4.8.</span> <span class="toc-text">对象中心投影</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-5%E9%95%9C%E5%A4%B4%E7%95%B8%E5%8F%98"><span class="toc-number">5.</span> <span class="toc-text">2.1.5镜头畸变</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/04/procdeptheval/" title="Evaluating Robustness of Monocular Depth Estimation with Procedural Scene Perturbations"><img src="/img/proc-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Evaluating Robustness of Monocular Depth Estimation with Procedural Scene Perturbations"/></a><div class="content"><a class="title" href="/2025/07/04/procdeptheval/" title="Evaluating Robustness of Monocular Depth Estimation with Procedural Scene Perturbations">Evaluating Robustness of Monocular Depth Estimation with Procedural Scene Perturbations</a><time datetime="2025-07-04T02:34:38.000Z" title="发表于 2025-07-04 10:34:38">2025-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/03/OmniStereo/" title="OmniStereo: Real-time Omnidireactional Depth Estimation with Multiview  Fisheye Cameras"><img src="/img/OmniStereo-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OmniStereo: Real-time Omnidireactional Depth Estimation with Multiview  Fisheye Cameras"/></a><div class="content"><a class="title" href="/2025/07/03/OmniStereo/" title="OmniStereo: Real-time Omnidireactional Depth Estimation with Multiview  Fisheye Cameras">OmniStereo: Real-time Omnidireactional Depth Estimation with Multiview  Fisheye Cameras</a><time datetime="2025-07-03T01:42:30.000Z" title="发表于 2025-07-03 09:42:30">2025-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/02/VGGT/" title="VGGT: Visual Geometry Grounded Transformer"><img src="/img/VGGT-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VGGT: Visual Geometry Grounded Transformer"/></a><div class="content"><a class="title" href="/2025/04/02/VGGT/" title="VGGT: Visual Geometry Grounded Transformer">VGGT: Visual Geometry Grounded Transformer</a><time datetime="2025-04-02T12:20:27.000Z" title="发表于 2025-04-02 20:20:27">2025-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/29/amodeldepthanything/" title="Amodal Depth Anything: Amodal Depth Estimation in the Wild"><img src="/img/amodeldepthanything-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Amodal Depth Anything: Amodal Depth Estimation in the Wild"/></a><div class="content"><a class="title" href="/2025/03/29/amodeldepthanything/" title="Amodal Depth Anything: Amodal Depth Estimation in the Wild">Amodal Depth Anything: Amodal Depth Estimation in the Wild</a><time datetime="2025-03-29T00:31:20.000Z" title="发表于 2025-03-29 08:31:20">2025-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/26/depthprompting/" title="Depth Prompting for Sensor-Agnostic Depth Estimation"><img src="/img/depthprompting-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth Prompting for Sensor-Agnostic Depth Estimation"/></a><div class="content"><a class="title" href="/2025/03/26/depthprompting/" title="Depth Prompting for Sensor-Agnostic Depth Estimation">Depth Prompting for Sensor-Agnostic Depth Estimation</a><time datetime="2025-03-26T05:53:11.000Z" title="发表于 2025-03-26 13:53:11">2025-03-26</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/cvaacover.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
