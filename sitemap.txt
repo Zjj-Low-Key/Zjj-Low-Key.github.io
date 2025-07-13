@@ -1,3 +1,4 @@
+http://example.com/2025/03/07/LightingDiT/
 http://example.com/2025/07/09/panoslam/
 http://example.com/2025/07/04/procdeptheval/
 http://example.com/2025/07/03/OmniStereo/
@@ -8,7 +9,6 @@ http://example.com/2025/03/29/amodeldepthanything/
 http://example.com/2025/03/26/depthprompting/
 http://example.com/google44daf7b127c17983.html
 http://example.com/2025/03/24/depthanycamera/
-http://example.com/2025/03/07/LightingDiT/
 http://example.com/2025/02/27/Improving-the-Diffusability-of-Autoencoders/
 http://example.com/2025/02/24/DiT/
 http://example.com/categories/index.html
