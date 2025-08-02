@@ -1,8 +1,8 @@
+http://example.com/about/index.html
 http://example.com/2025/03/07/LightingDiT/
 http://example.com/2025/07/09/panoslam/
 http://example.com/2025/07/04/procdeptheval/
 http://example.com/2025/07/03/OmniStereo/
-http://example.com/about/index.html
 http://example.com/2024/12/08/M%C2%B2Depth/
 http://example.com/2025/04/02/VGGT/
 http://example.com/2025/03/29/amodeldepthanything/
