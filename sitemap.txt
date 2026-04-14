@@ -1,7 +1,8 @@
+http://example.com/2026/03/30/DVD/
+http://example.com/2026/04/02/gaussiangpt/
 http://example.com/2026/04/01/gld/
 http://example.com/2026/03/31/cam3r/
 http://example.com/2026/03/30/Retrofit/
-http://example.com/2026/03/30/DVD/
 http://example.com/2026/03/12/depthmaster/
 http://example.com/2026/03/12/pointworld/
 http://example.com/2026/03/11/metricanything/
@@ -123,6 +124,8 @@ http://example.com/tags/%E7%86%B5%E5%BC%95%E5%AF%BC/
 http://example.com/tags/%E7%9B%B8%E6%9C%BA%E6%97%A0%E5%85%B3/
 http://example.com/tags/%E6%96%B0%E8%A7%86%E8%A7%92%E6%A8%A1%E5%9E%8B/
 http://example.com/tags/%E5%87%A0%E4%BD%95%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/
+http://example.com/tags/%E8%87%AA%E5%9B%9E%E5%BD%92/
+http://example.com/tags/%E5%9C%BA%E6%99%AF%E5%90%88%E6%88%90/
 http://example.com/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/
 http://example.com/categories/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/
 http://example.com/categories/%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/
