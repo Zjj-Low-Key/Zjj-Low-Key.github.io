@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova 单位：Comenius University in Bratislava, Czech Technical University in Prague 会议：2026 Arxiv 链接：ht">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/05/20/Depth2Pose/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova 单位：Comenius University in Bratislava, Czech Technical University in Prague 会议：2026 Arxiv 链接：ht">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/Depth2Pose-0.png">
+<meta property="article:published_time" content="2026-05-20T07:46:36.000Z">
+<meta property="article:modified_time" content="2026-05-20T07:47:03.923Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="单目深度估计">
+<meta property="article:tag" content="深度估计">
+<meta property="article:tag" content="姿态估计">
+<meta property="article:tag" content="Benchmark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/Depth2Pose-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth",
+  "url": "https://zjj-low-key.github.io/2026/05/20/Depth2Pose/",
+  "image": "https://zjj-low-key.github.io/img/Depth2Pose-0.png",
+  "datePublished": "2026-05-20T07:46:36.000Z",
+  "dateModified": "2026-05-20T07:47:03.923Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/05/20/Depth2Pose/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/Depth2Pose-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-20T07:47:03.923Z" title="更新于 2026-05-20 15:47:03">2026-05-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova</p>
+<p><strong>单位：</strong>Comenius University in Bratislava, Czech Technical University in Prague</p>
+<p><strong>会议：</strong>2026 Arxiv</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.19797">https://arxiv.org/abs/2605.19797</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><ol>
+<li><p><strong>评估标准存在局限性：</strong> 尽管单目深度估计（MDE）近年来取得了显著进展，并且预测的深度图在 Structure-from-Motion (SfM)、视觉定位和 SLAM 等下游几何任务中扮演着关键输入角色，但现有的 MDE 方法主要仍以深度绝对精度进行评估。通用的评估指标（如 Abs.Rel 或 RMSE）是在整张图像上全局聚合误差的，这并不能直接反映深度在具体的下游三维几何任务中的实用价值。</p>
+</li>
+<li><p><strong>几何重要性非均匀分布：</strong> 在下游几何任务（如 SfM 或 SLAM）中，并不需要深度图在每个像素上都完全准确。相反，只需要在几何信息丰富的区域（如纹理丰富、能够稳定匹配特征点、或具有良好观测视角的区域）保持高精度即可。无纹理区域（例如白墙、天花板）的深度误差对最终位姿估计的影响非常小。现有的全局精度指标忽略了这种区域几何重要性的差异，导致即使两个深度估计器在全局误差上表现相似，在具体下游任务中的表现却可能有天壤之别。</p>
+</li>
+<li><p><strong>获取密集深度真值（Ground-Truth Depth）代价高昂：</strong> 传统的深度评估基准严重依赖密集的逐像素深度真值。获取此类数据通常需要昂贵的专用硬件（如 RGB-D 相机或 LiDAR），或者利用多视角立体（MVS）算法重建伪真值，或完全依赖虚拟合成场景。这限制了评估场景的范围，使很多具有挑战性的真实场景（如大尺度户外环境、强反光/透明表面、植被茂密环境等）在现有评估中代表性不足。</p>
+</li>
+<li><p><strong>提出任务驱动且无需深度真值的评估框架：</strong> 为打破上述局限，作者提出了 <strong>Depth2Pose</strong>，这是一个通过深度辅助的相对位姿估计任务来间接、任务驱动地评估单目深度图质量的框架。该方法使用位姿估计精度作为深度的代理指标，且仅需相机的相对位姿真值（这很容易通过 COLMAP 等 SfM 流程自动获取），从而实现了在大尺度、高复杂度户外场景下的低成本、高扩展性评估。</p>
+</li>
+</ol>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><img src="/img/Depth2Pose-0.png" alt="Depth2Pose-0" title="Depth2Pose-0"></p>
+<p>Depth2Pose 的评估管线包含以下三个核心步骤：</p>
+<ol>
+<li><p><strong>输入与预测（Inputs &amp; Predictions）：</strong> Given 包含重叠视角的图像对 $I_1$ 和 $I_2$，使用待评估的 MDE 预测出相应的深度图 $D_1$ 和 $D_2$。同时使用 SuperPoint+LightGlue (SP+LG) 或 LoMa 等特征提取与匹配器获得两张图像间的 2D-2D 点对对应关系（Correspondences $x_1 \longleftrightarrow x_2$）。</p>
+</li>
+<li><p><strong>几何求解器（Geometry Solver）：</strong> 将 2D 匹配点坐标与对应位置上的深度预测值传入深度感知的相对位姿求解器。本文主要采用 RePoseD 框架中的位姿求解器（已集成在 PoseLib 库中）。根据对深度的假设不同，求解器提供了几种变体：</p>
+<ul>
+<li><strong>位姿估计器 H（Hybrid）：</strong> 尺度不变的已标定求解器，使用 Sampson 误差进行 LO-RANSAC 过滤，并结合 Sampson 误差与对称重投影误差进行局部优化。这是主流 MDE（提供绝对尺度深度）评估的默认首选配置。</li>
+<li><strong>位姿估计器 R（Reprojection）：</strong> 仅使用对称重投影误差进行 RANSAC 过滤与局部优化。由于 Sampson 误差仅依赖 2D 点匹配而不需要深度参与，求解器 H 可能会被 Sampson 误差“带飞”而掩盖深度估计的错误。求解器 R 则直接强制求解器依赖深度预测的准确性，能更直接地衡量深度的几何质量。</li>
+<li><strong>基线 B（Baseline）：</strong> 经典的 5 点法求解器（5-point solver），仅利用 2D 点对匹配关系，完全不使用深度信息。</li>
+</ul>
+</li>
+<li><p><strong>误差评估（Evaluation）：</strong> 将估计出的相对位姿（旋转 $R<em>{est}$ 和平移 $t</em>{est}$）与 COLMAP 估计的参考位姿（Reference Pose $R<em>{gt}$ 和 $t</em>{gt}$）进行对比，计算旋转误差 $e_R$ 与平移误差 $e_t$：</p>
+<script type="math/tex; mode=display">
+e_R = \arccos \left( \frac{\operatorname{Tr}(R_{est}^\top R_{gt}) - 1}{2} \right)</script><script type="math/tex; mode=display">
+e_t = \arccos \left( \frac{t_{est} \cdot t_{gt}}{\|t_{est}\| \|t_{gt}\|} \right)</script><p>综合位姿误差定义为 $e_p = \max(e_R, e_t)$。最终性能通过 <strong>mAA(10°)</strong>（在误差 10° 范围内的累积分布曲线下面积，mean Average Accuracy）进行汇总。</p>
+</li>
+</ol>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>为了评估单目深度估计在多样化、极具挑战性的真实场景下的泛化能力，作者推出了 <strong>D2P 数据集</strong>。该数据集不提供密集的深度真值，而是使用 COLMAP 重建的相机位姿作为伪真值（pGT）。</p>
+<p><img src="/img/Depth2Pose-1.png" alt="Depth2Pose-1" title="Depth2Pose-1"></p>
+<p>D2P 数据集包含 <strong>24 个场景</strong>，共 <strong>1,942 张图像</strong>，并细分为以下两个子集：</p>
+<ol>
+<li><strong>D2P-Statues（雕塑子集，12个场景）：</strong> 包含公共空间中的各种独特雕像，通常以接近 360° 环绕的形式进行捕捉。这些雕像形状奇特、比例夸张，甚至位于水面上或悬挂于楼宇之间，在常见的深度训练集中从未出现过。这可以很好地评估 MDE 模型对未知尺度和几何结构的推理能力。</li>
+<li><strong>D2P-Vegetation（植被子集，12个场景）：</strong> 包含公园环境、树木、灌木等，涵盖有叶和无叶场景。植被精细的几何结构（如细小的树枝和树叶）会带来频繁的深度不连续和局部遮挡，是 MDE 极易失效的“重灾区”。同时，植被由于其稀疏性和半透明效果，很难使用传统 LiDAR 等主动式传感器进行采集。</li>
+</ol>
+<p><strong>数据采集与处理：</strong> 使用 Google Pixel 9、iPhone 14/15 Pro/16 Pro 以及 GoPro 等消费级设备，在固定焦距下以平缓的手持移动拍摄视频并抽帧（1 FPS），利用 easy-anno 自动擦除人脸等隐私信息，最后使用 COLMAP（SIFT + 暴力匹配用于雕塑，ALIKED + LightGlue 用于植被）求解出高精度的相机相对位姿作为伪真值。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文对各种模型在标准基准和 D2P 数据集上进行了零样本（zero-shot）推理和位姿求解实验。研究所耗费的计算资源情况如下：</p>
+<ul>
+<li><strong>D2P 数据集实验：</strong> 累计消耗了 <strong>13 GPU hours</strong>（主要在 A100 40GB GPU 集群上运行，用于 MDE 模型推理与特征点匹配）和 <strong>200 CPU hours</strong>（采用 Intel Xeon Gold 6338 2.00GHz 处理器）。</li>
+<li><strong>标准基准数据集实验：</strong> 累计消耗了 <strong>30 GPU hours</strong> 和 <strong>600 CPU hours</strong>。</li>
+</ul>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>论文首先在标准数据集（ETH3D、ScanNet++、Sintel、LaMAR）上验证了位姿指标与深度指标的关联性，接着在 D2P 数据集上展现了当前 SOTA 模型在面对复杂真实场景时的性能退化。</p>
+<p><img src="/img/Depth2Pose-2.png" alt="Depth2Pose-2" title="Depth2Pose-2"></p>
+<h3 id="1-深度精度与位姿精度之间的强关联"><a href="#1-深度精度与位姿精度之间的强关联" class="headerlink" title="1. 深度精度与位姿精度之间的强关联"></a>1. 深度精度与位姿精度之间的强关联</h3><p>在全局层面，常规的深度阈值精度 $\delta_1$（预测值与真值之比在 1.25 内的比例）与相对位姿的 mAA(10°) 之间呈现出极强的线性相关。如图 3 所示，在使用 LoMa 匹配时，位姿估计器 H 的 Pearson 相关系数 $r = 0.9512$，位姿估计器 R 的相关系数 $r = 0.9710$。这有力地证明了<strong>在没有深度真值时，使用位姿误差作为评估深度的代理指标是极其可靠的</strong>。</p>
+<h3 id="2-局部误差对位姿影响的非均匀性"><a href="#2-局部误差对位姿影响的非均匀性" class="headerlink" title="2. 局部误差对位姿影响的非均匀性"></a>2. 局部误差对位姿影响的非均匀性</h3><p>如图 4 所示，尽管不同 MDE 预测结果的 $\delta_1$ 指标和 Abs.Rel 指标差异明显，但它们的最终位姿误差却可能非常接近。例如，一些在非几何关键区域（如平整的天花板）产生的深度错误虽然拉低了传统的全局深度指标，但由于没有特征点匹配，对下游的相对位姿求解几乎毫无负面影响。这进一步凸显了传统评估指标无法衡量深度“空间实用性”的缺陷。</p>
+<p><img src="/img/Depth2Pose-4.png" alt="Depth2Pose-4" title="Depth2Pose-4"></p>
+<h3 id="3-SOTA-MDE-在未知场景中的泛化差距"><a href="#3-SOTA-MDE-在未知场景中的泛化差距" class="headerlink" title="3. SOTA MDE 在未知场景中的泛化差距"></a>3. SOTA MDE 在未知场景中的泛化差距</h3><p>当从标准基准跨越到 D2P 挑战基准时，模型表现出了极大的性能动荡与排名逆转。</p>
+<p><img src="/img/Depth2Pose-3.png" alt="Depth2Pose-3" title="Depth2Pose-3"></p>
+<p><img src="/img/Depth2Pose-5.png" alt="Depth2Pose-5" title="Depth2Pose-5"></p>
+<ul>
+<li><strong>性能严重退化与排名动荡：</strong> 在标准基准上表现最好的前馈单目深度模型 <strong>MoGeV2-L</strong>，在 D2P-Vegetation 子集上配合求解器 H 的表现甚至落后于在标准基准上排名靠后的 <strong>DAv3-Mono-L</strong>。</li>
+<li><strong>与无深度基线的对比：</strong> 令人惊讶的是，即使是目前最优秀的 MDE 预测深度图，配合深度感知位姿求解器（H 或 R）后，其最终的相对位姿精度依然<strong>未能超越完全不使用深度的经典 5 点法基线（NoDepth+B）</strong>。例如，NoDepth+B 在 D2P-Mean 上的 mAA 为 <strong>82.34</strong>，而最好的 MoGeV2-L 也仅为 <strong>75.02</strong>。</li>
+<li><strong>潜在提升空间巨大：</strong> 尽管目前的深度预测对位姿求解带来了负向优化，但通过真值深度三角化点云的 GT 深度基线（GT）在 D2P-Mean 上取得了 <strong>93.73</strong> 的极佳成绩，这暗示了<strong>如果单目深度图的局部边界与微小几何精度能得到实质性提高，下游相对位姿估算将获得巨大的增益</strong>。</li>
+</ul>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><strong>无需密集深度真值：</strong> 避开了极难采集的密集深度真值，仅利用容易求解的相机位姿作为评估基准。这极大地拓展了可用于评估单目深度的现实场景边界。</li>
+<li><strong>任务驱动的评估逻辑：</strong> 关注深度对下游相对位姿估计的实际贡献，自然地赋予了几何信息丰富区域更高的评价权重，相比于简单平均每个像素的常规深度误差更加符合工程实际。</li>
+<li><strong>极佳的场景覆盖面：</strong> 针对性引入了“雕塑”与“植被”两大难点子集，极好地挑战了当前单目深度模型对复杂三维物理世界、非均匀表面和精细断续边缘的表征能力。</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><strong>绝对尺度衡量受限：</strong> 由于相对位姿估计中天然存在尺度等价性（Scale Ambiguity），Depth2Pose 无法直接用于评估单目深度的绝对尺度精度（Metric Scale Accuracy）。</li>
+<li><strong>场景可重建性前提：</strong> 评估框架依然强依赖于能否使用 SfM 成功建立相机轨迹并获取参考位姿，对于极度缺乏特征匹配点或运动模糊严重的极端场景依然无法展开评测。</li>
+<li><strong>可能低估 SLAM 等大型系统的容错能力：</strong> SLAM 和多帧 SfM 系统中包含大量的时空多帧冗余，能部分抵消单个图像帧深度的严重预测误差。因此，对于这些大型系统来说，Depth2Pose 所基于的“两帧相对位姿求解”可能在指标上对某些 MDE 模型过于苛刻。</li>
+<li><strong>纹理缺失区域盲区：</strong> 框架只能计算特征匹配点处的深度品质。如果在无纹理的光滑镜面、玻璃等不产生特征点的区域深度预测极差，本框架将无法检出。</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><strong>位姿精度可作为深度的代理：</strong> 验证了相对位姿评估精度（mAA）与传统深度度量（$\delta_1$）之间的超高线性相关性（$r \approx 0.97$），从而确立了在无真值深度场景下以位姿测深度的可行性。</li>
+<li><strong>揭示单目深度的 Generalization Gap：</strong> 在雕像和植被茂密的场景下，最先进的单目深度算法的表现会发生崩塌和排名倒挂。</li>
+<li><strong>MDE 对位姿暂无正向增益：</strong> 目前主流单目深度模型预测的深度在融合到位姿求解器中时，其表现普遍劣于完全不用深度信息的纯 2D-RANSAC 基准（NoDepth+B），但 GT 辅助的表现（~93% mAA）表明一旦深度准确，将能带来极大增益。</li>
+<li><strong>评估求解器 R 的设计：</strong> 使用纯重投影误差的求解器 R 能够杜绝 Sampson 误差对坏深度预测的“兜底”作用，比求解器 H 更加直接、灵敏地反馈深度图像边缘与形状的不准确性。</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a><a class="post-meta__tags" href="/tags/%E5%A7%BF%E6%80%81%E4%BC%B0%E8%AE%A1/">姿态估计</a><a class="post-meta__tags" href="/tags/Benchmark/">Benchmark</a></div><div class="post-share"><div class="social-share" data-image="/img/Depth2Pose-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img class="cover" src="/img/RAEv2-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">RAEv2: Improved Baselines with Representation Autoencoders</div></div><div class="info-2"><div class="info-item-1">作者：Jaskirat Singh, Boyang Zheng, Zongze Wu, Richard Zhang, Eli Shechtman, Saining Xie 单位：Adobe Research, ANU, New York University 会议：2026 Arxiv 链接：arXiv ｜ Project Page  研究动机近年来，潜在扩散模型（Latent Diffusion Models, LDM）已成为图像生成领域的主流。常规的 LDM 必须依赖于一个专门训练的变分自编码器（VAE）将高维像素空间映射至低维的潜在空间。然而，近期提出的“表征自编码器”（Representation Autoencoders, RAE）打破了这一常规，它直接利用现成的、自监督预训练视觉编码器（如 DINOv2、DINOv3 等）作为潜在空间，通过在其特征上训练扩散模型来省去独立的 VAE 训练。这对于统一计算机视觉的“理解（Understanding）”和“生成（Generation）”两大领域具有里程碑式的意义。 但是在实际落地时，初代的 RAE...</div></div></div></a><a class="pagination-related" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img class="cover" src="/img/PhyWorld-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">PhyWorld: Physics-Faithful World Model for Video Generation</div></div><div class="info-2"><div class="info-item-1">作者：Pu Zhao, Juyi Lin, Timothy Rupprecht, Arash Akbari, Chence Yang, Rahul Chowdhury, Elaheh Motamedi, Arman Akbari, Yumei He, Chen Wang, Geng Yuan, Weiwei Chen, Yanzhi Wang 单位：Northeastern University, University of Georgia, Tulane University, EmbodyX 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.19242 研究动机 这篇论文把视频生成模型当作 Physical AI...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depthanythingv2/" title="Depth Anything v2"><img class="cover" src="/img/Depthanythingv21.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anything v2</div></div><div class="info-2"><div class="info-item-1">三个关键方法：1）将所有有标签的真实图像更换为合成图像 2）增强了教师模型的capacity 3）通过大规模伪标签真实图像对学生模型进行训练 真实标签数据的缺点：1）标签噪声：传感器固有的缺点、透明等场景 2）忽略的细节：边缘、洞 导致错误的估计，过度平滑的估计 合成数据的局限性：1）合成图像与真实图像之间的分布偏移 真实图像包含更多随机性，合成图像场景的布置较为有序。 2）所覆盖的场景有限，难以与真实世界的场景相匹敌 大规模无标签真实图像的作用：1）缩小合成图像与真实场景之间的领域差异 2）增大所覆盖的场景范围 3）知识迁移   sparse的gt在评估的时候真的会影响指标的可靠性么？ 能否直接训练或者使用一个强大的metric depth网络来生成metric的伪标签，从而使得学生模型能够具备metric depth预测能力？ </div></div></div></a><a class="pagination-related" href="/2026/05/18/DepthVLM/" title="Unlocking Dense Metric Depth Estimation in VLMs"><img class="cover" src="/img/DepthVLM-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">Unlocking Dense Metric Depth Estimation in VLMs</div></div><div class="info-2"><div class="info-item-1">作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15876 研究动机 这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。 已有路线大致有三类问题：  纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。  一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。  DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量...</div></div></div></a><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2026/05/19/Lotus2/" title="Lotus-2: Advancing Geometric Dense Prediction with Powerful Image Generative Model"><img class="cover" src="/img/Lotus2-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-19</div><div class="info-item-2">Lotus-2: Advancing Geometric Dense Prediction with Powerful Image Generative Model</div></div><div class="info-2"><div class="info-item-1">作者：Jing He, Haodong Li, Mingzhi Sheng, Ying-Cong Chen 单位：HKUST(GZ), UC San Diego, HKUST 会议：2025 Arxiv 链接：https://arxiv.org/abs/2512.01030 研究动机 这篇文章讨论的是一个很尖锐的矛盾：单目几何密集预测本质上是病态问题，但现在最强的两类路线各有明显短板。  大规模判别式深度模型依赖海量监督数据，性能上限很大程度由训练集规模、真实性和标注质量决定，一旦遇到稀有场景或开放域图像，泛化就容易掉下来。  扩散/rectified-flow 这类生成模型确实在海量图文数据里学到了强 world prior，但它们原生的随机采样、多步生成和高保真图像目标，并不天然适合“同一张图稳定输出一张几何图”这种确定性任务。  如果直接把生成模型的随机生成范式搬过来，模型会出现结构方差、几何幻觉和推理开销过高的问题；但如果完全退回普通回归模型，又拿不到生成模型里蕴含的大规模几何先验。   所以 Lotus-2...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B7%B1%E5%BA%A6%E7%B2%BE%E5%BA%A6%E4%B8%8E%E4%BD%8D%E5%A7%BF%E7%B2%BE%E5%BA%A6%E4%B9%8B%E9%97%B4%E7%9A%84%E5%BC%BA%E5%85%B3%E8%81%94"><span class="toc-number">5.1.</span> <span class="toc-text">1. 深度精度与位姿精度之间的强关联</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B1%80%E9%83%A8%E8%AF%AF%E5%B7%AE%E5%AF%B9%E4%BD%8D%E5%A7%BF%E5%BD%B1%E5%93%8D%E7%9A%84%E9%9D%9E%E5%9D%87%E5%8C%80%E6%80%A7"><span class="toc-number">5.2.</span> <span class="toc-text">2. 局部误差对位姿影响的非均匀性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-SOTA-MDE-%E5%9C%A8%E6%9C%AA%E7%9F%A5%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%9A%84%E6%B3%9B%E5%8C%96%E5%B7%AE%E8%B7%9D"><span class="toc-number">5.3.</span> <span class="toc-text">3. SOTA MDE 在未知场景中的泛化差距</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"><img src="/img/GTA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"/></a><div class="content"><a class="title" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion">GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion</a><time datetime="2026-05-20T13:20:00.000Z" title="发表于 2026-05-20 21:20:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img src="/img/RAEv2-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAEv2: Improved Baselines with Representation Autoencoders"/></a><div class="content"><a class="title" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders">RAEv2: Improved Baselines with Representation Autoencoders</a><time datetime="2026-05-20T11:15:00.000Z" title="发表于 2026-05-20 19:15:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img src="/img/Depth2Pose-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"/></a><div class="content"><a class="title" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</a><time datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img src="/img/PhyWorld-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PhyWorld: Physics-Faithful World Model for Video Generation"/></a><div class="content"><a class="title" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation">PhyWorld: Physics-Faithful World Model for Video Generation</a><time datetime="2026-05-20T06:14:38.000Z" title="发表于 2026-05-20 14:14:38">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"><img src="/img/Tango3D-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"/></a><div class="content"><a class="title" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence">Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence</a><time datetime="2026-05-20T06:08:21.000Z" title="发表于 2026-05-20 14:08:21">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/Depth2Pose-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

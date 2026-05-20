@@ -1,0 +1,402 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Unlocking Dense Metric Depth Estimation in VLMs | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2605.15876 研究动机 这篇文章要解决的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unlocking Dense Metric Depth Estimation in VLMs">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/05/18/DepthVLM/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2605.15876 研究动机 这篇文章要解决的问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/DepthVLM-0.png">
+<meta property="article:published_time" content="2026-05-18T05:27:31.000Z">
+<meta property="article:modified_time" content="2026-05-18T05:30:04.392Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="单目深度估计">
+<meta property="article:tag" content="视觉基础模型">
+<meta property="article:tag" content="多模态输入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/DepthVLM-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Unlocking Dense Metric Depth Estimation in VLMs",
+  "url": "https://zjj-low-key.github.io/2026/05/18/DepthVLM/",
+  "image": "https://zjj-low-key.github.io/img/DepthVLM-0.png",
+  "datePublished": "2026-05-18T05:27:31.000Z",
+  "dateModified": "2026-05-18T05:30:04.392Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/05/18/DepthVLM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Unlocking Dense Metric Depth Estimation in VLMs',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/DepthVLM-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">Unlocking Dense Metric Depth Estimation in VLMs</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Unlocking Dense Metric Depth Estimation in VLMs</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-18T05:27:31.000Z" title="发表于 2026-05-18 13:27:31">2026-05-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-18T05:30:04.392Z" title="更新于 2026-05-18 13:30:04">2026-05-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke</p>
+<p><strong>单位：</strong>Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute</p>
+<p><strong>会议：</strong>2026 Arxiv</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.15876">https://arxiv.org/abs/2605.15876</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p><img src="/img/DepthVLM-0.png" alt="DepthVLM-0" title="DepthVLM-0"></p>
+<p>这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。</p>
+<p>已有路线大致有三类问题：</p>
+<ol>
+<li><p>纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。</p>
+</li>
+<li><p>一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。</p>
+</li>
+<li><p>DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量 forward；Youtu-VL 虽然能一次输出图像级深度，但 token 级输出较粗，还需要后处理插值。</p>
+</li>
+</ol>
+<p><img src="/img/DepthVLM-1.png" alt="DepthVLM-1" title="DepthVLM-1"></p>
+<p>因此本文的问题可以概括为：</p>
+<blockquote>
+<p>能否只对已有 VLM 做很小的结构改动，让它在保留通用多模态能力的同时，原生输出全分辨率 metric depth，并且推理时只需要一次前向传播？</p>
+</blockquote>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><img src="/img/DepthVLM-2.png" alt="DepthVLM-2" title="DepthVLM-2"></p>
+<p>DepthVLM 的核心设计很克制：保留标准 VLM 的视觉编码器、projector 和 LLM 主干，只在 LLM/ViT 特征之上加一个轻量 DPT-style depth head。这样模型仍然可以走原来的文本生成路径，同时并行输出 dense metric depth map。</p>
+<ol>
+<li>多层视觉特征作为深度头输入</li>
+</ol>
+<p>作者没有只取最后一层特征，而是抽取三个中间 ViT layer 加上 LLM 最后一层 image-token hidden states：</p>
+<script type="math/tex; mode=display">
+F_k =
+\begin{cases}
+\phi(h^{(\ell_k)}) & k = 1,2,3 \\
+H^{LLM}_{M_v} & k = 4
+\end{cases}</script><p>浅层 ViT 特征保留边缘和局部纹理，深层特征更偏语义，LLM 最终 hidden states 则带有视觉-语言上下文。DPT head 将这些多尺度特征 reassemble 到不同空间尺度，再通过 RefineNet block 融合，最终回归输入分辨率下的深度图。</p>
+<ol>
+<li>两阶段训练，避免破坏 VLM 原能力</li>
+</ol>
+<p>第一阶段冻结整个 VLM，只训练随机初始化的 depth head，让它先学会稳定的深度输出。监督使用 SILog loss：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{depth} =
+\sqrt{
+\frac{1}{|\Omega|}\sum_{i \in \Omega} d_i^2
+- \lambda
+\left(\frac{1}{|\Omega|}\sum_{i \in \Omega} d_i\right)^2
+}, \quad
+d_i = \log \hat{D}_i - \log D_i^*</script><p>第二阶段解冻 LLM backbone，端到端联合训练语言建模和深度预测：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{joint} = \mathcal{L}_{text} + \alpha \mathcal{L}_{depth}</script><p>这个训练顺序是本文比较关键的地方：如果一开始就全模型微调，随机 depth head 的噪声梯度容易扰动原有 VLM；如果只训练 depth head，又无法把几何能力和语言推理更深地耦合起来。</p>
+<ol>
+<li>统一焦距，处理跨数据集 metric ambiguity</li>
+</ol>
+<p>混合多个 indoor/outdoor depth 数据集时，同一场景在不同焦距下会对应不同像素尺度，直接训练会造成 metric depth 监督冲突。DepthVLM 采用 focal-length normalization，把图像和深度按共享虚拟焦距重采样：</p>
+<script type="math/tex; mode=display">
+s = f_c / f, \quad \tilde{I} = R_s(I), \quad \tilde{D} = R_s(D)</script><p>实验中作者 sweep 了 $f_c \in {800, 1000, 1200}$，最终 $f_c=1000$ 效果最好。</p>
+<ol>
+<li>输出形式上的关键差异</li>
+</ol>
+<p>DepthLM 的成本是 $H \times W$ 次 forward，因为每个像素都要单独问；Youtu-VL 是一次 forward，但输出是 sparse patch-level grid。DepthVLM 直接从多尺度特征解码 dense pixel-level depth map，因此在 256×192 输入下端到端延迟只有 0.42s。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>本文构建了 <code>DepthVLM-Bench</code>，用统一 VLM-compatible 格式组织训练和评测。</p>
+<p><img src="/img/DepthVLM-13.png" alt="DepthVLM-13" title="DepthVLM-13"></p>
+<p>训练集来自 8 个公开数据集：</p>
+<ol>
+<li>Outdoor：Argoverse2、Waymo、DDAD、NuScenes</li>
+<li>Indoor：ScanNet++、Taskonomy、HM3D、Matterport3D</li>
+</ol>
+<p>大多数数据集均匀采样约 800K 图像，小数据集保留原始规模，最终训练集约 4.4M images。</p>
+<p><img src="/img/DepthVLM-14.png" alt="DepthVLM-14" title="DepthVLM-14"></p>
+<p>评测集覆盖 9 个数据集，且与训练 split 不重合：</p>
+<ol>
+<li>Outdoor：Argoverse2、Waymo、DDAD、NuScenes</li>
+<li>Indoor：ScanNet++、sunRGBD、IBims-1、NYUv2</li>
+<li>Mixed：ETH3D</li>
+</ol>
+<p>每个数据集尽量采样约 1K images，并在 VLM depth evaluation 中每张图采样 10 个像素点。</p>
+<p><img src="/img/DepthVLM-15.png" alt="DepthVLM-15" title="DepthVLM-15"></p>
+<p>为了公平评估普通 VLM 的 metric depth 能力，作者用红色箭头标记待估计像素，并要求模型只输出米制距离数值。由于 5px marker 对普通 VLM 太小，本文把 marker 增大到 20px，避免评测测到的只是 marker detection 能力。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文给出了比较明确的训练配置：</p>
+<ol>
+<li><p>默认 backbone 为 Qwen3-VL 4B/8B。</p>
+</li>
+<li><p>Depth head 约 34M 参数，小于 LLM 参数量的 1%。</p>
+</li>
+<li><p>训练样本约 4.4M，训练 1 个 epoch。</p>
+</li>
+<li><p>8B 版本在 80 张 NVIDIA H20 GPU 上训练 4 天；4B 版本使用相同计算资源训练 2 天。</p>
+</li>
+<li><p>Stage-1 和 Stage-2 的学习率分别为 $3.5 \times 10^{-4}$ 和 $2 \times 10^{-5}$，warmup ratio 分别为 0.04 和 0.05，$\lambda=0.5$，$\alpha=1.0$。</p>
+</li>
+</ol>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="/img/DepthVLM-3.png" alt="DepthVLM-3" title="DepthVLM-3"></p>
+<p>第一组结果比较现有 VLM。普通通用 VLM 在 metric depth 上明显不可靠，例如 GPT-5.5 的平均 $\delta_1$ 只有 0.407，Qwen3-VL-32B 也只有 0.210。即使是空间增强 VLM，表现也没有明显接近深度专用模型。DepthVLM-4B 达到 0.868，DepthVLM-8B 达到 0.876，显著超过 Youtu-VL 和 DepthLM。</p>
+<p><img src="/img/DepthVLM-4.png" alt="DepthVLM-4" title="DepthVLM-4"></p>
+<p>第二组结果比较纯视觉深度模型。DepthVLM-4B 平均 $\delta_1$ 为 0.884，DepthVLM-8B 为 0.890，超过 DepthAnythingV3、UniDepthV2、Metric3Dv2 等强基线。这个结果是本文最重要的主张之一：dense geometry 能够在一个统一 VLM 中原生涌现，而不一定要牺牲给纯视觉 specialist。</p>
+<p><img src="/img/DepthVLM-5.png" alt="DepthVLM-5" title="DepthVLM-5"></p>
+<p>第三组结果验证通用多模态能力是否受损。DepthVLM 在 MMBench、MMStar、ScienceQA、OCRBench、CountBench、POPE 等任务上基本保持 Qwen3-VL backbone 的能力，有些指标还略有提升。相比之下，DepthLM 因为 text-heavy 的单像素深度监督，不适合标准 VQA 协议。</p>
+<p><img src="/img/DepthVLM-6.png" alt="DepthVLM-6" title="DepthVLM-6"></p>
+<p>作者还展示了更复杂的 3D spatial reasoning。DepthVLM 不只是输出深度图，还能回答点深度、两物体距离、深度顺序、3D 物体尺寸等问题。这里的核心解释是：原生 dense geometry prediction 给 VLM 提供了更稳的空间中间表征。</p>
+<p><img src="/img/DepthVLM-7.png" alt="DepthVLM-7" title="DepthVLM-7"></p>
+<p>定性结果显示，Youtu-VL 的 patch-level 输出在点云和深度图上会有块状噪声，DepthLM 保持了较好的语义一致性但细节不足；DepthVLM 的边缘结构和语义一致性更好。</p>
+<p><img src="/img/DepthVLM-8.png" alt="DepthVLM-8" title="DepthVLM-8"></p>
+<p>Depth head 消融说明，简单 two-layer MLP 最差；原始 DPT 由于会进一步下采样 LLM final visual feature，效果也不是最优。本文的 lightweight DPT 通过多尺度融合更适配 VLM 的 token 特征。</p>
+<p><img src="/img/DepthVLM-9.png" alt="DepthVLM-9" title="DepthVLM-9"></p>
+<p>特征来源消融说明，只用 ViT 中间特征或只用 LLM final feature 都不够理想。最佳方案是结合多层 ViT 特征和 LLM final hidden states，也就是同时利用局部几何细节和高层语义上下文。</p>
+<p><img src="/img/DepthVLM-10.png" alt="DepthVLM-10" title="DepthVLM-10"></p>
+<p>训练策略消融体现了两阶段设计的 trade-off：只训练 Stage-1 会保留 VLM 能力但深度效果有限；只做 Stage-2 深度更好但多模态能力下降；Stage-1 + Stage-2 并冻结 ViT 能在深度和通用视觉 benchmark 之间取得更好的平衡。</p>
+<p><img src="/img/DepthVLM-11.png" alt="DepthVLM-11" title="DepthVLM-11"></p>
+<p>焦距归一化消融说明，直接混合 raw multi-source 数据会受到相机差异影响；统一到 $f_c=1000$ 在 Waymo、sunRGBD、IBims-1 上最优，整体上也最稳。</p>
+<p><img src="/img/DepthVLM-12.png" alt="DepthVLM-12" title="DepthVLM-12"></p>
+<p>效率上，DepthLM 需要逐像素 query，256×192 输入下要 13 小时；Youtu-VL 一次 forward 但还需要插值后处理，耗时 2.48s；DepthVLM 输出 dense pixel-level depth，不需要后处理，延迟为 0.42s。</p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><p>结构改动小，只增加 34M 参数级别的 depth head，就让 VLM 获得了 dense metric depth 输出能力。</p>
+</li>
+<li><p>两阶段训练设计比较合理，解决了“学深度”和“保留 VQA/多模态能力”之间的冲突。</p>
+</li>
+<li><p>不是只赢普通 VLM，而是在多个 benchmark 上超过了强纯视觉深度模型，说明统一 VLM + dense geometry supervision 这条路线有潜力。</p>
+</li>
+<li><p>推理效率相比 DepthLM 这样的逐点 query 方法是数量级提升，输出也比 sparse patch-level depth 更适合直接用于下游 3D 任务。</p>
+</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><p>论文主要聚焦 dense metric depth，还没有扩展到 object detection、pose estimation、normal、scene flow 等更完整的 3D perception。</p>
+</li>
+<li><p>训练成本仍然较高，4B/8B 版本都依赖 80 张 H20 GPU，只是新增 depth head 很轻，并不代表整体训练轻量。</p>
+</li>
+<li><p>metric depth 的评估协议仍然需要把普通 VLM 改造成“红箭头 + 数值回答”的形式，这能比较 VLM 的空间估计能力，但和真正密集预测模型的输入输出形式并不完全对齐。</p>
+</li>
+<li><p>数据仍然依赖多源公开深度数据集，跨传感器、跨焦距、跨场景的 metric ambiguity 通过归一化缓解，但不一定完全解决真实开放世界中的尺度不确定性。</p>
+</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><p>给 VLM 加 dense head，比让 VLM 用文本逐点回答深度更自然，也更高效。</p>
+</li>
+<li><p>多层 ViT 特征负责细节，LLM final hidden states 负责语义上下文，两者结合才是最佳深度输入。</p>
+</li>
+<li><p>两阶段训练是关键：先只训 depth head 稳定几何，再联合微调整合语言和几何能力。</p>
+</li>
+<li><p>focal-length normalization 对跨数据集 metric depth 很重要，本质是在统一像素到米制深度的投影关系。</p>
+</li>
+<li><p>Dense geometry supervision 不一定削弱 VLM，反而可能提升 3D spatial reasoning。</p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/">视觉基础模型</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%BE%93%E5%85%A5/">多模态输入</a></div><div class="post-share"><div class="social-share" data-image="/img/DepthVLM-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/18/IVGT/" title="IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation"><img class="cover" src="/img/IVGT-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation</div></div><div class="info-2"><div class="info-item-1">作者：Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu 单位：Intelligent Vision Group, Tsinghua University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.16258 研究动机 这篇文章的核心问题是：现有 VGGT/DUSt3R 系列视觉几何基础模型大多输出显式几何，例如每个输入视角上的 depth map 或 pixel-aligned pointmap。这种表示非常适合快速估计相机和粗几何，但它有两个天然限制：  几何只定义在像素采样点上，是离散的、视角绑定的，同一个物理表面可能在多个视角中被重复预测。  如果要得到连续 mesh、任意视角渲染、surface normal 或 SDF 等下游结果，往往还需要额外建模或后处理。   传统 NeRF/SDF 方法能提供连续神经场，但通常依赖已知相机位姿，并且需要每个场景单独优化。IVGT 想把这两条路线接起来：像 VGGT...</div></div></div></a><a class="pagination-related" href="/2026/05/16/SANA-WM/" title="SANA-WM: Efficient Minute-Scale World Modeling with Hybrid Linear Diffusion Transformer"><img class="cover" src="/img/SANA-WM-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">SANA-WM: Efficient Minute-Scale World Modeling with Hybrid Linear Diffusion Transformer</div></div><div class="info-2"><div class="info-item-1">作者：Haoyi Zhu, Haozhe Liu, Yuyang Zhao, Tian Ye, Junsong Chen, Jincheng Yu, Tong He, Song Han, Enze Xie 单位：NVIDIA 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15178 研究动机  世界模型正在从“短视频生成”走向“可交互仿真”。在 camera-controlled world modeling 里，输入第一帧、文本描述和 6-DoF 相机轨迹，模型需要生成 60 秒、720p、且严格跟随轨迹的视频。这比普通 I2V 更难，因为它既要保持场景身份，又要在长时间内维持几何一致性。  现有开源世界模型要么依赖更大的模型、更多数据和多卡推理，要么通过短视频 teacher 蒸馏来降低成本。但短视频 teacher...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2026/05/14/MTD/" title="MTD: The Midas Touch for Metric Depth"><img class="cover" src="/img/MTD-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">MTD: The Midas Touch for Metric Depth</div></div><div class="info-2"><div class="info-item-1">作者：Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan 单位：College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intelligent Autonomous Systems, Tongji University; National Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Xi’an Jiaotong University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11578 研究动机 相对深度基础模型已经有很强的跨场景泛化能力，例如 MiDaS、DepthAnythingV2、Marigold...</div></div></div></a><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a><a class="pagination-related" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img class="cover" src="/img/Depth2Pose-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-20</div><div class="info-item-2">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</div></div><div class="info-2"><div class="info-item-1">作者：Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova 单位：Comenius University in Bratislava, Czech Technical University in Prague 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.19797 研究动机 评估标准存在局限性： 尽管单目深度估计（MDE）近年来取得了显著进展，并且预测的深度图在 Structure-from-Motion (SfM)、视觉定位和 SLAM 等下游几何任务中扮演着关键输入角色，但现有的 MDE 方法主要仍以深度绝对精度进行评估。通用的评估指标（如 Abs.Rel 或 RMSE）是在整张图像上全局聚合误差的，这并不能直接反映深度在具体的下游三维几何任务中的实用价值。  几何重要性非均匀分布： 在下游几何任务（如 SfM 或...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depthanythingv2/" title="Depth Anything v2"><img class="cover" src="/img/Depthanythingv21.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anything v2</div></div><div class="info-2"><div class="info-item-1">三个关键方法：1）将所有有标签的真实图像更换为合成图像 2）增强了教师模型的capacity 3）通过大规模伪标签真实图像对学生模型进行训练 真实标签数据的缺点：1）标签噪声：传感器固有的缺点、透明等场景 2）忽略的细节：边缘、洞 导致错误的估计，过度平滑的估计 合成数据的局限性：1）合成图像与真实图像之间的分布偏移 真实图像包含更多随机性，合成图像场景的布置较为有序。 2）所覆盖的场景有限，难以与真实世界的场景相匹敌 大规模无标签真实图像的作用：1）缩小合成图像与真实场景之间的领域差异 2）增大所覆盖的场景范围 3）知识迁移   sparse的gt在评估的时候真的会影响指标的可靠性么？ 能否直接训练或者使用一个强大的metric depth网络来生成metric的伪标签，从而使得学生模型能够具备metric depth预测能力？ </div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"><img src="/img/GTA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"/></a><div class="content"><a class="title" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion">GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion</a><time datetime="2026-05-20T13:20:00.000Z" title="发表于 2026-05-20 21:20:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img src="/img/RAEv2-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAEv2: Improved Baselines with Representation Autoencoders"/></a><div class="content"><a class="title" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders">RAEv2: Improved Baselines with Representation Autoencoders</a><time datetime="2026-05-20T11:15:00.000Z" title="发表于 2026-05-20 19:15:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img src="/img/Depth2Pose-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"/></a><div class="content"><a class="title" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</a><time datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img src="/img/PhyWorld-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PhyWorld: Physics-Faithful World Model for Video Generation"/></a><div class="content"><a class="title" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation">PhyWorld: Physics-Faithful World Model for Video Generation</a><time datetime="2026-05-20T06:14:38.000Z" title="发表于 2026-05-20 14:14:38">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"><img src="/img/Tango3D-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"/></a><div class="content"><a class="title" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence">Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence</a><time datetime="2026-05-20T06:08:21.000Z" title="发表于 2026-05-20 14:08:21">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/DepthVLM-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu 单位：Intelligent Vision Group, Tsinghua University 会议：2026 Arxiv 链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2605.16258 研究动机 这篇文章的核心问题是：现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/05/18/IVGT/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu 单位：Intelligent Vision Group, Tsinghua University 会议：2026 Arxiv 链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2605.16258 研究动机 这篇文章的核心问题是：现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/IVGT-0.png">
+<meta property="article:published_time" content="2026-05-18T05:57:22.000Z">
+<meta property="article:modified_time" content="2026-05-18T06:01:48.935Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="三维重建">
+<meta property="article:tag" content="前馈模型">
+<meta property="article:tag" content="几何基础模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/IVGT-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation",
+  "url": "https://zjj-low-key.github.io/2026/05/18/IVGT/",
+  "image": "https://zjj-low-key.github.io/img/IVGT-0.png",
+  "datePublished": "2026-05-18T05:57:22.000Z",
+  "dateModified": "2026-05-18T06:01:48.935Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/05/18/IVGT/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/IVGT-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-18T05:57:22.000Z" title="发表于 2026-05-18 13:57:22">2026-05-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-18T06:01:48.935Z" title="更新于 2026-05-18 14:01:48">2026-05-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu</p>
+<p><strong>单位：</strong>Intelligent Vision Group, Tsinghua University</p>
+<p><strong>会议：</strong>2026 Arxiv</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.16258">https://arxiv.org/abs/2605.16258</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p><img src="/img/IVGT-0.png" alt="IVGT-0" title="IVGT-0"></p>
+<p>这篇文章的核心问题是：现有 VGGT/DUSt3R 系列视觉几何基础模型大多输出显式几何，例如每个输入视角上的 depth map 或 pixel-aligned pointmap。这种表示非常适合快速估计相机和粗几何，但它有两个天然限制：</p>
+<ol>
+<li><p>几何只定义在像素采样点上，是离散的、视角绑定的，同一个物理表面可能在多个视角中被重复预测。</p>
+</li>
+<li><p>如果要得到连续 mesh、任意视角渲染、surface normal 或 SDF 等下游结果，往往还需要额外建模或后处理。</p>
+</li>
+</ol>
+<p>传统 NeRF/SDF 方法能提供连续神经场，但通常依赖已知相机位姿，并且需要每个场景单独优化。IVGT 想把这两条路线接起来：像 VGGT 一样从未标定多视图图像前馈推理，又像神经隐式场一样得到可连续查询的 3D scene representation。</p>
+<p><img src="/img/IVGT-1.png" alt="IVGT-1" title="IVGT-1"></p>
+<p>所以本文的问题可以概括为：</p>
+<blockquote>
+<p>能否让一个视觉几何 Transformer 不再只输出离散 pointmap，而是直接预测一个 pose-free、feed-forward、可连续查询的隐式神经场？</p>
+</blockquote>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><img src="/img/IVGT-2.png" alt="IVGT-2" title="IVGT-2"></p>
+<p>IVGT 的输入是未标定位姿的多视图 RGB 图像，输出不是一组固定点，而是一个全局 canonical coordinate system 下的 neural scene representation。这个表示可以接受任意 3D query point，预测该点的 SDF 和颜色，从而进一步做 volume rendering、surface extraction、depth/normal/RGB 渲染。</p>
+<ol>
+<li>多视图特征聚合</li>
+</ol>
+<p>模型用 transformer backbone 处理所有输入视角的 token，并通过 frame-wise attention 与 global feature attention 交替聚合视角内和跨视角信息。它还会辅助预测每个输入视角的相机参数和深度图，这些几何量用于后续投影、采样和构造场景边界。</p>
+<p>最终得到的全局表示可以写成：</p>
+<script type="math/tex; mode=display">
+\mathcal{F} = \{F_i\}_{i=1}^{N}</script><p>其中每个 $F_i$ 是已经隐式对齐到共享 canonical system 的 view-specific feature。</p>
+<ol>
+<li>连续 3D query 与 ray-depth embedding</li>
+</ol>
+<p>给定 canonical coordinate system 中任意一点 $\mathbf{x}$，模型会把它投影到所有可见输入视角，并聚合对应像素特征：</p>
+<script type="math/tex; mode=display">
+z_f = \sum_{i=1}^{N_k} F_i(\pi(\mathbf{x}))</script><p>仅用投影像素特征是不够的，因为同一条射线上的多个 3D 点会投影到同一个像素，但它们的真实几何和外观不同。直接对绝对 3D 坐标做 positional encoding 也有问题：坐标值依赖参考帧选择，同一物理点换一个 reference frame 就会得到不同编码。</p>
+<p>IVGT 的做法是编码 query point 相对每个视角的 ray depth：</p>
+<script type="math/tex; mode=display">
+z_d = \sum_{i=1}^{N_k} f_{raydepth}(d_i(\mathbf{x}))</script><p>然后把图像特征 $z_f$ 和 ray-depth feature $z_d$ 拼接，得到局部空间特征 $z$。这个设计的直觉是：ray depth 是相对视角的几何量，比绝对 XYZ 更适合 pose-free 多视图场景。</p>
+<ol>
+<li>级联 SDF 与颜色解码器</li>
+</ol>
+<p>IVGT 先用 8-layer MLP 从 $z$ 解码 SDF 值和中间外观特征：</p>
+<script type="math/tex; mode=display">
+(\hat{s}, \hat{z}) = f_{\theta}(z)</script><p>再把外观特征、SDF 梯度对应的 surface normal、以及 viewing direction positional encoding 送入 2-layer MLP，预测 view-dependent color：</p>
+<script type="math/tex; mode=display">
+\hat{c} = c_{\theta}(\hat{z}, \hat{n}, \gamma(\mathbf{v}))</script><p>这就把几何和外观放进了同一个连续隐式场里。</p>
+<ol>
+<li>渲染与 surface extraction</li>
+</ol>
+<p>渲染时沿每条相机射线采样 3D 点，预测每个采样点的 SDF 和颜色，再将 SDF 转换为 density 进行体渲染，得到 RGB、depth 和 normal。</p>
+<p>提取 mesh 时，先用输入视角预测深度和相机位姿构造粗点云，估计场景 bounding volume；再在体素网格上查询 SDF，筛选有效区域并上采样到更高分辨率，最后用 Marching Cubes 提取连续 surface。</p>
+<ol>
+<li>两阶段训练</li>
+</ol>
+<p>第一阶段只用 2D 渲染监督和相机监督，损失包含：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{stage1}
+= \mathcal{L}_{rgb}
++ \lambda_1 \mathcal{L}_{depth-render}
++ \lambda_2 \mathcal{L}_{normal}
++ \lambda_3 \mathcal{L}_{camera}</script><p>第二阶段加入 SDF 几何正则，包括 Eikonal loss、smoothness loss，以及 VGGT 风格的 depth loss：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{stage2}
+= \mathcal{L}_{stage1}
++ \lambda_4 \mathcal{L}_{eikonal}
++ \lambda_5 \mathcal{L}_{smooth}
++ \lambda_6 \mathcal{L}_{depth}</script><p>这样设计的原因是：太早加入 3D 约束会妨碍模型先学到基本几何分布，而只靠 2D supervision 又会得到粗糙、不规则的 surface。先学粗几何，再加 SDF 正则，是本文稳定 surface quality 的关键。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>训练数据覆盖 object-level 和 scene-level，包含真实数据与合成数据：</p>
+<ol>
+<li>ARKitScenes</li>
+<li>CO3Dv2</li>
+<li>HyperSim</li>
+<li>MegaDepth</li>
+<li>OmniObject3D</li>
+<li>ScanNet</li>
+<li>ScanNet++</li>
+<li>Unreal4K</li>
+<li>WildRGBD</li>
+</ol>
+<p>监督信号主要需要 camera poses 和 RGB-D 数据；surface normal 不是人工标注，而是用 DSine 从 RGB 预测得到。</p>
+<p>评测覆盖多个任务和数据集：</p>
+<ol>
+<li>Mesh reconstruction：ScanNet</li>
+<li>Pointmap reconstruction：7-Scenes、NRGBD、DTU</li>
+<li>Camera pose estimation：ScanNet、Sintel、TUM-dynamics</li>
+<li>Novel view synthesis：RealEstate10K、DL3DV、ScanNet qualitative visualization</li>
+<li>Depth estimation：NYUv2、Sintel</li>
+<li>Surface normal estimation：NYUv2、iBims-1</li>
+</ol>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文给出的实现细节如下：</p>
+<ol>
+<li><p>Image encoder 和 global feature extraction module 初始化自 VGGT 预训练权重。</p>
+</li>
+<li><p>优化器为 AdamW，学习率 warmup 到 $2 \times 10^{-4}$，随后 cosine decay。</p>
+</li>
+<li><p>每次迭代从 8 个视角渲染，其中 4 个 context views，4 个 novel views。</p>
+</li>
+<li><p>每个视角采样 1024 条 rays，并使用 error-bounded sampling 采样射线上的点。</p>
+</li>
+<li><p>使用 4 张 A800 NVIDIA GPU 训练 4 天。</p>
+</li>
+</ol>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="/img/IVGT-3.png" alt="IVGT-3" title="IVGT-3"></p>
+<p>在 ScanNet mesh reconstruction 上，IVGT 是 generalizable 方法，不需要每个场景单独优化。它的 F-score 为 0.647，低于 MonoSDF 的 0.733，但优于 COLMAP、UNISURF、NeuS、VolSDF 和 Manhattan-SDF。考虑到 MonoSDF 需要每个场景优化数小时，IVGT 的优势在于一次前馈推理就能得到连续 mesh。</p>
+<p><img src="/img/IVGT-4.png" alt="IVGT-4" title="IVGT-4"></p>
+<p>定性 mesh reconstruction 说明 IVGT 的 surface 更完整，也比部分 per-scene 优化方法更平滑稳定。它不是简单输出点云，而是从隐式 SDF 场中提取 surface，因此天然更适合生成连续 mesh。</p>
+<p><img src="/img/IVGT-5.png" alt="IVGT-5" title="IVGT-5"></p>
+<p>作者还展示了跨场景、跨对象尺度的 colored mesh reconstruction。这里的意义在于：IVGT 不只适用于单一室内场景，也能处理 object-level 数据，并在没有 test-time optimization 的情况下输出带颜色的 mesh。</p>
+<p><img src="/img/IVGT-6.png" alt="IVGT-6" title="IVGT-6"></p>
+<p>Pointmap reconstruction 上，直接从 per-view features 解码的 IVGT pointmap 在 7-Scenes、NRGBD、DTU 上多数指标优于 Fast3R、CUT3R、Point3R、StreamVGGT 和 VGGT。值得注意的是，IVGT 同时报告了 <code>IVGT</code> 和 <code>IVGT (from render)</code>：前者来自显式 per-view depth 解码，后者来自隐式场渲染得到的 depth。</p>
+<p><img src="/img/IVGT-7.png" alt="IVGT-7" title="IVGT-7"></p>
+<p>Figure 6 直观展示了 pointmap 和 mesh 表示的差别：pixel-aligned pointmap 在物体边界处容易稀疏、不连续，而从 IVGT 隐式场提取的 mesh 在表面连续性和完整性上更好。</p>
+<p><img src="/img/IVGT-8.png" alt="IVGT-8" title="IVGT-8"></p>
+<p>相机位姿估计方面，IVGT 在 ScanNet、Sintel、TUM-dynamics 上和 VGGT、WorldMirror 等前馈方法接近或更优。由于 IVGT 的主目标不是 pose-only，而是连续场景表示，这组结果说明隐式表示没有破坏原有视觉几何基础模型的 pose estimation 能力。</p>
+<p><img src="/img/IVGT-9.png" alt="IVGT-9" title="IVGT-9"></p>
+<p>Novel view synthesis 上，IVGT 的 PSNR/SSIM 有竞争力，但 LPIPS 明显落后于 WorldMirror 和部分 3DGS 风格方法。例如 RealEstate10K 2-view 下，IVGT 的 PSNR 为 18.97，低于 WorldMirror 的 20.62；LPIPS 为 0.449，也不如 WorldMirror 的 0.187。这与作者在 limitation 中的说法一致：SDF-based rendering 几何连贯，但高频外观细节不如专门的 NVS 方法。</p>
+<p><img src="/img/IVGT-10.png" alt="IVGT-10" title="IVGT-10"></p>
+<p>ScanNet novel view synthesis 定性结果显示，IVGT 可以从同一个 SDF 场渲染 RGB、depth 和 normal。图像可能偏平滑，但 depth 和 normal 的结构连续性较好。</p>
+<p><img src="/img/IVGT-11.png" alt="IVGT-11" title="IVGT-11"></p>
+<p>深度估计上，IVGT 在 Sintel monocular/video 上表现强，Sintel video 的 Abs Rel 为 0.295，略优于 VGGT 的 0.299；NYUv2 上 Abs Rel 低于 VGGT，但 $\delta &lt; 1.25$ 更高。说明它在 depth 任务上仍然保留了几何基础模型的能力。</p>
+<p><img src="/img/IVGT-12.png" alt="IVGT-12" title="IVGT-12"></p>
+<p>Surface normal estimation 上，IVGT 没有专门为 normal 任务设计，但在 NYUv2 与 iBims-1 上接近 DSine 等专门 normal 方法。这说明 SDF 表示确实捕获了可用于 surface orientation 的几何结构。</p>
+<p><img src="/img/IVGT-13.png" alt="IVGT-13" title="IVGT-13"></p>
+<p>位置编码消融很关键。使用绝对 XYZ 坐标的 <code>XYZ-PosEnc</code> 和 <code>XYZ-Embed</code> 都明显不如 <code>Raydepth-Embed</code>。这支持了作者的论点：在 pose-free 多视图场景中，绝对坐标依赖参考帧，容易引入 ambiguity；相对视角的 ray depth 更稳定。</p>
+<p><img src="/img/IVGT-14.png" alt="IVGT-14" title="IVGT-14"></p>
+<p>两阶段训练消融表明，Stage 1 只靠 2D supervision 能学到粗几何，但表面很粗糙；Stage 2 加入 Eikonal 和 smoothness regularization 后，mesh 明显更平滑、更连贯。</p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><p>把 VGGT 类前馈视觉几何模型和 SDF/NeRF 类连续隐式表示接起来，方向很清晰。</p>
+</li>
+<li><p>输入不需要已知相机位姿，仍然能构建 canonical coordinate system 下的 neural scene representation。</p>
+</li>
+<li><p>一个表示同时支持 mesh、pointmap、camera pose、NVS、depth、normal，多任务接口统一。</p>
+</li>
+<li><p>Ray-depth embedding 是一个很实用的设计，避免直接使用绝对 XYZ 带来的 reference-frame ambiguity。</p>
+</li>
+<li><p>相比 per-scene SDF/NeRF 优化，IVGT 是 feed-forward generalizable 方法，速度和可扩展性更好。</p>
+</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><p>NVS 的高频外观质量不如专门的 3DGS / NVS 方法，LPIPS 指标也明显落后。</p>
+</li>
+<li><p>Eikonal 和 smoothness prior 有利于 surface coherence，但可能压掉薄结构、尖锐边缘和细粒度几何。</p>
+</li>
+<li><p>当前假设静态场景和有界空间范围，不适合直接处理动态场景或大范围无界室外场景。</p>
+</li>
+<li><p>连续 3D query 需要把每个采样点投影到多个输入视角并聚合特征，推理成本高于直接解码 pixel-aligned pointmap，实时部署仍有压力。</p>
+</li>
+<li><p>目前论文没有给出与 DUSt3R/MASt3R/VGGT 在完全相同部署约束下的端到端速度对比，工程可用性还需要更多验证。</p>
+</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><p>IVGT 的核心不是“更好的 pointmap”，而是把视觉几何基础模型的输出从离散显式几何升级成连续隐式场。</p>
+</li>
+<li><p>Pose-free 场景中不要轻易用绝对 XYZ positional encoding，reference frame 会引入 ambiguity。</p>
+</li>
+<li><p>Ray-depth embedding 把 3D query point 的位置写成相对各输入视角的深度，比绝对坐标更稳定。</p>
+</li>
+<li><p>先 2D rendering supervision 学粗几何，再加 Eikonal/smoothness 规整 surface，是训练连续 SDF 表示的关键。</p>
+</li>
+<li><p>这篇更像 VGGT 类模型通向“可渲染、可提 mesh 的 3D scene representation”的一步，而不是单纯追求某一个 depth/pose benchmark 的 SOTA。</p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E9%A6%88%E6%A8%A1%E5%9E%8B/">前馈模型</a><a class="post-meta__tags" href="/tags/%E5%87%A0%E4%BD%95%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/">几何基础模型</a></div><div class="post-share"><div class="social-share" data-image="/img/IVGT-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/18/DINO/" title="Emerging Properties in Self-Supervised Vision Transformers"><img class="cover" src="/img/DINO-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Emerging Properties in Self-Supervised Vision Transformers</div></div><div class="info-2"><div class="info-item-1">作者：Mathilde Caron, Hugo Touvron, Ishan Misra, Herve Jegou, Julien Mairal, Piotr Bojanowski, Armand Joulin 单位：Facebook AI Research, Inria, Sorbonne University 会议：ICCV 2021 / arXiv 2021 链接：https://arxiv.org/abs/2104.14294 研究动机 这篇论文关心的问题不是“ViT 能不能做自监督”，而是“自监督会不会让 ViT 学到和监督学习、卷积网络不同的性质”。当时 ViT 在视觉任务上已经能和卷积网络竞争，但代价是更多数据和更高算力，而且特征并没有表现出特别清晰的独特优势。作者的判断是：如果 Transformer 在 NLP 中的成功很大程度来自自监督预训练，那么视觉 Transformer 也应该检查监督标签是否压缩了图像中的丰富信息。 论文给出的两个核心观察很直接。第一，自监督 ViT 的最后一层 [CLS] token...</div></div></div></a><a class="pagination-related" href="/2026/05/18/DepthVLM/" title="Unlocking Dense Metric Depth Estimation in VLMs"><img class="cover" src="/img/DepthVLM-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Unlocking Dense Metric Depth Estimation in VLMs</div></div><div class="info-2"><div class="info-item-1">作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15876 研究动机 这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。 已有路线大致有三类问题：  纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。  一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。  DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/14/Mix3R/" title="Mix3R: Mixing Feed-forward Reconstruction and Generative 3D Priors for Joint Multi-view Aligned 3D Reconstruction and Pose Estimation"><img class="cover" src="/img/Mix3R-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">Mix3R: Mixing Feed-forward Reconstruction and Generative 3D Priors for Joint Multi-view Aligned 3D Reconstruction and Pose Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Siyou Lin, Zhou Xue, Hongwen Zhang, Liang An, Dongping Li, Shaohui Jiao, Yebin Liu 单位：Tsinghua University, Beijing Normal University, ByteDance 会议：SIGGRAPH 2026 Conference Track / arXiv 2026 链接：https://arxiv.org/abs/2605.03359 研究动机 传统多视角重建方法例如 COLMAP 依赖密集相机、特征匹配和多视角几何优化，几何精度很强，但在稀疏视角、纹理不足或遮挡明显的物体上容易失效，计算流程也不够前馈。  前馈式重建方法例如 VGGT、$\pi^3$、MapAnything 和 Depth Anything 3 可以直接预测深度、点图、射线图或相机位姿，优势是像素级对齐很自然；问题是它们主要重建可见区域，对输入视角之间的重叠依赖较强，所以稀疏视角下容易得到不完整或错误的形状。  3D 生成模型例如 TRELLIS...</div></div></div></a><a class="pagination-related" href="/2026/04/23/Pow3R/" title="Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors"><img class="cover" src="/img/pow3r-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-11</div><div class="info-item-2">Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors</div></div><div class="info-2"><div class="info-item-1">作者：Wonbong Jang, Philippe Weinzaepfel, Lourdes Agapito, Vincent Leroy, Jerome Revaud  单位：UCL, Naver Labs Europe  会议：2025 CVPR 链接：https://openaccess.thecvf.com/content/CVPR2025/papers/Jang_Pow3R_Empowering_Unconstrained_3D_Reconstruction_with_Camera_and_Scene_Priors_CVPR_2025_paper.pdf  研究动机 传统的SfM（如COLMAP）缺乏预先学习的先验，每个场景必须独立优化，且对异常值和挑战性条件很敏感 。  现有的3D视觉基础模型（如DUSt3R和MASt3R）输入空间受限，仅支持纯RGB图像输入，无法利用测试时可能获取到的辅助先验信息（如相机内参、相对位姿或稀疏/稠密深度图）...</div></div></div></a><a class="pagination-related" href="/2024/12/08/3DGS/" title="DIFFERENTIABLE 3D GAUSSIAN SPLATTING"><img class="cover" src="/img/3DGS1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DIFFERENTIABLE 3D GAUSSIAN SPLATTING</div></div><div class="info-2"><div class="info-item-1"> 3D高斯的优势：非结构化、可微、利用快速α混合进行渲染、无需法线 世界坐标系下，高斯由三维协方差矩阵和点（均值）μ表示：  G ( x ) \,=e^{-\frac{1} {2} ( x )^{T} \Sigma^{-1} ( x )} \tag{4}给定视角变换矩阵W，相机坐标系下的协方差矩阵为：  \Sigma^{\prime}=J W \Sigma W^{T} J^{T} \tag{5}其中J是投影变换的仿射近似雅可比矩阵 协方差矩阵只有在半正定的时候才具有物理意义，而如果直接对协方差矩阵使用梯度下降优化，很难保证矩阵的合理性。 由于协方差矩阵是用来描述椭球的形状，因此可以用缩放矩阵S和旋转矩阵R来获得一个对应的协方差矩阵：  \Sigma=R S S^{T} R^{T}\tag{6}OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIANSOptimization优化的参数：位置p，α，协方差矩阵，球谐函数系数  \mathcal{L}=( 1-\lambda)...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Dust3r/" title="DUSt3R: Geometric 3D Vision Made Easy"><img class="cover" src="/img/Dust3r1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DUSt3R: Geometric 3D Vision Made Easy</div></div><div class="info-2"><div class="info-item-1">相关概念Pointmap将三维点的稠密二维场表示为pointmap $X \in\mathbb{R}^{W \times H \times3}$ ，对应分辨率为$W×H$ 的RGB图像 $I$，$X$描述了图像像素和三维场景点之间的一一对应关系。 假设每一条相机光线只会击中一个三维点，即忽略半透明表面的情况 Cameras and scene给定相机内参矩阵$K \in\mathbb{R}^{3 \times3}$ ，pointmap就能够根据给定的ground-truth 深度图$D \in\mathbb{R}^{W \times H}$ 获得：  X_{i, j}=K^{-1} D_{i, j} \left[ i, j, 1 \right]^{\top}$X^{n,m}$表示相机$n$的pointmap $X^n$在相机$m$坐标系中的表示：  X^{n, m}=P_{m} P_{n}^{-1} h \left( X^{n} \right) \tag{1}其中$P{m}, P{n} \in\mathbb{R}^{3 \times4}$ 是世界坐标系到相机坐标系的位姿，$h...</div></div></div></a><a class="pagination-related" href="/2024/12/08/EWAVolumeSplatting/" title="EWA Volume Splatting"><img class="cover" src="/img/EWA1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">EWA Volume Splatting</div></div><div class="info-2"><div class="info-item-1">elliptical Gaussian kernels 椭圆高斯核 Splatting algorithms interpret volume data as a set of particles that are absorbing and emitting light. 泼溅算法将体素数据解释为一组吸收和发射光的粒子。 Our method is based on a novel framework to compute the footprint function, which relies on the transformation of the volume data to so-called ray space. This transformation is equivalent to perspective projection. By using its local affine approximation at each voxel, we derive an analytic expression for the EWA footprint in...</div></div></div></a><a class="pagination-related" href="/2024/12/08/MASt3R/" title="Grounding Image Matching in 3D with MASt3R"><img class="cover" src="/img/MASt3R1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">Grounding Image Matching in 3D with MASt3R</div></div><div class="info-2"><div class="info-item-1">问题描述给定两张图像 $I^1$ 和 $I^2$ ，分别由未知参数的相机 $C^1$ 和 $C^2$ 采集，恢复出一组像素对应点 ${(i,j)}$ Method 由于gt pointmaps是metric的，所以为了得到metric的预测，将原本的nomalize的因子设置为 $z:= \hat{z}$ Matching prediction head and loss回归的方法固有地会受到噪声地影响，且DUSt3R没有显式地针对matching任务做训练。 Matching head  D^{1}=\mathrm{H e a d}_{\mathrm{d e s c}}^{1} ( [ H^{1}, H^{\prime1} ] ), \tag{8} D^{2}=\mathrm{H e a d}_{\mathrm{d e s c}}^{2} ( [ H^{2}, H^{\prime2} ] ). \tag{9}Head是一个简单的两层MLP以及非线性GELU激活函数，最后，将每个局部feature 归一化。 Matching objective 一张图像中的每一个local...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"><img src="/img/GTA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"/></a><div class="content"><a class="title" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion">GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion</a><time datetime="2026-05-20T13:20:00.000Z" title="发表于 2026-05-20 21:20:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img src="/img/RAEv2-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAEv2: Improved Baselines with Representation Autoencoders"/></a><div class="content"><a class="title" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders">RAEv2: Improved Baselines with Representation Autoencoders</a><time datetime="2026-05-20T11:15:00.000Z" title="发表于 2026-05-20 19:15:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img src="/img/Depth2Pose-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"/></a><div class="content"><a class="title" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</a><time datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img src="/img/PhyWorld-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PhyWorld: Physics-Faithful World Model for Video Generation"/></a><div class="content"><a class="title" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation">PhyWorld: Physics-Faithful World Model for Video Generation</a><time datetime="2026-05-20T06:14:38.000Z" title="发表于 2026-05-20 14:14:38">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"><img src="/img/Tango3D-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"/></a><div class="content"><a class="title" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence">Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence</a><time datetime="2026-05-20T06:08:21.000Z" title="发表于 2026-05-20 14:08:21">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/IVGT-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

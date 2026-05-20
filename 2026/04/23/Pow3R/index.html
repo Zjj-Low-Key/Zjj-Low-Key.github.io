@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Wonbong Jang, Philippe Weinzaepfel, Lourdes Agapito, Vincent Leroy, Jerome Revaud  单位：UCL, Naver Labs Europe  会议：2025 CVPR 链接：https:&#x2F;&#x2F;openaccess.thecvf.com&#x2F;content&#x2F;CVPR2025&#x2F;papers&#x2F;Jang_Pow3R_Empowe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/04/23/Pow3R/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Wonbong Jang, Philippe Weinzaepfel, Lourdes Agapito, Vincent Leroy, Jerome Revaud  单位：UCL, Naver Labs Europe  会议：2025 CVPR 链接：https:&#x2F;&#x2F;openaccess.thecvf.com&#x2F;content&#x2F;CVPR2025&#x2F;papers&#x2F;Jang_Pow3R_Empowe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/pow3r-0.png">
+<meta property="article:published_time" content="2026-04-23T11:26:20.000Z">
+<meta property="article:modified_time" content="2026-05-11T12:58:19.091Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="三维重建">
+<meta property="article:tag" content="前馈模型">
+<meta property="article:tag" content="多模态输入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/pow3r-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors",
+  "url": "https://zjj-low-key.github.io/2026/04/23/Pow3R/",
+  "image": "https://zjj-low-key.github.io/img/pow3r-0.png",
+  "datePublished": "2026-04-23T11:26:20.000Z",
+  "dateModified": "2026-05-11T12:58:19.091Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/04/23/Pow3R/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/pow3r-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Pow3R:Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-23T11:26:20.000Z" title="发表于 2026-04-23 19:26:20">2026-04-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-11T12:58:19.091Z" title="更新于 2026-05-11 20:58:19">2026-05-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Wonbong Jang, Philippe Weinzaepfel, Lourdes Agapito, Vincent Leroy, Jerome Revaud </p>
+<p><strong>单位：</strong>UCL, Naver Labs Europe </p>
+<p><strong>会议：</strong>2025 CVPR</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content/CVPR2025/papers/Jang_Pow3R_Empowering_Unconstrained_3D_Reconstruction_with_Camera_and_Scene_Priors_CVPR_2025_paper.pdf">https://openaccess.thecvf.com/content/CVPR2025/papers/Jang_Pow3R_Empowering_Unconstrained_3D_Reconstruction_with_Camera_and_Scene_Priors_CVPR_2025_paper.pdf</a> </p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><ol>
+<li><p>传统的SfM（如COLMAP）缺乏预先学习的先验，每个场景必须独立优化，且对异常值和挑战性条件很敏感 。</p>
+</li>
+<li><p>现有的3D视觉基础模型（如DUSt3R和MASt3R）输入空间受限，仅支持纯RGB图像输入，无法利用测试时可能获取到的辅助先验信息（如相机内参、相对位姿或稀疏/稠密深度图） 。</p>
+</li>
+<li><p>缺乏高分辨率处理能力，受限于训练分辨率，DUSt3R处理大尺寸图像时容易模糊，且由于不输出第二张图自身坐标系下的点图，相对位姿估计速度慢且需要两次前向传播 。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>能否设计一个统一的3D前馈回归模型，既能像DUSt3R一样在无约束条件下工作，又能灵活地在测试时注入任意组合的相机或场景先验，从而实现精度的提升以及原生高分辨率处理等新功能？</strong> </p>
+</blockquote>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><img src="/img/pow3r-1.png" alt="pow3r-1" title="pow3r-1"></p>
+<ol>
+<li><p>统一的多先验注入网络架构</p>
+<p><img src="/img/pow3r-2.png" alt="pow3r-2" title="pow3r-2"></p>
+</li>
+</ol>
+<p>模型基于DUSt3R的Transformer架构，但在预测 $X^{1,1}$ 和 $X^{2,1}$ 的基础上，增加了一个预测分支来输出第二张图像在其自身相机坐标系下的点图 $X^{2,2}$ 。为了注入辅助信息，模型采用了“Inject-1”策略，即在Encoder或Decoder的第一个Block注入对应的多模态嵌入特征 。</p>
+<ol>
+<li>多模态先验的特征编码与对齐</li>
+</ol>
+<ul>
+<li><p><strong>内参（Intrinsics）：</strong> 将相机内参 $K$ 转换为密集的相机光线映射 $K^{-1}[i,j,1]$，进行Patchify编码后与RGB特征结合，这使模型能够理解非中心裁剪图像的空间位置 。</p>
+</li>
+<li><p><strong>深度（Depthmaps / Point Clouds）：</strong> 将稀疏或稠密的深度图 $D$ 及其掩码 $M$ 拼接为 $[D’, M]$ 后进行Patchify编码输入到Encoder 。</p>
+</li>
+<li><p><strong>相对位姿（Camera Pose）：</strong> 将相对位姿平移向量归一化后，通过MLP编码并直接加到Decoder的全局CLS Token上 。</p>
+</li>
+</ul>
+<ol>
+<li>基于置信度的3D回归损失</li>
+</ol>
+<p>除了预测点图，模型还预测置信度图 $C_{i,j}^{n,m}$。损失函数采用置信度加权的尺度不变3D回归损失，鼓励模型在困难区域推断：</p>
+<p>​                    <script type="math/tex">\mathcal{L}^{conf}(n,m)=\sum_{i,j\in\mathcal{D}}C_{i,j}^{n,m}\mathcal{L}_{i,j}^{regr}(n,m)-\alpha \log C_{i,j}^{n,m}</script></p>
+<p>其中，$\alpha=0.2$ 。总损失结合了三个点图的预测 。</p>
+<ol>
+<li>滑动窗口高分辨率处理与快速位姿估计</li>
+</ol>
+<p>由于注入了相机内参光线，模型具备了“裁剪感知”能力 。推理时可以通过滑动窗口切片处理高分辨率图像，通过中值尺度因子对齐重叠区域，实现原生高分辨率预测 。同时，利用新预测的 $X^{2,2}$ 和 $X^{2,1}$，可以直接通过Procrustes对齐算法求解相对位姿 $[R^<em>|t^</em>]$，比RANSAC PnP快一个数量级：</p>
+<p>​                <script type="math/tex">\sigma, R, t^* = \arg \min_{\sigma,R,t} \sum_{i,j} \sqrt{C_{i,j}^{2,2} C_{i,j}^{2,1}} \left\| \sigma(R X_{i,j}^{2,2} + t) - X_{i,j}^{2,1} \right\|^2</script></p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>Train：Habitat, MegaDepth, ARKitScenes, Static Scenes 3D, BlendedMVS, ScanNet++, Co3D-v2, Waymo (共计850万图像对) </p>
+<p>Eval：NYUv2 (深度补全), KITTI, ScanNet, ETH3D, DTU, Tanks and Temples, Co3Dv2, RealEstate10K, InfiniGen </p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>8张 A100 GPUs (先在 224px 分辨率下训练3天，再在 512px 下微调2天) </p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="/img/pow3r-3.png" alt="pow3r-3" title="pow3r-3"></p>
+<p><img src="/img/pow3r-4.png" alt="pow3r-4" title="pow3r-4"></p>
+<p><img src="/img/pow3r-5.png" alt="pow3r-5" title="pow3r-5"></p>
+<p><img src="/img/pow3r-6.png" alt="pow3r-6" title="pow3r-6"></p>
+<p><img src="/img/pow3r-7.png" alt="pow3r-7" title="pow3r-7"></p>
+<p><img src="/img/pow3r-8.png" alt="pow3r-8" title="pow3r-8"></p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><p><strong>极其灵活的输入模态：</strong> 在没有任何先验时，性能与DUSt3R相当；当提供任意组合的先验（内参、稀疏深度、位姿）时，性能均能得到显著提升（统一网络，无需重新训练） 。</p>
+</li>
+<li><p><strong>解锁了高分辨率预测能力：</strong> 通过引入内参对应的光线编码，打破了Transformer固定分辨率的限制，实现了基于滑窗的无缝高分辨大图推理 。</p>
+</li>
+<li><p><strong>推断效率的巨大提升：</strong> 单次前向传播即可输出 $X^{2,2}$，使得相对位姿估计可以直接使用Procrustes对齐，相比传统PnP速度提升约10倍 。</p>
+</li>
+<li><p><strong>对噪声先验的鲁棒性（可控性）：</strong> 当输入的辅助信息偏离真实值太多时，模型能够自主判断并降低预测置信度，而不会被错误先验完全带偏 。</p>
+</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><p>继承了基础模型（如DUSt3R）的计算代价，ViT处理图像对的方式在应对超大规模视频或实时SLAM系统时依然偏重 。</p>
+</li>
+<li><p>对于极度缺乏纹理或者存在极强反射的困难区域，尽管有置信度预测，仅靠双视图的匹配与先验仍可能存在一定的不稳定。对于全局大规模场景，仍需依赖全局对齐优化（Global Alignment） 。</p>
+</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><p><strong>随机模态丢弃训练 (Random subset dropout)：</strong> 训练时随机丢弃不同的辅助输入组合，使得单一模型可以在测试时自适应不同级别的先验信息 。</p>
+</li>
+<li><p><strong>将内参转化为空间光线映射 (Rays from Intrinsics)：</strong> 这一简单的设计赋予了图像块强烈的空间位置先验，从而允许模型理解局部裁剪（Crop），解锁了高分辨率推理 。</p>
+</li>
+<li><p><strong>$X^{2,2}$ 的预测极大提升位姿解算效率：</strong> 预测第二张图自身坐标系的点图，使得原本复杂的透视N点问题(PnP)简化为闭式解的Procrustes对齐问题 。</p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E9%A6%88%E6%A8%A1%E5%9E%8B/">前馈模型</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%BE%93%E5%85%A5/">多模态输入</a></div><div class="post-share"><div class="social-share" data-image="/img/pow3r-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/12/UniCorrn/" title="UniCorrn: Unified Correspondence Transformer Across 2D and 3D"><img class="cover" src="/img/UniCorrn-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">UniCorrn: Unified Correspondence Transformer Across 2D and 3D</div></div><div class="info-2"><div class="info-item-1">作者：Prajnan Goswami, Tianye Ding, Feng Liu, Huaizu Jiang 单位：Northeastern University, Adobe Research 会议：CVPR 2026 链接：arXiv, Project, Code 研究动机视觉对应关系是 3D 视觉里非常底层的一类能力：给定同一场景的不同观测，模型要找出一个点在另一个观测里的对应位置。传统上这件事会按输入模态拆成三类任务：图像到图像的 2D-2D matching、图像到点云的 2D-3D matching、点云到点云的 3D-3D matching。  这篇论文想解决的问题不是单个 benchmark 的精度，而是一个更大的建模问题：  能否用一个共享权重的模型，同时处理 2D-2D、2D-3D 和 3D-3D 几何匹配？  作者认为已有路线有三个关键限制：  基于 cost volume / pyramid / recurrent refinement 的 2D...</div></div></div></a><a class="pagination-related" href="/2026/04/21/diffi2p/" title="Diff2I2P: Differentiable Image-to-Point Cloud Registration with Diffusion Prior"><img class="cover" src="/img/diffi2p-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Diff2I2P: Differentiable Image-to-Point Cloud Registration with Diffusion Prior</div></div><div class="info-2"><div class="info-item-1">作者：Juncheng Mu， Chengwei Ren，Weixiang Zhang， Liang Pan，Xiao-Ping Zhang，Yue Gao 单位：Tsinghua University, Shanghai AI Laboratory 会议：2025 ICCV 链接： https://github.com/mujc2021/Diff2I2P 研究动机1.当前的Image-to-Point Cloud的方法主要依靠度量学习来强制对齐图像和点云的特征空间，而忽略了两个模态之间存在的模态差距 2.非对齐的图像-深度会导致预训练扩散模型的预测能力下降，产生严重的生成伪影  3.梯度无法反向传播至骨干网络 核心方法 1.可微标定利用KPConv和ResNet分别提取特征，然后采用多尺度块匹配策略来缓解尺度不匹配问题。在选取相似度最高的前 K 个点-像素对之后，得到初始的对应点 可变性对应点调整：对于每一对初始的对应点，在gt的转换下，DCT都预测一个点偏移来对齐对应点：  C = \{(x_i + \Delta p_i, y_i) \mid (x_i, y_i) \in...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/18/IVGT/" title="IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation"><img class="cover" src="/img/IVGT-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation</div></div><div class="info-2"><div class="info-item-1">作者：Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu 单位：Intelligent Vision Group, Tsinghua University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.16258 研究动机 这篇文章的核心问题是：现有 VGGT/DUSt3R 系列视觉几何基础模型大多输出显式几何，例如每个输入视角上的 depth map 或 pixel-aligned pointmap。这种表示非常适合快速估计相机和粗几何，但它有两个天然限制：  几何只定义在像素采样点上，是离散的、视角绑定的，同一个物理表面可能在多个视角中被重复预测。  如果要得到连续 mesh、任意视角渲染、surface normal 或 SDF 等下游结果，往往还需要额外建模或后处理。   传统 NeRF/SDF 方法能提供连续神经场，但通常依赖已知相机位姿，并且需要每个场景单独优化。IVGT 想把这两条路线接起来：像 VGGT...</div></div></div></a><a class="pagination-related" href="/2026/05/14/Mix3R/" title="Mix3R: Mixing Feed-forward Reconstruction and Generative 3D Priors for Joint Multi-view Aligned 3D Reconstruction and Pose Estimation"><img class="cover" src="/img/Mix3R-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">Mix3R: Mixing Feed-forward Reconstruction and Generative 3D Priors for Joint Multi-view Aligned 3D Reconstruction and Pose Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Siyou Lin, Zhou Xue, Hongwen Zhang, Liang An, Dongping Li, Shaohui Jiao, Yebin Liu 单位：Tsinghua University, Beijing Normal University, ByteDance 会议：SIGGRAPH 2026 Conference Track / arXiv 2026 链接：https://arxiv.org/abs/2605.03359 研究动机 传统多视角重建方法例如 COLMAP 依赖密集相机、特征匹配和多视角几何优化，几何精度很强，但在稀疏视角、纹理不足或遮挡明显的物体上容易失效，计算流程也不够前馈。  前馈式重建方法例如 VGGT、$\pi^3$、MapAnything 和 Depth Anything 3 可以直接预测深度、点图、射线图或相机位姿，优势是像素级对齐很自然；问题是它们主要重建可见区域，对输入视角之间的重叠依赖较强，所以稀疏视角下容易得到不完整或错误的形状。  3D 生成模型例如 TRELLIS...</div></div></div></a><a class="pagination-related" href="/2026/05/14/SCOUP/" title="SCOUP: Sparse Code Uplifting for Efficient 3D Language Gaussian Splatting"><img class="cover" src="/img/SCOUP-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">SCOUP: Sparse Code Uplifting for Efficient 3D Language Gaussian Splatting</div></div><div class="info-2"><div class="info-item-1">作者：Lovre Antonio Budimir, Yushi Guan, Steve Ryhner, Sven Lončarić, Nandita Vijaykumar 单位：Faculty of Electrical Engineering and Computing, University of Zagreb; Department of Computer Science, University of Toronto; Vector Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.13600 研究动机 3D Language Gaussian Splatting 的目标是在 3DGS 场景上挂载语言对齐的视觉特征，让三维场景可以被文本查询，例如在重建好的房间里直接问 &quot;red cup&quot;、&quot;knife&quot;、&quot;bag of cookies&quot;，系统能够在 3D 空间和渲染视角中给出对应区域。 这件事的难点不在于 3DGS 本身，而在于语言特征太重。典型流程会先用...</div></div></div></a><a class="pagination-related" href="/2024/12/08/3DGS/" title="DIFFERENTIABLE 3D GAUSSIAN SPLATTING"><img class="cover" src="/img/3DGS1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DIFFERENTIABLE 3D GAUSSIAN SPLATTING</div></div><div class="info-2"><div class="info-item-1"> 3D高斯的优势：非结构化、可微、利用快速α混合进行渲染、无需法线 世界坐标系下，高斯由三维协方差矩阵和点（均值）μ表示：  G ( x ) \,=e^{-\frac{1} {2} ( x )^{T} \Sigma^{-1} ( x )} \tag{4}给定视角变换矩阵W，相机坐标系下的协方差矩阵为：  \Sigma^{\prime}=J W \Sigma W^{T} J^{T} \tag{5}其中J是投影变换的仿射近似雅可比矩阵 协方差矩阵只有在半正定的时候才具有物理意义，而如果直接对协方差矩阵使用梯度下降优化，很难保证矩阵的合理性。 由于协方差矩阵是用来描述椭球的形状，因此可以用缩放矩阵S和旋转矩阵R来获得一个对应的协方差矩阵：  \Sigma=R S S^{T} R^{T}\tag{6}OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIANSOptimization优化的参数：位置p，α，协方差矩阵，球谐函数系数  \mathcal{L}=( 1-\lambda)...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Dust3r/" title="DUSt3R: Geometric 3D Vision Made Easy"><img class="cover" src="/img/Dust3r1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DUSt3R: Geometric 3D Vision Made Easy</div></div><div class="info-2"><div class="info-item-1">相关概念Pointmap将三维点的稠密二维场表示为pointmap $X \in\mathbb{R}^{W \times H \times3}$ ，对应分辨率为$W×H$ 的RGB图像 $I$，$X$描述了图像像素和三维场景点之间的一一对应关系。 假设每一条相机光线只会击中一个三维点，即忽略半透明表面的情况 Cameras and scene给定相机内参矩阵$K \in\mathbb{R}^{3 \times3}$ ，pointmap就能够根据给定的ground-truth 深度图$D \in\mathbb{R}^{W \times H}$ 获得：  X_{i, j}=K^{-1} D_{i, j} \left[ i, j, 1 \right]^{\top}$X^{n,m}$表示相机$n$的pointmap $X^n$在相机$m$坐标系中的表示：  X^{n, m}=P_{m} P_{n}^{-1} h \left( X^{n} \right) \tag{1}其中$P{m}, P{n} \in\mathbb{R}^{3 \times4}$ 是世界坐标系到相机坐标系的位姿，$h...</div></div></div></a><a class="pagination-related" href="/2024/12/08/EWAVolumeSplatting/" title="EWA Volume Splatting"><img class="cover" src="/img/EWA1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">EWA Volume Splatting</div></div><div class="info-2"><div class="info-item-1">elliptical Gaussian kernels 椭圆高斯核 Splatting algorithms interpret volume data as a set of particles that are absorbing and emitting light. 泼溅算法将体素数据解释为一组吸收和发射光的粒子。 Our method is based on a novel framework to compute the footprint function, which relies on the transformation of the volume data to so-called ray space. This transformation is equivalent to perspective projection. By using its local affine approximation at each voxel, we derive an analytic expression for the EWA footprint in...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"><img src="/img/GTA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"/></a><div class="content"><a class="title" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion">GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion</a><time datetime="2026-05-20T13:20:00.000Z" title="发表于 2026-05-20 21:20:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img src="/img/RAEv2-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAEv2: Improved Baselines with Representation Autoencoders"/></a><div class="content"><a class="title" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders">RAEv2: Improved Baselines with Representation Autoencoders</a><time datetime="2026-05-20T11:15:00.000Z" title="发表于 2026-05-20 19:15:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img src="/img/Depth2Pose-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"/></a><div class="content"><a class="title" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</a><time datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img src="/img/PhyWorld-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PhyWorld: Physics-Faithful World Model for Video Generation"/></a><div class="content"><a class="title" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation">PhyWorld: Physics-Faithful World Model for Video Generation</a><time datetime="2026-05-20T06:14:38.000Z" title="发表于 2026-05-20 14:14:38">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"><img src="/img/Tango3D-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"/></a><div class="content"><a class="title" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence">Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence</a><time datetime="2026-05-20T06:08:21.000Z" title="发表于 2026-05-20 14:08:21">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/pow3r-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

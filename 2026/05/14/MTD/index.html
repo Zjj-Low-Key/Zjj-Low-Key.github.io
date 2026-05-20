@@ -1,0 +1,384 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MTD: The Midas Touch for Metric Depth | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan 单位：College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MTD: The Midas Touch for Metric Depth">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/05/14/MTD/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan 单位：College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intel">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/MTD-0.png">
+<meta property="article:published_time" content="2026-05-14T05:24:30.000Z">
+<meta property="article:modified_time" content="2026-05-14T05:27:31.476Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="单目深度估计">
+<meta property="article:tag" content="视觉基础模型">
+<meta property="article:tag" content="深度补全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/MTD-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MTD: The Midas Touch for Metric Depth",
+  "url": "https://zjj-low-key.github.io/2026/05/14/MTD/",
+  "image": "https://zjj-low-key.github.io/img/MTD-0.png",
+  "datePublished": "2026-05-14T05:24:30.000Z",
+  "dateModified": "2026-05-14T05:27:31.476Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/05/14/MTD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MTD: The Midas Touch for Metric Depth',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/MTD-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">MTD: The Midas Touch for Metric Depth</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">MTD: The Midas Touch for Metric Depth</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-14T05:24:30.000Z" title="发表于 2026-05-14 13:24:30">2026-05-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-14T05:27:31.476Z" title="更新于 2026-05-14 13:27:31">2026-05-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan</p>
+<p><strong>单位：</strong>College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intelligent Autonomous Systems, Tongji University; National Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Xi’an Jiaotong University</p>
+<p><strong>会议：</strong>2026 Arxiv</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.11578">https://arxiv.org/abs/2605.11578</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p><img src="/img/MTD-0.png" alt="MTD-0" title="MTD-0"></p>
+<p>相对深度基础模型已经有很强的跨场景泛化能力，例如 MiDaS、DepthAnythingV2、Marigold 等模型可以在新场景里给出结构很好的相对深度。但是这类输出天然缺少米制尺度，直接落到机器人、自动驾驶、SLAM 或 RGB-D 设备增强时，会遇到三个问题。</p>
+<ol>
+<li><p>全局尺度对齐不够。用少量 3D 点做一次全局 least-squares 可以把相对深度拉到米制尺度，但不同物体、不同区域往往有不同的 scale ratio 和 shift bias，一个全局仿射变换很难同时照顾远处道路、近处物体和细薄结构。</p>
+</li>
+<li><p>训练式深度补全泛化成本高。BP-Net、DMD$^3$C、Marigold-DC 等方法通过网络融合 RGB 和稀疏深度，但通常依赖特定训练域或大规模深度补全数据，换场景、换传感器、换稀疏模式时未必稳。</p>
+</li>
+<li><p>真实系统还需要速度。高质量扩散式深度模型和大 backbone 往往推理慢，嵌入式设备或手持 RGB-D 系统更需要一个轻量、可插拔、数学上可解释的后端。</p>
+</li>
+</ol>
+<p>这篇论文的核心问题可以概括为：</p>
+<blockquote>
+<p>能否只用极稀疏的 3D seed，把任意相对深度基础模型的输出稳定地转换为米制深度，同时保持跨场景泛化、边界质量和实时部署能力？</p>
+</blockquote>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><img src="/img/MTD-1.png" alt="MTD-1" title="MTD-1"></p>
+<p>MTD 的输入包括一张 RGB 图像、一个深度基础模型输出的相对深度、极稀疏 3D seed，以及由图像得到的 superpixel segment set。输出是 dense metric depth。整个方法是一个 coarse-to-fine pipeline：先做分段尺度恢复，再做像素级细化。</p>
+<h3 id="1-3D-seed-的统一视角"><a href="#1-3D-seed-的统一视角" class="headerlink" title="1. 3D seed 的统一视角"></a>1. 3D seed 的统一视角</h3><p>论文把可提供尺度信息的稀疏输入都称为 3D seeds。它可以来自 LiDAR sparse depth、低成本 RGB-D 相机的粗深度、stereo 或 MVS 中的 correspondence matches。关键不是输入来源，而是这些点能给相对深度提供少量已知尺度锚点。</p>
+<p>相对深度模型给出每个 seed 投影位置的相对深度 $d_i^j$，3D seed 给出可与真实深度单调对应的 scalar proxy $\xi_i^j$。MTD 的任务就是学习从 $d$ 到 $\xi$，再到 metric depth $z$ 的局部映射。</p>
+<h3 id="2-Segment-wise-recovery：先把局部尺度找回来"><a href="#2-Segment-wise-recovery：先把局部尺度找回来" class="headerlink" title="2. Segment-wise recovery：先把局部尺度找回来"></a>2. Segment-wise recovery：先把局部尺度找回来</h3><p>如果直接对整张图做全局 least-squares，只能得到一个统一尺度。MTD 先把图像切成 superpixels，每个 segment 都允许有自己的标定函数 $g_i:d\mapsto\xi$。对于含有 seed 的 segment，论文用 least-squares 或 median matching 得到局部标定参数，并把这些参数存在 lookup table 里。</p>
+<p>问题在于 seed 很稀疏，很多 segment 没有任何投影点。论文因此构建一个 segment graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$，每个节点对应一个 segment，边权由 segment centroid 的距离衰减核决定，并保留近邻边来稀疏化图。然后求解图正则化目标：</p>
+<script type="math/tex; mode=display">
+\min_{\{\boldsymbol{\theta}_i\}}
+\sum_{i\in\mathcal{Q}}\|\boldsymbol{\theta}_i-\hat{\boldsymbol{\theta}}_i\|^2
++
+\sum_{(i,j)\in\mathcal{E}} w_{ij}\|\boldsymbol{\theta}_i-\boldsymbol{\theta}_j\|^2</script><p>第一项让有 seed 的 segment 保持自己的尺度锚点，第二项让邻近 segment 的标定参数平滑传播。这样就能把少量 seed 的尺度信息扩散到整张图，同时避免跨物体边界的过度混合。</p>
+<h3 id="3-Pixel-wise-refinement：再把-segment-内残差补掉"><a href="#3-Pixel-wise-refinement：再把-segment-内残差补掉" class="headerlink" title="3. Pixel-wise refinement：再把 segment 内残差补掉"></a>3. Pixel-wise refinement：再把 segment 内残差补掉</h3><p>分段标定之后仍然会有像素级误差，尤其是 segment 内部深度变化、边界附近和细结构区域。MTD 把这个问题改写成 discontinuity-aware geodesic propagation。</p>
+<p>论文从 coarse metric depth $z(u,v)$ 出发，定义二阶变化相关的局部不连续密度：</p>
+<script type="math/tex; mode=display">
+\phi(u,v)=\sqrt{z_{uu}^2(u,v)+z_{vv}^2(u,v)}</script><p>若一条路径穿过物体边界，$\phi$ 会变大，路径代价也会变大。于是从可靠 seed 像素向其他像素传播时，最短测地路径会倾向于沿同一物理表面传播，而不是跨越深度断裂。连续形式的测地代价为：</p>
+<script type="math/tex; mode=display">
+d_\phi(\boldsymbol p,\boldsymbol q)=
+\inf_{\mathcal L\in\mathscr L_{\boldsymbol p\to\boldsymbol q}}
+\int_{\mathcal L}\phi(u,v)\,ds</script><p>离散实现里，论文把路径积分写成单像素移动的 Riemann sum，并用 dynamic programming 求解。每次更新把旧估计和当前局部预测做凸组合：</p>
+<script type="math/tex; mode=display">
+z^{(k+1)}(\boldsymbol p)
+=
+\left(1-\frac{1}{k+1}\right)z^{(k)}(\boldsymbol p)
++
+\frac{1}{k+1}\hat z^{(k)}(\boldsymbol p\mid\boldsymbol q,\Delta\boldsymbol p)</script><p>这个设计的好处是，传播不是普通的局部滤波，而是带有几何意义的路径优化。它既能补 seed 周围的局部误差，又能避免把前景物体的深度错误传播到背景。</p>
+<h3 id="4-轻量化-front-end"><a href="#4-轻量化-front-end" class="headerlink" title="4. 轻量化 front-end"></a>4. 轻量化 front-end</h3><p>MTD 的后端是非参数的，主要耗时来自前端相对深度模型。论文进一步用 DepthAnythingV2 作为 teacher，通过 feature distillation 和 logit distillation 蒸馏 TinyViT、EfficientViT 等轻量 backbone。这样 MTD 不必依赖大模型，也能在 Jetson AGX Orin 这类平台上接近实时运行。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>训练或蒸馏数据主要包括：</p>
+<ol>
+<li>VKITTI2</li>
+<li>Hypersim</li>
+<li>TartanAir</li>
+<li>SA-1B</li>
+</ol>
+<p>深度估计评测使用 KITTI、NYU-Depth V2、ScanNet、ETH3D、DIODE 等数据集，采用 prior works 的 split。</p>
+<p>深度补全评测覆盖 nuScenes、DDAD、Make3D、DIODE、ETH3D、ScanNet、VOID、SUN-RGBD、IBims-1、HAMMER 等数据集。nuScenes、DDAD、VOID 本身提供 sparse depth；其他数据集通过随机保留 $0.01\%-0.1\%$ 的深度点来模拟极稀疏输入，并加入 $10\%-20\%$ 的噪声扰动。</p>
+<p>下游应用还包括 RealSense D455 深度修正、VGGT 多视角重建、KITTI Odometry 上的 SLAM，以及 KITTI-360 上的 occupancy prediction。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文没有明确给出训练用 GPU 数量和完整训练时长，但给了较详细的推理设置。</p>
+<ol>
+<li><p>VOID1500 上的速度和精度对比使用 RTX 3090，输入分辨率为 $480\times640$。</p>
+</li>
+<li><p>MTD 后端开销很小。在 $480\times640$ 输入上，segment-wise recovery 加 pixel-wise refinement 的总后端时间为 1.9 ms，显存低于 1.8 GB，GPU utilization 低于 4%。</p>
+</li>
+<li><p>嵌入式实验使用 NVIDIA Jetson AGX Orin Platform，并经过 TensorRT 与多线程加速。论文强调后端是非参数轻量算法，主要瓶颈是前端 depth foundation model。</p>
+</li>
+</ol>
+<p><img src="/img/MTD-4.png" alt="MTD-4" title="MTD-4"></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="/img/MTD-2.png" alt="MTD-2" title="MTD-2"></p>
+<p>在深度补全 zero-shot 评测中，MTD 在多数数据集上超过现有方法。相对于 Marigold-DC，论文特别指出在 nuScenes 上 MAE 降低 0.418，RMSE 降低 0.537。表格里的整体趋势是：室外数据集更难，因为点云更稀疏、深度范围更大，但 MTD 的分段尺度恢复能明显缓解全局对齐失效。</p>
+<p>在单目深度估计评测中，MTD 被作为 plug-and-play 后端接到不同相对深度模型后面。MiDaS、LeReS、DPT、Depth Pro、DepthAnythingV2、Marigold、GeoWizard、Lotus、DepthMaster 等模型接入 MTD 后，AbsRel 普遍下降，$\delta_1$ 普遍上升。与 DepthAnythingV2 搭配时整体效果最好，因此论文后续硬件和应用实验主要采用 DepthAnythingV2。</p>
+<p><img src="/img/MTD-3.png" alt="MTD-3" title="MTD-3"></p>
+<p>消融实验验证了几个关键设计：</p>
+<ol>
+<li><p>Per-segment calibration 中，least-squares 优于 median，对 inverse depth $z^{-1}$ 做 proxy 效果更好。</p>
+</li>
+<li><p>Sparse graph optimization 比 global-based propagation 更稳，在 KITTI 和 VOID 上都降低 RMSE/MAE。</p>
+</li>
+<li><p>Pixel-wise refinement 中，去掉 $d_\phi$ 后效果下降，说明普通边缘或无测地约束的传播不足以处理跨边界错误。多项式 basis 优于 B-spline，较大的迭代 receptive field 在 KITTI 上继续带来收益。</p>
+</li>
+<li><p>当 3D seed 数量很少时，MTD 会退化接近全局 least-squares，相当于有一个保守下限；当 seed 增多时，MTD 能继续利用更细的 segment scale，而全局 least-squares 的提升有限。</p>
+</li>
+</ol>
+<p><img src="/img/MTD-5.png" alt="MTD-5" title="MTD-5"></p>
+<p><img src="/img/MTD-6.png" alt="MTD-6" title="MTD-6"></p>
+<p>下游应用的结论也比较强。对于低成本 range camera，Raw + MTD 在室内和室外都显著降低 RMSE/MAE，并改善边界和缺失区域。对于 VGGT 多视角重建，MTD 用 correspondence triangulation 得到的 3D seeds 做尺度恢复，比简单 Align 更准，也超过 MVSAnywhere 的整体 RMSE/MAE。SLAM 实验中，Droid + MTD 在 KITTI Odometry 多个序列上明显降低 ATE-RMSE，说明这个后端不只是表格分数好，对几何下游也有帮助。</p>
+<p><img src="/img/MTD-7.png" alt="MTD-7" title="MTD-7"></p>
+<p><img src="/img/MTD-8.png" alt="MTD-8" title="MTD-8"></p>
+<p>补充材料里的定性图说明了两个直观现象：一是 MTD 能在多数据集上比学习式深度补全保留更稳定的结构，二是对常见 range camera 的粗糙深度，它能补全空洞、锐化边界，并把 raw depth 中的大片噪声或模糊结构变得更接近真实几何。</p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><p>思路非常工程化。它不试图重新训练一个万能深度补全网络，而是把已有相对深度基础模型的泛化能力保留下来，用少量 3D seed 解决尺度问题。</p>
+</li>
+<li><p>数学解释比较清楚。Segment graph 负责局部尺度传播，geodesic cost 负责像素级边界感知传播，两部分都能说清楚为什么有效。</p>
+</li>
+<li><p>输入形式灵活。LiDAR sparse depth、range camera、stereo disparity、multi-view correspondences 都可以被统一成 3D seeds。</p>
+</li>
+<li><p>后端非常轻。1.9 ms 的后端开销使它更像一个几何校准模块，而不是一个额外大网络。</p>
+</li>
+<li><p>消融完整。论文不仅比较 SoTA，还分析了 seed 数量、segment scale、foundation model capacity、proxy domain、graph optimization 和 dynamic programming。</p>
+</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><p>MTD 仍然需要外部 3D seed。它不是纯单目 metric depth，若完全没有尺度输入，就无法凭空解决 absolute scale。</p>
+</li>
+<li><p>分段质量会影响局部尺度恢复。论文显示不同 superpixel 方法的最优结果接近，但真实复杂场景里，segment 与物体边界不一致时仍可能传播错误尺度。</p>
+</li>
+<li><p>前端相对深度模型仍是主要瓶颈。后端很快，但系统端实时性取决于 chosen backbone，轻量 backbone 会牺牲一定精度。</p>
+</li>
+<li><p>对传感器错位和噪声有鲁棒性实验，但极端遮挡、动态物体、多传感器时间不同步等情况仍可能影响 seed 的可靠性。</p>
+</li>
+<li><p>训练或蒸馏细节没有完整量化算力成本，复现实验时还需要代码和 checkpoint 进一步确认。</p>
+</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><p>MTD 的本质不是深度补全网络，而是“相对深度基础模型 + 极稀疏 3D seed”的米制尺度转换器。</p>
+</li>
+<li><p>全局 least-squares 只能解决整体尺度，真正的问题是 local scale inconsistency，所以 segment-wise calibration 是核心。</p>
+</li>
+<li><p>Discontinuity-aware geodesic cost 把像素级修正写成路径积分问题，传播会自然避开深度断裂。</p>
+</li>
+<li><p>当 3D seed 变稀疏时，算法退化到全局对齐附近；当 seed 变多时，它能自动转向更细的局部尺度恢复。</p>
+</li>
+<li><p>这类方法很适合做 depth foundation model 的几何后处理层：不破坏模型泛化能力，却补上 metric scale 和真实系统所需的稳定性。</p>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/">视觉基础模型</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E8%A1%A5%E5%85%A8/">深度补全</a></div><div class="post-share"><div class="social-share" data-image="/img/MTD-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2026/05/12/UniCorrn/" title="UniCorrn: Unified Correspondence Transformer Across 2D and 3D"><img class="cover" src="/img/UniCorrn-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">UniCorrn: Unified Correspondence Transformer Across 2D and 3D</div></div><div class="info-2"><div class="info-item-1">作者：Prajnan Goswami, Tianye Ding, Feng Liu, Huaizu Jiang 单位：Northeastern University, Adobe Research 会议：CVPR 2026 链接：arXiv, Project, Code 研究动机视觉对应关系是 3D 视觉里非常底层的一类能力：给定同一场景的不同观测，模型要找出一个点在另一个观测里的对应位置。传统上这件事会按输入模态拆成三类任务：图像到图像的 2D-2D matching、图像到点云的 2D-3D matching、点云到点云的 3D-3D matching。  这篇论文想解决的问题不是单个 benchmark 的精度，而是一个更大的建模问题：  能否用一个共享权重的模型，同时处理 2D-2D、2D-3D 和 3D-3D 几何匹配？  作者认为已有路线有三个关键限制：  基于 cost volume / pyramid / recurrent refinement 的 2D...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/18/DepthVLM/" title="Unlocking Dense Metric Depth Estimation in VLMs"><img class="cover" src="/img/DepthVLM-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">Unlocking Dense Metric Depth Estimation in VLMs</div></div><div class="info-2"><div class="info-item-1">作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15876 研究动机 这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。 已有路线大致有三类问题：  纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。  一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。  DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量...</div></div></div></a><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2025/03/26/depthprompting/" title="Depth Prompting for Sensor-Agnostic Depth Estimation"><img class="cover" src="/img/depthprompting-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-03-26</div><div class="info-item-2">Depth Prompting for Sensor-Agnostic Depth Estimation</div></div><div class="info-2"><div class="info-item-1">摘要由于系统性的测量偏差，例如密度、感知模式和扫描范围，当前方法在现实世界的应用范围有限。 学习联合表示的输入模式对偏差敏感。 设计了深度提示模块，根据传感器类型或场景配置的新深度分布获得希望的特征表示。 通过将这个模块嵌入基本的单目深度估计模型，可以解决深度扫描范围的限制，提供绝对的带尺度的深度图。 简介目标是构建一个传感器不可知的深度估计模型，能够在各种主动深度传感器上工作。深度提示首先编码稀疏的深度信息，并将其和图像特征进行融合构建一个逐像素的亲和力图。最后对亲和力图和最初的深度图进行细化操作。采用偏差调优技术，只需要对0.1%的模型参数进行微调。 Prompt EngineeringPrompt...</div></div></div></a><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a><a class="pagination-related" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img class="cover" src="/img/Depth2Pose-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-20</div><div class="info-item-2">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</div></div><div class="info-2"><div class="info-item-1">作者：Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova 单位：Comenius University in Bratislava, Czech Technical University in Prague 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.19797 研究动机 评估标准存在局限性： 尽管单目深度估计（MDE）近年来取得了显著进展，并且预测的深度图在 Structure-from-Motion (SfM)、视觉定位和 SLAM 等下游几何任务中扮演着关键输入角色，但现有的 MDE 方法主要仍以深度绝对精度进行评估。通用的评估指标（如 Abs.Rel 或 RMSE）是在整张图像上全局聚合误差的，这并不能直接反映深度在具体的下游三维几何任务中的实用价值。  几何重要性非均匀分布： 在下游几何任务（如 SfM 或...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3D-seed-%E7%9A%84%E7%BB%9F%E4%B8%80%E8%A7%86%E8%A7%92"><span class="toc-number">2.1.</span> <span class="toc-text">1. 3D seed 的统一视角</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Segment-wise-recovery%EF%BC%9A%E5%85%88%E6%8A%8A%E5%B1%80%E9%83%A8%E5%B0%BA%E5%BA%A6%E6%89%BE%E5%9B%9E%E6%9D%A5"><span class="toc-number">2.2.</span> <span class="toc-text">2. Segment-wise recovery：先把局部尺度找回来</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Pixel-wise-refinement%EF%BC%9A%E5%86%8D%E6%8A%8A-segment-%E5%86%85%E6%AE%8B%E5%B7%AE%E8%A1%A5%E6%8E%89"><span class="toc-number">2.3.</span> <span class="toc-text">3. Pixel-wise refinement：再把 segment 内残差补掉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%BD%BB%E9%87%8F%E5%8C%96-front-end"><span class="toc-number">2.4.</span> <span class="toc-text">4. 轻量化 front-end</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"><img src="/img/GTA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion"/></a><div class="content"><a class="title" href="/2026/05/20/GTA/" title="GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion">GTA: Advancing Image-to-3D World Generation via Geometry Then Appearance Video Diffusion</a><time datetime="2026-05-20T13:20:00.000Z" title="发表于 2026-05-20 21:20:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders"><img src="/img/RAEv2-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RAEv2: Improved Baselines with Representation Autoencoders"/></a><div class="content"><a class="title" href="/2026/05/20/RAEv2/" title="RAEv2: Improved Baselines with Representation Autoencoders">RAEv2: Improved Baselines with Representation Autoencoders</a><time datetime="2026-05-20T11:15:00.000Z" title="发表于 2026-05-20 19:15:00">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img src="/img/Depth2Pose-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"/></a><div class="content"><a class="title" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</a><time datetime="2026-05-20T07:46:36.000Z" title="发表于 2026-05-20 15:46:36">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation"><img src="/img/PhyWorld-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PhyWorld: Physics-Faithful World Model for Video Generation"/></a><div class="content"><a class="title" href="/2026/05/20/PhyWorld/" title="PhyWorld: Physics-Faithful World Model for Video Generation">PhyWorld: Physics-Faithful World Model for Video Generation</a><time datetime="2026-05-20T06:14:38.000Z" title="发表于 2026-05-20 14:14:38">2026-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"><img src="/img/Tango3D-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence"/></a><div class="content"><a class="title" href="/2026/05/20/Tango3D/" title="Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence">Tango3D: Towards Alignment for Global and Local 2D-3D Correspondence</a><time datetime="2026-05-20T06:08:21.000Z" title="发表于 2026-05-20 14:08:21">2026-05-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/MTD-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
