@@ -1,3 +1,4 @@
+https://zjj-low-key.github.io/2026/05/14/MTD/
 https://zjj-low-key.github.io/2026/06/29/mtd_graph_reading_notes_v2/
 https://zjj-low-key.github.io/2026/05/12/UniCorrn/
 https://zjj-low-key.github.io/2026/06/15/2DGS/
@@ -29,7 +30,6 @@ https://zjj-low-key.github.io/2026/05/14/Real2Sim/
 https://zjj-low-key.github.io/2026/05/14/SCOUP/
 https://zjj-low-key.github.io/2026/05/14/RoSplat/
 https://zjj-low-key.github.io/2026/05/14/FocusDepth/
-https://zjj-low-key.github.io/2026/05/14/MTD/
 https://zjj-low-key.github.io/2026/04/23/Pow3R/
 https://zjj-low-key.github.io/2026/04/16/Dens3R/
 https://zjj-low-key.github.io/2026/04/21/diffi2p/
