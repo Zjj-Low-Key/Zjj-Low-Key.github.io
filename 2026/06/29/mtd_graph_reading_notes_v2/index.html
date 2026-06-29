@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjj-low-key.github.io/img/MTD-0.png">
 <meta property="article:published_time" content="2026-06-29T08:11:02.000Z">
-<meta property="article:modified_time" content="2026-06-29T08:12:19.575Z">
+<meta property="article:modified_time" content="2026-06-29T08:17:20.597Z">
 <meta property="article:author" content="Zhu Jiajun">
 <meta property="article:tag" content="单目深度估计">
 <meta property="article:tag" content="视觉基础模型">
@@ -21,7 +21,7 @@
   "url": "https://zjj-low-key.github.io/2026/06/29/mtd_graph_reading_notes_v2/",
   "image": "https://zjj-low-key.github.io/img/MTD-0.png",
   "datePublished": "2026-06-29T08:11:02.000Z",
-  "dateModified": "2026-06-29T08:12:19.575Z",
+  "dateModified": "2026-06-29T08:17:20.597Z",
   "author": [
     {
       "@type": "Person",
@@ -162,7 +162,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/MTD-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">MTD: 图优化视角下的 Metric Depth 公式推导笔记</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">MTD: 图优化视角下的 Metric Depth 公式推导笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-29T08:11:02.000Z" title="发表于 2026-06-29 16:11:02">2026-06-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-29T08:12:19.575Z" title="更新于 2026-06-29 16:12:19">2026-06-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">10.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>43分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan</p>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/MTD-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">MTD: 图优化视角下的 Metric Depth 公式推导笔记</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">MTD: 图优化视角下的 Metric Depth 公式推导笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-29T08:11:02.000Z" title="发表于 2026-06-29 16:11:02">2026-06-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-29T08:17:20.597Z" title="更新于 2026-06-29 16:17:20">2026-06-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">10.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>43分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan</p>
 <p><strong>单位：</strong>College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intelligent Autonomous Systems, Tongji University; National Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Xi’an Jiaotong University</p>
 <p><strong>会议：</strong>CVPR 2026</p>
 <p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.11578">https://arxiv.org/abs/2605.11578</a></p>
@@ -177,16 +177,16 @@
 </ol>
 <hr>
 <h2 id="0-先给结论：这篇文章的本质是什么"><a href="#0-先给结论：这篇文章的本质是什么" class="headerlink" title="0. 先给结论：这篇文章的本质是什么"></a>0. 先给结论：这篇文章的本质是什么</h2><p>这篇论文表面上是在做：</p>
-<p>[<br>\text{relative depth} \rightarrow \text{metric depth}<br>]</p>
-<p>也就是把相对深度变成有真实尺度的绝对深度。</p>
+<script type="math/tex; mode=display">
+\text{relative depth} \rightarrow \text{metric depth}</script><p>也就是把相对深度变成有真实尺度的绝对深度。</p>
 <p>但它的核心并不是重新训练一个深度估计网络，而是：</p>
-<p>[<br>\text{已有 relative depth}</p>
-<ul>
-<li>\text{极稀疏 metric anchors}</li>
-<li>\text{图上传播}</li>
-<li>\text{边界感知细化}<br>\Rightarrow<br>\text{dense metric depth}<br>]</li>
-</ul>
-<p>换句话说，它真正关心的是：</p>
+<script type="math/tex; mode=display">
+\text{已有 relative depth}
++ \text{极稀疏 metric anchors}
++ \text{图上传播}
++ \text{边界感知细化}
+\Rightarrow
+\text{dense metric depth}</script><p>换句话说，它真正关心的是：</p>
 <blockquote>
 <p>只给少量真实 3D 点，如何把这些点携带的 metric scale 信息可靠地传播到整张图上？</p>
 </blockquote>
@@ -241,17 +241,17 @@
 </blockquote>
 <hr>
 <h2 id="1-图论最小基础"><a href="#1-图论最小基础" class="headerlink" title="1. 图论最小基础"></a>1. 图论最小基础</h2><h3 id="1-1-什么是图"><a href="#1-1-什么是图" class="headerlink" title="1.1 什么是图"></a>1.1 什么是图</h3><p>图 graph 是由节点和边组成的结构：</p>
-<p>[<br>G=(V,E)<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+G=(V,E)</script><p>其中：</p>
 <ul>
-<li>(V)：vertices，节点集合；</li>
-<li>(E)：edges，边集合。</li>
+<li>$V$：vertices，节点集合；</li>
+<li>$E$：edges，边集合。</li>
 </ul>
 <p>比如有 4 个超像素：</p>
-<p>[<br>V={S_1,S_2,S_3,S_4}<br>]</p>
-<p>如果 (S_1) 和 (S_2) 相邻，就连一条边：</p>
-<p>[<br>(S_1,S_2)\in E<br>]</p>
-<p>在这篇论文里，至少可以看到两层图：</p>
+<script type="math/tex; mode=display">
+V=\{S_1,S_2,S_3,S_4\}</script><p>如果 $S_1$ 和 $S_2$ 相邻，就连一条边：</p>
+<script type="math/tex; mode=display">
+(S_1,S_2)\in E</script><p>在这篇论文里，至少可以看到两层图：</p>
 <ol>
 <li><p><strong>superpixel graph</strong><br>节点是超像素，每个节点代表图像中的一块区域。</p>
 </li>
@@ -260,8 +260,8 @@
 </ol>
 <hr>
 <h3 id="1-2-边权是什么"><a href="#1-2-边权是什么" class="headerlink" title="1.2 边权是什么"></a>1.2 边权是什么</h3><p>图上的边可以有权重：</p>
-<p>[<br>w_{ij}<br>]</p>
-<p>表示节点 (i) 和节点 (j) 之间的关系强弱。</p>
+<script type="math/tex; mode=display">
+w_{ij}</script><p>表示节点 $i$ 和节点 $j$ 之间的关系强弱。</p>
 <p>在图像问题里，常见含义是：</p>
 <ul>
 <li>权重大：两个节点相似，信息可以多传播；</li>
@@ -296,30 +296,36 @@
 <p>这篇文章里的 superpixel graph 更偏向 similarity weight；pixel-wise geodesic cost 更偏向 cost weight。</p>
 <hr>
 <h3 id="1-3-图优化在做什么"><a href="#1-3-图优化在做什么" class="headerlink" title="1.3 图优化在做什么"></a>1.3 图优化在做什么</h3><p>最常见的图优化形式是：</p>
-<p>[<br>\min<em>{\theta_i}<br>\sum</em>{i\in Q}|\theta<em>i-\hat{\theta}_i|^2<br>+<br>\lambda<br>\sum</em>{(i,j)\in E}w_{ij}|\theta_i-\theta_j|^2<br>]</p>
-<p>这个式子看起来可怕，但它只有两句话：</p>
+<script type="math/tex; mode=display">
+\min_{\theta_i}
+\sum_{i\in Q}\|\theta_i-\hat{\theta}_i\|^2
++
+\lambda
+\sum_{(i,j)\in E}w_{ij}\|\theta_i-\theta_j\|^2</script><p>这个式子看起来可怕，但它只有两句话：</p>
 <p>第一项：</p>
-<p>[<br>\sum_{i\in Q}|\theta_i-\hat{\theta}_i|^2<br>]</p>
-<p>表示：</p>
+<script type="math/tex; mode=display">
+\sum_{i\in Q}\|\theta_i-\hat{\theta}_i\|^2</script><p>表示：</p>
 <blockquote>
-<p>对有观测的节点，估计值 (\theta_i) 要接近观测值 (\hat{\theta}_i)。</p>
+<p>对有观测的节点，估计值 $\theta_i$ 要接近观测值 $\hat{\theta}_i$。</p>
 </blockquote>
 <p>第二项：</p>
-<p>[<br>\sum<em>{(i,j)\in E}w</em>{ij}|\theta_i-\theta_j|^2<br>]</p>
-<p>表示：</p>
+<script type="math/tex; mode=display">
+\sum_{(i,j)\in E}w_{ij}\|\theta_i-\theta_j\|^2</script><p>表示：</p>
 <blockquote>
-<p>相邻节点的参数不要差太多，尤其是边权 (w_{ij}) 大的时候。</p>
+<p>相邻节点的参数不要差太多，尤其是边权 $w_{ij}$ 大的时候。</p>
 </blockquote>
 <p>所以整体是在平衡：</p>
-<p>[<br>\text{相信 anchors}<br>\quad \text{和} \quad<br>\text{相信邻居平滑}<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+\text{相信 anchors}
+\quad \text{和} \quad
+\text{相信邻居平滑}</script><hr>
 <h3 id="1-4-图拉普拉斯直觉"><a href="#1-4-图拉普拉斯直觉" class="headerlink" title="1.4 图拉普拉斯直觉"></a>1.4 图拉普拉斯直觉</h3><p>图拉普拉斯 Laplacian 本质上是在惩罚图上相邻节点之间的差异。</p>
-<p>如果有两个相邻节点 (i,j)，惩罚项是：</p>
-<p>[<br>w_{ij}|\theta_i-\theta_j|^2<br>]</p>
-<p>如果它们差异很大，这一项就大。</p>
+<p>如果有两个相邻节点 $i,j$，惩罚项是：</p>
+<script type="math/tex; mode=display">
+w_{ij}\|\theta_i-\theta_j\|^2</script><p>如果它们差异很大，这一项就大。</p>
 <p>优化会倾向于让：</p>
-<p>[<br>\theta_i\approx \theta_j<br>]</p>
-<p>但只有当 (w_{ij}) 大时，这种拉近才明显。</p>
+<script type="math/tex; mode=display">
+\theta_i\approx \theta_j</script><p>但只有当 $w_{ij}$ 大时，这种拉近才明显。</p>
 <p>所以图拉普拉斯可以理解为：</p>
 <blockquote>
 <p>在图结构上做平滑。</p>
@@ -327,184 +333,242 @@
 <hr>
 <h2 id="2-深度估计背景：relative-depth-和-metric-depth"><a href="#2-深度估计背景：relative-depth-和-metric-depth" class="headerlink" title="2. 深度估计背景：relative depth 和 metric depth"></a>2. 深度估计背景：relative depth 和 metric depth</h2><h3 id="2-1-relative-depth-是什么"><a href="#2-1-relative-depth-是什么" class="headerlink" title="2.1 relative depth 是什么"></a>2.1 relative depth 是什么</h3><p>很多 foundation depth model，比如 MiDaS、Depth Anything，输出的是 relative depth。</p>
 <p>它通常能表达：</p>
-<p>[<br>\text{哪个点更近，哪个点更远}<br>]</p>
-<p>但是它不保证：</p>
-<p>[<br>\text{这个点真实是 } 2.3\text{ m}<br>]</p>
-<p>也就是说，相对深度有 shape，但没有真实单位。</p>
+<script type="math/tex; mode=display">
+\text{哪个点更近，哪个点更远}</script><p>但是它不保证：</p>
+<script type="math/tex; mode=display">
+\text{这个点真实是 } 2.3\text{ m}</script><p>也就是说，相对深度有 shape，但没有真实单位。</p>
 <hr>
 <h3 id="2-2-metric-depth-是什么"><a href="#2-2-metric-depth-是什么" class="headerlink" title="2.2 metric depth 是什么"></a>2.2 metric depth 是什么</h3><p>metric depth 是有真实尺度的深度：</p>
-<p>[<br>z(p)=5.2\text{ m}<br>]</p>
-<p>它不仅知道远近关系，还知道真实物理距离。</p>
+<script type="math/tex; mode=display">
+z(p)=5.2\text{ m}</script><p>它不仅知道远近关系，还知道真实物理距离。</p>
 <hr>
 <h3 id="2-3-尺度恢复到底在恢复什么"><a href="#2-3-尺度恢复到底在恢复什么" class="headerlink" title="2.3 尺度恢复到底在恢复什么"></a>2.3 尺度恢复到底在恢复什么</h3><p>给定 relative depth：</p>
-<p>[<br>d(p)<br>]</p>
-<p>我们想得到 metric depth：</p>
-<p>[<br>z(p)<br>]</p>
-<p>最简单的做法是全局仿射变换：</p>
-<p>[<br>z(p)=a d(p)+b<br>]</p>
-<p>但真实情况中，一个全局 (a,b) 往往不够。</p>
+<script type="math/tex; mode=display">
+d(p)</script><p>我们想得到 metric depth：</p>
+<script type="math/tex; mode=display">
+z(p)</script><p>最简单的做法是全局仿射变换：</p>
+<script type="math/tex; mode=display">
+z(p)=a d(p)+b</script><p>但真实情况中，一个全局 $a,b$ 往往不够。</p>
 <p>比如室内、室外、前景物体、远处背景，不同区域可能存在不同误差。</p>
 <p>所以这篇论文更倾向于局部变换：</p>
-<p>[<br>z(p)\approx g_i(d(p))<br>]</p>
-<p>其中 (p) 属于第 (i) 个 superpixel (S_i)。</p>
+<script type="math/tex; mode=display">
+z(p)\approx g_i(d(p))</script><p>其中 $p$ 属于第 $i$ 个 superpixel $S_i$。</p>
 <p>常见形式是：</p>
-<p>[<br>g_i(d)=a_i d+b_i<br>]</p>
-<p>这里每个区域都有自己的：</p>
-<p>[<br>\theta_i=(a_i,b_i)<br>]</p>
-<p>于是问题变成：</p>
+<script type="math/tex; mode=display">
+g_i(d)=a_i d+b_i</script><p>这里每个区域都有自己的：</p>
+<script type="math/tex; mode=display">
+\theta_i=(a_i,b_i)</script><p>于是问题变成：</p>
 <blockquote>
-<p>如何给每个 superpixel 都估计一个合适的 (\theta_i)？</p>
+<p>如何给每个 superpixel 都估计一个合适的 $\theta_i$？</p>
 </blockquote>
 <p>如果这个 superpixel 里有 sparse 3D seed，可以直接拟合。<br>如果没有，就需要从邻居传播。</p>
 <p>这就是图优化进入的地方。</p>
 <hr>
 <h2 id="3-第一阶段：segment-wise-recovery"><a href="#3-第一阶段：segment-wise-recovery" class="headerlink" title="3. 第一阶段：segment-wise recovery"></a>3. 第一阶段：segment-wise recovery</h2><h3 id="3-1-输入和目标"><a href="#3-1-输入和目标" class="headerlink" title="3.1 输入和目标"></a>3.1 输入和目标</h3><p>输入：</p>
 <ul>
-<li>RGB 图像 (I)；</li>
-<li>depth foundation model 输出的 relative depth (d(p))；</li>
+<li>RGB 图像 $I$；</li>
+<li>depth foundation model 输出的 relative depth $d(p)$；</li>
 <li>极稀疏的 3D seeds；</li>
 <li>图像分割得到的 superpixels：</li>
 </ul>
-<p>[<br>S={S<em>i}</em>{i=1}^N<br>]</p>
-<p>目标：</p>
+<script type="math/tex; mode=display">
+S=\{S_i\}_{i=1}^N</script><p>目标：</p>
 <blockquote>
-<p>对每个 superpixel (S_i)，找到一个从 relative depth 到 metric proxy 的映射 (g_i)。</p>
+<p>对每个 superpixel $S_i$，找到一个从 relative depth 到 metric proxy 的映射 $g_i$。</p>
 </blockquote>
-<p>这里需要明确一点：<strong>论文实际采用的是 inverse-depth-like proxy，而不是直接在 metric depth (z) 上做拟合。</strong></p>
+<p>这里需要明确一点：<strong>论文实际采用的是 inverse-depth-like proxy，而不是直接在 metric depth $z$ 上做拟合。</strong></p>
 <p>论文主文 3.1.1 先把 3D seed 转换成一个 scalar proxy，记作：</p>
-<p>[<br>\xi(p)<br>]</p>
-<p>补充材料 B.1 进一步说明，这个 proxy 与 inverse depth 等价。也就是说，它不是直接拟合：</p>
-<p>[<br>d_{\text{rel}} \rightarrow z<br>]</p>
-<p>而是先拟合：</p>
-<p>[<br>d_{\text{rel}} \rightarrow \xi<br>]</p>
-<p>再由 (\xi) 和真实深度 (z) 之间的单调双射恢复 metric depth。</p>
+<script type="math/tex; mode=display">
+\xi(p)</script><p>补充材料 B.1 进一步说明，这个 proxy 与 inverse depth 等价。也就是说，它不是直接拟合：</p>
+<script type="math/tex; mode=display">
+d_{\text{rel}} \rightarrow z</script><p>而是先拟合：</p>
+<script type="math/tex; mode=display">
+d_{\text{rel}} \rightarrow \xi</script><p>再由 $\xi$ 和真实深度 $z$ 之间的单调双射恢复 metric depth。</p>
 <p>当 seed 本身已经提供 metric depth，例如 LiDAR depth 或某个 metric depth estimator 的输出时，补充材料中使用：</p>
-<p>[<br>\xi(x)=\frac{\kappa}{z_s(x)+\epsilon}<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\xi(x)=\frac{\kappa}{z_s(x)+\epsilon}</script><p>其中：</p>
 <ul>
-<li>(z_s(x))：seed 在像素 (x) 处提供的真实 metric depth；</li>
-<li>(\kappa)：一个固定常数，论文说可以设成任意常数，只要恢复时使用同一个 (\kappa)；</li>
-<li>(\epsilon)：数值稳定项，避免分母过小。</li>
+<li>$z_s(x)$：seed 在像素 $x$ 处提供的真实 metric depth；</li>
+<li>$\kappa$：一个固定常数，论文说可以设成任意常数，只要恢复时使用同一个 $\kappa$；</li>
+<li>$\epsilon$：数值稳定项，避免分母过小。</li>
 </ul>
-<p>如果已知 (\xi)，那么对应的 metric depth 可以反解为：</p>
-<p>[<br>z_s(x)=\frac{\kappa}{\xi(x)}-\epsilon<br>]</p>
-<p>所以这个 proxy 的本质就是：</p>
-<p>[<br>\xi \sim z^{-1}<br>]</p>
-<p>也就是 inverse depth / disparity-like representation。</p>
+<p>如果已知 $\xi$，那么对应的 metric depth 可以反解为：</p>
+<script type="math/tex; mode=display">
+z_s(x)=\frac{\kappa}{\xi(x)}-\epsilon</script><p>所以这个 proxy 的本质就是：</p>
+<script type="math/tex; mode=display">
+\xi \sim z^{-1}</script><p>也就是 inverse depth / disparity-like representation。</p>
 <p>如果 seed 来自 rectified stereo，那么 disparity 本身就与 inverse depth 成正比：</p>
-<p>[<br>\text{disp} \propto \frac{1}{z}<br>]</p>
-<p>更具体地，在标准双目中：</p>
-<p>[<br>\text{disp}=\frac{bf}{z}<br>]</p>
-<p>其中 (b) 是 baseline，(f) 是 focal length。</p>
-<p>如果 seed 来自 generic multi-view stereo 或未校正双目，论文的做法是先用相机位姿和匹配点三角化得到 metric depth，再按照上面的 inverse-depth proxy 公式转换成 (\xi)。</p>
-<p>这解释了为什么实验表里会有 “Domain: (z^{-1})” 这一项：论文不是偶然用了 inverse depth，而是把它作为更稳定的 proxy domain。直觉上，inverse depth 对近处物体更敏感，也更接近很多 monocular relative depth model 的输出形式。</p>
+<script type="math/tex; mode=display">
+\text{disp} \propto \frac{1}{z}</script><p>更具体地，在标准双目中：</p>
+<script type="math/tex; mode=display">
+\text{disp}=\frac{bf}{z}</script><p>其中 $b$ 是 baseline，$f$ 是 focal length。</p>
+<p>如果 seed 来自 generic multi-view stereo 或未校正双目，论文的做法是先用相机位姿和匹配点三角化得到 metric depth，再按照上面的 inverse-depth proxy 公式转换成 $\xi$。</p>
+<p>这解释了为什么实验表里会有 “Domain: $z^{-1}$” 这一项：论文不是偶然用了 inverse depth，而是把它作为更稳定的 proxy domain。直觉上，inverse depth 对近处物体更敏感，也更接近很多 monocular relative depth model 的输出形式。</p>
 <hr>
-<h3 id="3-1-1-为什么用-inverse-depth-proxy"><a href="#3-1-1-为什么用-inverse-depth-proxy" class="headerlink" title="3.1.1 为什么用 inverse depth proxy"></a>3.1.1 为什么用 inverse depth proxy</h3><p>对单目深度估计来说，直接预测或拟合 (z) 往往会遇到一个问题：远处深度值变化范围很大，但视觉差异很小。例如：</p>
-<p>[<br>10m \rightarrow 20m<br>]</p>
-<p>在 metric depth 里差了 (10m)，但图像上可能只是一点点视差变化。</p>
+<h3 id="3-1-1-为什么用-inverse-depth-proxy"><a href="#3-1-1-为什么用-inverse-depth-proxy" class="headerlink" title="3.1.1 为什么用 inverse depth proxy"></a>3.1.1 为什么用 inverse depth proxy</h3><p>对单目深度估计来说，直接预测或拟合 $z$ 往往会遇到一个问题：远处深度值变化范围很大，但视觉差异很小。例如：</p>
+<script type="math/tex; mode=display">
+10m \rightarrow 20m</script><p>在 metric depth 里差了 $10m$，但图像上可能只是一点点视差变化。</p>
 <p>而 inverse depth 是：</p>
-<p>[<br>\frac{1}{10}=0.1,<br>\qquad<br>\frac{1}{20}=0.05<br>]</p>
-<p>它把深度变化压缩到一个更稳定的数值范围里。对于 sparse seeds 很少的情况，这种数值稳定性很重要，因为少数 anchor 的拟合很容易被远处大深度值主导。</p>
+<script type="math/tex; mode=display">
+\frac{1}{10}=0.1,
+\qquad
+\frac{1}{20}=0.05</script><p>它把深度变化压缩到一个更稳定的数值范围里。对于 sparse seeds 很少的情况，这种数值稳定性很重要，因为少数 anchor 的拟合很容易被远处大深度值主导。</p>
 <p>所以这一阶段更准确的目标应该写成：</p>
-<p>[<br>\text{relative depth } d(p)<br>\xrightarrow{g_i}<br>\text{inverse-depth proxy } \xi(p)<br>\xrightarrow{\xi\mapsto z}<br>\text{metric depth } z(p)<br>]</p>
-<hr>
-<h3 id="3-2-对有-seeds-的-superpixel-做局部标定"><a href="#3-2-对有-seeds-的-superpixel-做局部标定" class="headerlink" title="3.2 对有 seeds 的 superpixel 做局部标定"></a>3.2 对有 seeds 的 superpixel 做局部标定</h3><p>假设 superpixel (S_i) 中有若干 sparse seeds。</p>
-<p>第 (j) 个 seed 上：</p>
+<script type="math/tex; mode=display">
+\text{relative depth } d(p)
+\xrightarrow{g_i}
+\text{inverse-depth proxy } \xi(p)
+\xrightarrow{\xi\mapsto z}
+\text{metric depth } z(p)</script><hr>
+<h3 id="3-2-对有-seeds-的-superpixel-做局部标定"><a href="#3-2-对有-seeds-的-superpixel-做局部标定" class="headerlink" title="3.2 对有 seeds 的 superpixel 做局部标定"></a>3.2 对有 seeds 的 superpixel 做局部标定</h3><p>假设 superpixel $S_i$ 中有若干 sparse seeds。</p>
+<p>第 $j$ 个 seed 上：</p>
 <ul>
 <li>relative depth 是：</li>
 </ul>
-<p>[<br>d_j^i<br>]</p>
-<ul>
+<script type="math/tex; mode=display">
+d_j^i</script><ul>
 <li>metric proxy 是：</li>
 </ul>
-<p>[<br>\xi_j^i<br>]</p>
-<p>我们希望拟合：</p>
-<p>[<br>\xi_j^i \approx a_i d_j^i+b_i<br>]</p>
-<p>也就是：</p>
-<p>[<br>g_i(d)=a_i d+b_i<br>]</p>
-<p>更严格地说，补充材料中将 per-segment calibration function 写成一个带下界裁剪的仿射函数：</p>
-<p>[<br>g<em>i(x)=\max{a_i x+b_i, d</em>{\min}},\qquad x\in\mathbb{R}_{\ge 0}<br>]</p>
-<p>你可以先把 (\max{\cdot,d_{\min}}) 理解成数值安全保护：它防止拟合出来的 proxy 落到过小或非法范围。为了讲清楚最小二乘推导，下面先忽略这个裁剪项，只看核心的 affine mapping：</p>
-<p>[<br>g_i(d)=a_i d+b_i<br>]</p>
-<p>令：</p>
-<p>[<br>\theta_i=<br>\begin{bmatrix}<br>a_i\<br>b_i<br>\end{bmatrix}<br>]</p>
-<p>对每个 seed，有：</p>
-<p>[<br>\xi_j^i<br>\approx<br>\begin{bmatrix}<br>d_j^i &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>a_i\<br>b_i<br>\end{bmatrix}<br>]</p>
-<p>把所有 seed 写成矩阵形式：</p>
-<p>[<br>\mathbf{\xi}_i\approx X_i\theta_i<br>]</p>
-<p>其中：</p>
-<p>[<br>X_i=<br>\begin{bmatrix}<br>d_1^i &amp; 1\<br>d_2^i &amp; 1\<br>\vdots &amp; \vdots\<br>d_m^i &amp; 1<br>\end{bmatrix}<br>]</p>
-<p>[<br>\mathbf{\xi}_i=<br>\begin{bmatrix}<br>\xi_1^i\<br>\xi_2^i\<br>\vdots\<br>\xi_m^i<br>\end{bmatrix}<br>]</p>
-<p>最小二乘目标是：</p>
-<p>[<br>\min_{\theta_i}|X_i\theta_i-\mathbf{\xi}_i|^2<br>]</p>
-<p>正规方程推导如下。</p>
+<script type="math/tex; mode=display">
+\xi_j^i</script><p>我们希望拟合：</p>
+<script type="math/tex; mode=display">
+\xi_j^i \approx a_i d_j^i+b_i</script><p>也就是：</p>
+<script type="math/tex; mode=display">
+g_i(d)=a_i d+b_i</script><p>更严格地说，补充材料中将 per-segment calibration function 写成一个带下界裁剪的仿射函数：</p>
+<script type="math/tex; mode=display">
+g_i(x)=\max\{a_i x+b_i, d_{\min}\},\qquad x\in\mathbb{R}_{\ge 0}</script><p>你可以先把 $\max{\cdot,d_{\min}}$ 理解成数值安全保护：它防止拟合出来的 proxy 落到过小或非法范围。为了讲清楚最小二乘推导，下面先忽略这个裁剪项，只看核心的 affine mapping：</p>
+<script type="math/tex; mode=display">
+g_i(d)=a_i d+b_i</script><p>令：</p>
+<script type="math/tex; mode=display">
+\theta_i=
+\begin{bmatrix}
+a_i\\
+b_i
+\end{bmatrix}</script><p>对每个 seed，有：</p>
+<script type="math/tex; mode=display">
+\xi_j^i
+\approx
+\begin{bmatrix}
+d_j^i & 1
+\end{bmatrix}
+\begin{bmatrix}
+a_i\\
+b_i
+\end{bmatrix}</script><p>把所有 seed 写成矩阵形式：</p>
+<script type="math/tex; mode=display">
+\mathbf{\xi}_i\approx X_i\theta_i</script><p>其中：</p>
+<script type="math/tex; mode=display">
+X_i=
+\begin{bmatrix}
+d_1^i & 1\\
+d_2^i & 1\\
+\vdots & \vdots\\
+d_m^i & 1
+\end{bmatrix}</script><script type="math/tex; mode=display">
+\mathbf{\xi}_i=
+\begin{bmatrix}
+\xi_1^i\\
+\xi_2^i\\
+\vdots\\
+\xi_m^i
+\end{bmatrix}</script><p>最小二乘目标是：</p>
+<script type="math/tex; mode=display">
+\min_{\theta_i}\|X_i\theta_i-\mathbf{\xi}_i\|^2</script><p>正规方程推导如下。</p>
 <p>展开目标：</p>
-<p>[<br>L(\theta_i)<br>=(X_i\theta_i-\mathbf{\xi}_i)^T(X_i\theta_i-\mathbf{\xi}_i)<br>]</p>
-<p>展开乘法：</p>
-<p>[<br>L(\theta_i)<br>=<br>\theta_i^T X_i^T X_i\theta_i<br>-2\mathbf{\xi}_i^T X_i\theta_i<br>+<br>\mathbf{\xi}_i^T\mathbf{\xi}_i<br>]</p>
-<p>对 (\theta_i) 求导：</p>
-<p>[<br>\frac{\partial L}{\partial \theta_i}<br>=<br>2X_i^TX_i\theta_i<br>-2X_i^T\mathbf{\xi}_i<br>]</p>
-<p>令导数为 0：</p>
-<p>[<br>2X_i^TX_i\theta_i<br>-2X_i^T\mathbf{\xi}_i=0<br>]</p>
-<p>两边除以 2：</p>
-<p>[<br>X_i^TX_i\theta_i<br>-X_i^T\mathbf{\xi}_i=0<br>]</p>
-<p>移项：</p>
-<p>[<br>X_i^TX_i\theta_i<br>=<br>X_i^T\mathbf{\xi}_i<br>]</p>
-<p>如果 (X_i^TX_i) 可逆，则：</p>
-<p>[<br>\theta_i<br>=<br>(X_i^TX_i)^{-1}X_i^T\mathbf{\xi}_i<br>]</p>
-<p>这就是有 seeds 的 superpixel 的局部映射参数。</p>
+<script type="math/tex; mode=display">
+L(\theta_i)
+=(X_i\theta_i-\mathbf{\xi}_i)^T(X_i\theta_i-\mathbf{\xi}_i)</script><p>展开乘法：</p>
+<script type="math/tex; mode=display">
+L(\theta_i)
+=
+\theta_i^T X_i^T X_i\theta_i
+-2\mathbf{\xi}_i^T X_i\theta_i
++
+\mathbf{\xi}_i^T\mathbf{\xi}_i</script><p>对 $\theta_i$ 求导：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial \theta_i}
+=
+2X_i^TX_i\theta_i
+-2X_i^T\mathbf{\xi}_i</script><p>令导数为 0：</p>
+<script type="math/tex; mode=display">
+2X_i^TX_i\theta_i
+-2X_i^T\mathbf{\xi}_i=0</script><p>两边除以 2：</p>
+<script type="math/tex; mode=display">
+X_i^TX_i\theta_i
+-X_i^T\mathbf{\xi}_i=0</script><p>移项：</p>
+<script type="math/tex; mode=display">
+X_i^TX_i\theta_i
+=
+X_i^T\mathbf{\xi}_i</script><p>如果 $X_i^TX_i$ 可逆，则：</p>
+<script type="math/tex; mode=display">
+\theta_i
+=
+(X_i^TX_i)^{-1}X_i^T\mathbf{\xi}_i</script><p>这就是有 seeds 的 superpixel 的局部映射参数。</p>
 <p>记作：</p>
-<p>[<br>\hat{\theta}_i<br>]</p>
-<hr>
-<h3 id="3-3-没有-seeds-的-superpixel-怎么办"><a href="#3-3-没有-seeds-的-superpixel-怎么办" class="headerlink" title="3.3 没有 seeds 的 superpixel 怎么办"></a>3.3 没有 seeds 的 superpixel 怎么办</h3><p>如果某个 superpixel 没有 3D seed，就不能直接拟合 (\hat{\theta}_i)。</p>
+<script type="math/tex; mode=display">
+\hat{\theta}_i</script><hr>
+<h3 id="3-3-没有-seeds-的-superpixel-怎么办"><a href="#3-3-没有-seeds-的-superpixel-怎么办" class="headerlink" title="3.3 没有 seeds 的 superpixel 怎么办"></a>3.3 没有 seeds 的 superpixel 怎么办</h3><p>如果某个 superpixel 没有 3D seed，就不能直接拟合 $\hat{\theta}_i$。</p>
 <p>论文的做法是构建 superpixel graph。</p>
 <p>每个 superpixel 是一个节点：</p>
-<p>[<br>V={1,2,\dots,N}<br>]</p>
-<p>如果两个 superpixel 空间上接近，就连边：</p>
-<p>[<br>(i,j)\in E<br>]</p>
-<p>边权 (w_{ij}) 表示它们之间传播参数的可信程度。</p>
+<script type="math/tex; mode=display">
+V=\{1,2,\dots,N\}</script><p>如果两个 superpixel 空间上接近，就连边：</p>
+<script type="math/tex; mode=display">
+(i,j)\in E</script><p>边权 $w_{ij}$ 表示它们之间传播参数的可信程度。</p>
 <p>论文里这个边权不是由神经网络学出来的，而是由 superpixel 的中心距离直接计算出来的。令：</p>
-<p>[<br>c_i=\text{centroid}(S_i)<br>]</p>
-<p>表示第 (i) 个 superpixel 的中心。两个节点之间的距离为：</p>
-<p>[<br>\rho_{ij}=|c_i-c_j|_2<br>]</p>
-<p>补充材料 B.2 给出的边权形式是：</p>
-<p>[<br>w_{ij}\propto \exp\left(-\frac{|c_i-c_j|_2}{\tau}\right)<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+c_i=\text{centroid}(S_i)</script><p>表示第 $i$ 个 superpixel 的中心。两个节点之间的距离为：</p>
+<script type="math/tex; mode=display">
+\rho_{ij}=\|c_i-c_j\|_2</script><p>补充材料 B.2 给出的边权形式是：</p>
+<script type="math/tex; mode=display">
+w_{ij}\propto \exp\left(-\frac{\|c_i-c_j\|_2}{\tau}\right)</script><p>其中：</p>
 <ul>
-<li>(|c_i-c_j|_2)：两个 superpixel 中心之间的欧氏距离；</li>
-<li>(\tau)：adaptive, median-based scale parameter，用来把不同图像、不同分割尺度下的距离范围归一化，避免数值范围过大或过小。</li>
+<li>$|c_i-c_j|_2$：两个 superpixel 中心之间的欧氏距离；</li>
+<li>$\tau$：adaptive, median-based scale parameter，用来把不同图像、不同分割尺度下的距离范围归一化，避免数值范围过大或过小。</li>
 </ul>
 <p>这个式子的直觉非常简单：</p>
-<p>[<br>|c<em>i-c_j|_2 \text{ 越小}<br>\Rightarrow<br>w</em>{ij} \text{ 越大}<br>]</p>
-<p>也就是空间上越近的 superpixel，越倾向于共享相似的 calibration parameters。</p>
+<script type="math/tex; mode=display">
+\|c_i-c_j\|_2 \text{ 越小}
+\Rightarrow
+w_{ij} \text{ 越大}</script><p>也就是空间上越近的 superpixel，越倾向于共享相似的 calibration parameters。</p>
 <p>反过来：</p>
-<p>[<br>|c<em>i-c_j|_2 \text{ 越大}<br>\Rightarrow<br>w</em>{ij} \text{ 越小}<br>]</p>
-<p>距离很远的 superpixel 即使都在图像里，也不应该强行传播尺度参数。</p>
-<p>为了节省计算，论文还会对图做稀疏化。具体说，对每个节点只保留距离最近的 (N) 个邻居。可以写成：</p>
-<p>[<br>\mathcal{N}_N(i)=\text{the }N\text{ nearest superpixel nodes of }i<br>]</p>
-<p>然后只保留：</p>
-<p>[<br>(i,j)\in E<br>\quad\text{if}\quad<br>j\in\mathcal{N}_N(i)<br>]</p>
-<p>等价地说，只保留 (w_{ij}) 最大的一小部分边。</p>
-<p>这里要注意一个细节：论文补充材料的 Table 4 还比较了 graph distance 使用 2D centroid 和 3D centroid 的效果。也就是说，(c_i) 可以理解成图像平面中的 2D superpixel center，也可以理解成由粗深度提升后的 3D center。实验上没有一个绝对永远最优的选择：KITTI 上 graph-based 2D 略好，VOID 上 graph-based 3D 略好，而加入 bilateral filtering 后整体进一步改善。这说明边权设计本身就是这个方法的一个敏感点。</p>
+<script type="math/tex; mode=display">
+\|c_i-c_j\|_2 \text{ 越大}
+\Rightarrow
+w_{ij} \text{ 越小}</script><p>距离很远的 superpixel 即使都在图像里，也不应该强行传播尺度参数。</p>
+<p>为了节省计算，论文还会对图做稀疏化。具体说，对每个节点只保留距离最近的 $N$ 个邻居。可以写成：</p>
+<script type="math/tex; mode=display">
+\mathcal{N}_N(i)=\text{the }N\text{ nearest superpixel nodes of }i</script><p>然后只保留：</p>
+<script type="math/tex; mode=display">
+(i,j)\in E
+\quad\text{if}\quad
+j\in\mathcal{N}_N(i)</script><p>等价地说，只保留 $w_{ij}$ 最大的一小部分边。</p>
+<p>这里要注意一个细节：论文补充材料的 Table 4 还比较了 graph distance 使用 2D centroid 和 3D centroid 的效果。也就是说，$c_i$ 可以理解成图像平面中的 2D superpixel center，也可以理解成由粗深度提升后的 3D center。实验上没有一个绝对永远最优的选择：KITTI 上 graph-based 2D 略好，VOID 上 graph-based 3D 略好，而加入 bilateral filtering 后整体进一步改善。这说明边权设计本身就是这个方法的一个敏感点。</p>
 <p>然后求：</p>
-<p>[<br>\min<em>{\theta_i}<br>\sum</em>{i\in Q}<br>|\theta<em>i-\hat{\theta}_i|^2<br>+<br>\lambda<br>\sum</em>{(i,j)\in E}<br>w_{ij}<br>|\theta_i-\theta_j|^2<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\min_{\theta_i}
+\sum_{i\in Q}
+\|\theta_i-\hat{\theta}_i\|^2
++
+\lambda
+\sum_{(i,j)\in E}
+w_{ij}
+\|\theta_i-\theta_j\|^2</script><p>其中：</p>
 <ul>
-<li>(Q)：有 seeds 的 superpixel 集合；</li>
-<li>(\hat{\theta}_i)：由 seeds 拟合出来的参数；</li>
-<li>(\theta_i)：最终想要求的每个 superpixel 的参数；</li>
+<li>$Q$：有 seeds 的 superpixel 集合；</li>
+<li>$\hat{\theta}_i$：由 seeds 拟合出来的参数；</li>
+<li>$\theta_i$：最终想要求的每个 superpixel 的参数；</li>
 <li>第二项让相邻 superpixel 的参数相似。</li>
 </ul>
 <p>这就是 segment-wise recovery 的核心。</p>
 <hr>
-<h3 id="3-4-这个图优化的直觉"><a href="#3-4-这个图优化的直觉" class="headerlink" title="3.4 这个图优化的直觉"></a>3.4 这个图优化的直觉</h3><p>如果 (S_i) 有 seeds，那么 (\theta_i) 应该接近 (\hat{\theta}_i)。</p>
-<p>如果 (S<em>i) 和 (S_j) 很相似，边权 (w</em>{ij}) 大，那么：</p>
-<p>[<br>\theta_i\approx\theta_j<br>]</p>
-<p>如果 (S_j) 没有 seeds，但它邻近有 seeds 的 (S_i)，那么 (\theta_j) 会被 (\theta_i) 拉过去。</p>
+<h3 id="3-4-这个图优化的直觉"><a href="#3-4-这个图优化的直觉" class="headerlink" title="3.4 这个图优化的直觉"></a>3.4 这个图优化的直觉</h3><p>如果 $S_i$ 有 seeds，那么 $\theta_i$ 应该接近 $\hat{\theta}_i$。</p>
+<p>如果 $S<em>i$ 和 $S_j$ 很相似，边权 $w</em>{ij}$ 大，那么：</p>
+<script type="math/tex; mode=display">
+\theta_i\approx\theta_j</script><p>如果 $S_j$ 没有 seeds，但它邻近有 seeds 的 $S_i$，那么 $\theta_j$ 会被 $\theta_i$ 拉过去。</p>
 <p>所以 metric scale 信息就从有 anchors 的区域传播到没有 anchors 的区域。</p>
 <hr>
 <h2 id="4-第二阶段：pixel-wise-refinement-的基本想法"><a href="#4-第二阶段：pixel-wise-refinement-的基本想法" class="headerlink" title="4. 第二阶段：pixel-wise refinement 的基本想法"></a>4. 第二阶段：pixel-wise refinement 的基本想法</h2><p>segment-wise recovery 得到的深度仍然可能比较粗。</p>
-<p>因为一个 superpixel 内所有像素可能共享同一个 (g_i)，这会带来：</p>
+<p>因为一个 superpixel 内所有像素可能共享同一个 $g_i$，这会带来：</p>
 <ul>
 <li>边界不够锐利；</li>
 <li>局部细节不足；</li>
@@ -520,488 +584,971 @@
 <p>于是作者引入：</p>
 <ol>
 <li>Taylor remainder；</li>
-<li>discontinuity density (\phi)；</li>
+<li>discontinuity density $\phi$；</li>
 <li>geodesic cost；</li>
 <li>dynamic programming。</li>
 </ol>
 <p>下面从基础讲。</p>
 <hr>
-<h2 id="5-泰勒展开和一阶余项"><a href="#5-泰勒展开和一阶余项" class="headerlink" title="5. 泰勒展开和一阶余项"></a>5. 泰勒展开和一阶余项</h2><h3 id="5-1-一维一阶泰勒展开"><a href="#5-1-一维一阶泰勒展开" class="headerlink" title="5.1 一维一阶泰勒展开"></a>5.1 一维一阶泰勒展开</h3><p>给一个一维函数 (f(x))，在点 (a) 附近展开：</p>
-<p>[<br>f(x)<br>=<br>f(a)+f’(a)(x-a)+R_1(x)<br>]</p>
-<p>其中：</p>
-<p>[<br>R_1(x)<br>=<br>f(x)-f(a)-f’(a)(x-a)<br>]</p>
-<p>这就是一阶余项。</p>
+<h2 id="5-泰勒展开和一阶余项"><a href="#5-泰勒展开和一阶余项" class="headerlink" title="5. 泰勒展开和一阶余项"></a>5. 泰勒展开和一阶余项</h2><h3 id="5-1-一维一阶泰勒展开"><a href="#5-1-一维一阶泰勒展开" class="headerlink" title="5.1 一维一阶泰勒展开"></a>5.1 一维一阶泰勒展开</h3><p>给一个一维函数 $f(x)$，在点 $a$ 附近展开：</p>
+<script type="math/tex; mode=display">
+f(x)
+=
+f(a)+f'(a)(x-a)+R_1(x)</script><p>其中：</p>
+<script type="math/tex; mode=display">
+R_1(x)
+=
+f(x)-f(a)-f'(a)(x-a)</script><p>这就是一阶余项。</p>
 <p>它表示：</p>
 <blockquote>
 <p>真实函数值减去一阶线性预测后剩下的误差。</p>
 </blockquote>
 <p>如果函数几乎是直线，余项小。<br>如果函数弯曲强，余项大。</p>
 <hr>
-<h3 id="5-2-一维余项的积分形式"><a href="#5-2-一维余项的积分形式" class="headerlink" title="5.2 一维余项的积分形式"></a>5.2 一维余项的积分形式</h3><p>令 (b=x)，(h=b-a)。</p>
+<h3 id="5-2-一维余项的积分形式"><a href="#5-2-一维余项的积分形式" class="headerlink" title="5.2 一维余项的积分形式"></a>5.2 一维余项的积分形式</h3><p>令 $b=x$，$h=b-a$。</p>
 <p>我们想证明：</p>
-<p>[<br>f(b)-f(a)-h f’(a)<br>=<br>\int_a^b (b-t)f’’(t)\,dt<br>]</p>
-<p>从微积分基本定理开始：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b f’(s)\,ds<br>]</p>
-<p>又因为：</p>
-<p>[<br>f’(s)-f’(a)<br>=<br>\int_a^s f’’(t)\,dt<br>]</p>
-<p>所以：</p>
-<p>[<br>f’(s)<br>=<br>f’(a)<br>+<br>\int_a^s f’’(t)\,dt<br>]</p>
-<p>代回：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b<br>\left[<br>f’(a)<br>+<br>\int_a^s f’’(t)\,dt<br>\right]ds<br>]</p>
-<p>拆开两个积分：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b f’(a)\,ds<br>+<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>]</p>
-<p>第一项中 (f’(a)) 对 (s) 是常数：</p>
-<p>[<br>\int_a^b f’(a)\,ds<br>=<br>f’(a)\int_a^b 1\,ds<br>]</p>
-<p>[<br>=<br>f’(a)(b-a)<br>]</p>
-<p>也就是：</p>
-<p>[<br>\int_a^b f’(a)\,ds<br>=<br>h f’(a)<br>]</p>
-<p>所以：</p>
-<p>[<br>f(b)-f(a)<br>=<br>h f’(a)<br>+<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>]</p>
-<p>移项：</p>
-<p>[<br>f(b)-f(a)-h f’(a)<br>=<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>]</p>
-<p>现在处理二重积分：</p>
-<p>[<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>]</p>
-<p>它对应的积分区域满足：</p>
-<p>[<br>a\le s\le b<br>]</p>
-<p>并且：</p>
-<p>[<br>a\le t\le s<br>]</p>
-<p>合并为：</p>
-<p>[<br>a\le t\le s\le b<br>]</p>
-<p>如果交换积分顺序，先固定 (t)，则：</p>
-<p>[<br>a\le t\le b<br>]</p>
-<p>在固定 (t) 后，(s) 必须满足：</p>
-<p>[<br>t\le s\le b<br>]</p>
-<p>所以：</p>
-<p>[<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>=<br>\int_a^b\int_t^b f’’(t)\,ds\,dt<br>]</p>
-<p>由于 (f’’(t)) 不依赖 (s)，内层积分为：</p>
-<p>[<br>\int_t^b f’’(t)\,ds<br>=<br>f’’(t)\int_t^b 1\,ds<br>]</p>
-<p>[<br>=<br>f’’(t)(b-t)<br>]</p>
-<p>因此：</p>
-<p>[<br>\int_a^b\int_a^s f’’(t)\,dt\,ds<br>=<br>\int_a^b (b-t)f’’(t)\,dt<br>]</p>
-<p>最终得到：</p>
-<p>[<br>f(b)-f(a)-h f’(a)<br>=<br>\int_a^b (b-t)f’’(t)\,dt<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(a)
+=
+\int_a^b (b-t)f''(t)\,dt</script><p>从微积分基本定理开始：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b f'(s)\,ds</script><p>又因为：</p>
+<script type="math/tex; mode=display">
+f'(s)-f'(a)
+=
+\int_a^s f''(t)\,dt</script><p>所以：</p>
+<script type="math/tex; mode=display">
+f'(s)
+=
+f'(a)
++
+\int_a^s f''(t)\,dt</script><p>代回：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b
+\left[
+f'(a)
++
+\int_a^s f''(t)\,dt
+\right]ds</script><p>拆开两个积分：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b f'(a)\,ds
++
+\int_a^b\int_a^s f''(t)\,dt\,ds</script><p>第一项中 $f’(a)$ 对 $s$ 是常数：</p>
+<script type="math/tex; mode=display">
+\int_a^b f'(a)\,ds
+=
+f'(a)\int_a^b 1\,ds</script><script type="math/tex; mode=display">
+=
+f'(a)(b-a)</script><p>也就是：</p>
+<script type="math/tex; mode=display">
+\int_a^b f'(a)\,ds
+=
+h f'(a)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+h f'(a)
++
+\int_a^b\int_a^s f''(t)\,dt\,ds</script><p>移项：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(a)
+=
+\int_a^b\int_a^s f''(t)\,dt\,ds</script><p>现在处理二重积分：</p>
+<script type="math/tex; mode=display">
+\int_a^b\int_a^s f''(t)\,dt\,ds</script><p>它对应的积分区域满足：</p>
+<script type="math/tex; mode=display">
+a\le s\le b</script><p>并且：</p>
+<script type="math/tex; mode=display">
+a\le t\le s</script><p>合并为：</p>
+<script type="math/tex; mode=display">
+a\le t\le s\le b</script><p>如果交换积分顺序，先固定 $t$，则：</p>
+<script type="math/tex; mode=display">
+a\le t\le b</script><p>在固定 $t$ 后，$s$ 必须满足：</p>
+<script type="math/tex; mode=display">
+t\le s\le b</script><p>所以：</p>
+<script type="math/tex; mode=display">
+\int_a^b\int_a^s f''(t)\,dt\,ds
+=
+\int_a^b\int_t^b f''(t)\,ds\,dt</script><p>由于 $f’’(t)$ 不依赖 $s$，内层积分为：</p>
+<script type="math/tex; mode=display">
+\int_t^b f''(t)\,ds
+=
+f''(t)\int_t^b 1\,ds</script><script type="math/tex; mode=display">
+=
+f''(t)(b-t)</script><p>因此：</p>
+<script type="math/tex; mode=display">
+\int_a^b\int_a^s f''(t)\,dt\,ds
+=
+\int_a^b (b-t)f''(t)\,dt</script><p>最终得到：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(a)
+=
+\int_a^b (b-t)f''(t)\,dt</script><hr>
 <h3 id="5-3-右端点版本"><a href="#5-3-右端点版本" class="headerlink" title="5.3 右端点版本"></a>5.3 右端点版本</h3><p>还有一个右端点版本：</p>
-<p>[<br>f(b)-f(a)-h f’(b)<br>=<br>-<br>\int_a^b (t-a)f’’(t)\,dt<br>]</p>
-<p>推导如下。</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(b)
+=
+-
+\int_a^b (t-a)f''(t)\,dt</script><p>推导如下。</p>
 <p>从：</p>
-<p>[<br>f’(s)-f’(b)<br>=<br>-<br>\int_s^b f’’(t)\,dt<br>]</p>
-<p>所以：</p>
-<p>[<br>f’(s)<br>=<br>f’(b)<br>-<br>\int_s^b f’’(t)\,dt<br>]</p>
-<p>代入：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b f’(s)\,ds<br>]</p>
-<p>得到：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b<br>\left[<br>f’(b)<br>-<br>\int_s^b f’’(t)\,dt<br>\right]ds<br>]</p>
-<p>拆开：</p>
-<p>[<br>f(b)-f(a)<br>=<br>\int_a^b f’(b)\,ds<br>-<br>\int_a^b\int_s^b f’’(t)\,dt\,ds<br>]</p>
-<p>第一项：</p>
-<p>[<br>\int_a^b f’(b)\,ds<br>=<br>h f’(b)<br>]</p>
-<p>所以：</p>
-<p>[<br>f(b)-f(a)-h f’(b)<br>=<br>-<br>\int_a^b\int_s^b f’’(t)\,dt\,ds<br>]</p>
-<p>看二重积分区域：</p>
-<p>[<br>a\le s\le b,\qquad s\le t\le b<br>]</p>
-<p>合并：</p>
-<p>[<br>a\le s\le t\le b<br>]</p>
-<p>交换顺序，先固定 (t)：</p>
-<p>[<br>a\le t\le b<br>]</p>
-<p>固定 (t) 后：</p>
-<p>[<br>a\le s\le t<br>]</p>
-<p>所以：</p>
-<p>[<br>\int_a^b\int_s^b f’’(t)\,dt\,ds<br>=<br>\int_a^b\int_a^t f’’(t)\,ds\,dt<br>]</p>
-<p>由于 (f’’(t)) 不依赖 (s)：</p>
-<p>[<br>\int_a^t f’’(t)\,ds<br>=<br>f’’(t)(t-a)<br>]</p>
-<p>因此：</p>
-<p>[<br>f(b)-f(a)-h f’(b)<br>=<br>-<br>\int_a^b (t-a)f’’(t)\,dt<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+f'(s)-f'(b)
+=
+-
+\int_s^b f''(t)\,dt</script><p>所以：</p>
+<script type="math/tex; mode=display">
+f'(s)
+=
+f'(b)
+-
+\int_s^b f''(t)\,dt</script><p>代入：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b f'(s)\,ds</script><p>得到：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b
+\left[
+f'(b)
+-
+\int_s^b f''(t)\,dt
+\right]ds</script><p>拆开：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)
+=
+\int_a^b f'(b)\,ds
+-
+\int_a^b\int_s^b f''(t)\,dt\,ds</script><p>第一项：</p>
+<script type="math/tex; mode=display">
+\int_a^b f'(b)\,ds
+=
+h f'(b)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(b)
+=
+-
+\int_a^b\int_s^b f''(t)\,dt\,ds</script><p>看二重积分区域：</p>
+<script type="math/tex; mode=display">
+a\le s\le b,\qquad s\le t\le b</script><p>合并：</p>
+<script type="math/tex; mode=display">
+a\le s\le t\le b</script><p>交换顺序，先固定 $t$：</p>
+<script type="math/tex; mode=display">
+a\le t\le b</script><p>固定 $t$ 后：</p>
+<script type="math/tex; mode=display">
+a\le s\le t</script><p>所以：</p>
+<script type="math/tex; mode=display">
+\int_a^b\int_s^b f''(t)\,dt\,ds
+=
+\int_a^b\int_a^t f''(t)\,ds\,dt</script><p>由于 $f’’(t)$ 不依赖 $s$：</p>
+<script type="math/tex; mode=display">
+\int_a^t f''(t)\,ds
+=
+f''(t)(t-a)</script><p>因此：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(b)
+=
+-
+\int_a^b (t-a)f''(t)\,dt</script><hr>
 <h2 id="6-正文公式-2：二维一阶余项"><a href="#6-正文公式-2：二维一阶余项" class="headerlink" title="6. 正文公式 2：二维一阶余项"></a>6. 正文公式 2：二维一阶余项</h2><p>论文定义像素点：</p>
-<p>[<br>p=(u_0,v_0),\qquad q=(u_1,v_1)<br>]</p>
-<p>深度图：</p>
-<p>[<br>z=z(u,v)<br>]</p>
-<p>位移：</p>
-<p>[<br>\Delta u=u_1-u_0,\qquad \Delta v=v_1-v_0<br>]</p>
-<p>[<br>q-p=(\Delta u,\Delta v)<br>]</p>
-<p>梯度：</p>
-<p>[<br>\nabla z(p)=<br>\begin{bmatrix}<br>z_u(p)\<br>z_v(p)<br>\end{bmatrix}<br>]</p>
-<p>[<br>\nabla z(q)=<br>\begin{bmatrix}<br>z_u(q)\<br>z_v(q)<br>\end{bmatrix}<br>]</p>
-<p>正文公式 2 定义的余项是：</p>
-<p>[<br>R(p,q)<br>=<br>z(q)-z(p)<br>-<br>\frac{1}{2}<br>\left(<br>\nabla z(p)+\nabla z(q)<br>\right)^T(q-p)<br>]</p>
-<p>将内积展开：</p>
-<p>[<br>\left(<br>\nabla z(p)+\nabla z(q)<br>\right)^T(q-p)<br>=<br>\left[<br>z_u(p)+z_u(q),<br>z_v(p)+z_v(q)<br>\right]<br>\begin{bmatrix}<br>\Delta u\<br>\Delta v<br>\end{bmatrix}<br>]</p>
-<p>矩阵乘法得到：</p>
-<p>[<br>\left(<br>\nabla z(p)+\nabla z(q)<br>\right)^T(q-p)<br>=<br>\left[z_u(p)+z_u(q)\right]\Delta u<br>+<br>\left[z_v(p)+z_v(q)\right]\Delta v<br>]</p>
-<p>所以：</p>
-<p>[<br>R(p,q)<br>=<br>z(q)-z(p)<br>-<br>\frac{1}{2}<br>\left[<br>\left(z_u(p)+z_u(q)\right)\Delta u<br>+<br>\left(z_v(p)+z_v(q)\right)\Delta v<br>\right]<br>]</p>
-<p>直觉：</p>
+<script type="math/tex; mode=display">
+p=(u_0,v_0),\qquad q=(u_1,v_1)</script><p>深度图：</p>
+<script type="math/tex; mode=display">
+z=z(u,v)</script><p>位移：</p>
+<script type="math/tex; mode=display">
+\Delta u=u_1-u_0,\qquad \Delta v=v_1-v_0</script><script type="math/tex; mode=display">
+q-p=(\Delta u,\Delta v)</script><p>梯度：</p>
+<script type="math/tex; mode=display">
+\nabla z(p)=
+\begin{bmatrix}
+z_u(p)\\
+z_v(p)
+\end{bmatrix}</script><script type="math/tex; mode=display">
+\nabla z(q)=
+\begin{bmatrix}
+z_u(q)\\
+z_v(q)
+\end{bmatrix}</script><p>正文公式 2 定义的余项是：</p>
+<script type="math/tex; mode=display">
+R(p,q)
+=
+z(q)-z(p)
+-
+\frac{1}{2}
+\left(
+\nabla z(p)+\nabla z(q)
+\right)^T(q-p)</script><p>将内积展开：</p>
+<script type="math/tex; mode=display">
+\left(
+\nabla z(p)+\nabla z(q)
+\right)^T(q-p)
+=
+\left[
+z_u(p)+z_u(q),
+z_v(p)+z_v(q)
+\right]
+\begin{bmatrix}
+\Delta u\\
+\Delta v
+\end{bmatrix}</script><p>矩阵乘法得到：</p>
+<script type="math/tex; mode=display">
+\left(
+\nabla z(p)+\nabla z(q)
+\right)^T(q-p)
+=
+\left[z_u(p)+z_u(q)\right]\Delta u
++
+\left[z_v(p)+z_v(q)\right]\Delta v</script><p>所以：</p>
+<script type="math/tex; mode=display">
+R(p,q)
+=
+z(q)-z(p)
+-
+\frac{1}{2}
+\left[
+\left(z_u(p)+z_u(q)\right)\Delta u
++
+\left(z_v(p)+z_v(q)\right)\Delta v
+\right]</script><p>直觉：</p>
 <blockquote>
-<p>它衡量从 (p) 到 (q) 的真实深度差，能不能被两端平均梯度解释。</p>
+<p>它衡量从 $p$ 到 $q$ 的真实深度差，能不能被两端平均梯度解释。</p>
 </blockquote>
-<p>如果 (p,q) 在同一平滑表面上，(R(p,q)) 小。<br>如果它们之间隔着深度边界，(R(p,q)) 大。</p>
+<p>如果 $p,q$ 在同一平滑表面上，$R(p,q)$ 小。<br>如果它们之间隔着深度边界，$R(p,q)$ 大。</p>
 <hr>
 <h2 id="7-附录推导：将二维余项拆成四条边的一维余项"><a href="#7-附录推导：将二维余项拆成四条边的一维余项" class="headerlink" title="7. 附录推导：将二维余项拆成四条边的一维余项"></a>7. 附录推导：将二维余项拆成四条边的一维余项</h2><p>这是很多人读起来最痛苦的地方。下面不跳步。</p>
 <p>定义两个辅助点：</p>
-<p>[<br>r=(u_1,v_0)<br>]</p>
-<p>[<br>s=(u_0,v_1)<br>]</p>
-<p>几何关系是：</p>
-<p>[<br>p=(u_0,v_0)<br>]</p>
-<p>[<br>r=(u_1,v_0)<br>]</p>
-<p>[<br>s=(u_0,v_1)<br>]</p>
-<p>[<br>q=(u_1,v_1)<br>]</p>
-<p>可以想象成矩形四个角：</p>
-<p>[<br>\begin{matrix}<br>s &amp; \longrightarrow &amp; q\<br>\uparrow &amp; &amp; \uparrow\<br>p &amp; \longrightarrow &amp; r<br>\end{matrix}<br>]</p>
-<p>定义四个一维余项：</p>
-<p>[<br>H_0<br>=<br>z(r)-z(p)-\Delta u\,z_u(p)<br>]</p>
-<p>[<br>H_1<br>=<br>z(q)-z(s)-\Delta u\,z_u(q)<br>]</p>
-<p>[<br>V_0<br>=<br>z(s)-z(p)-\Delta v\,z_v(p)<br>]</p>
-<p>[<br>V_1<br>=<br>z(q)-z(r)-\Delta v\,z_v(q)<br>]</p>
-<p>解释：</p>
+<script type="math/tex; mode=display">
+r=(u_1,v_0)</script><script type="math/tex; mode=display">
+s=(u_0,v_1)</script><p>几何关系是：</p>
+<script type="math/tex; mode=display">
+p=(u_0,v_0)</script><script type="math/tex; mode=display">
+r=(u_1,v_0)</script><script type="math/tex; mode=display">
+s=(u_0,v_1)</script><script type="math/tex; mode=display">
+q=(u_1,v_1)</script><p>可以想象成矩形四个角：</p>
+<script type="math/tex; mode=display">
+\begin{matrix}
+s & \longrightarrow & q\\
+\uparrow & & \uparrow\\
+p & \longrightarrow & r
+\end{matrix}</script><p>定义四个一维余项：</p>
+<script type="math/tex; mode=display">
+H_0
+=
+z(r)-z(p)-\Delta u\,z_u(p)</script><script type="math/tex; mode=display">
+H_1
+=
+z(q)-z(s)-\Delta u\,z_u(q)</script><script type="math/tex; mode=display">
+V_0
+=
+z(s)-z(p)-\Delta v\,z_v(p)</script><script type="math/tex; mode=display">
+V_1
+=
+z(q)-z(r)-\Delta v\,z_v(q)</script><p>解释：</p>
 <ul>
-<li>(H_0)：底边 (p\to r) 的水平一阶余项；</li>
-<li>(H_1)：顶边 (s\to q) 的水平一阶余项；</li>
-<li>(V_0)：左边 (p\to s) 的垂直一阶余项；</li>
-<li>(V_1)：右边 (r\to q) 的垂直一阶余项。</li>
+<li>$H_0$：底边 $p\to r$ 的水平一阶余项；</li>
+<li>$H_1$：顶边 $s\to q$ 的水平一阶余项；</li>
+<li>$V_0$：左边 $p\to s$ 的垂直一阶余项；</li>
+<li>$V_1$：右边 $r\to q$ 的垂直一阶余项。</li>
 </ul>
 <p>现在把四个相加：</p>
-<p>[<br>H_0+H_1+V_0+V_1<br>]</p>
-<p>代入定义：</p>
-<p>[<br>=<br>\left[z(r)-z(p)-\Delta u z_u(p)\right]<br>+<br>\left[z(q)-z(s)-\Delta u z_u(q)\right]<br>]</p>
-<p>[<br>+<br>\left[z(s)-z(p)-\Delta v z_v(p)\right]<br>+<br>\left[z(q)-z(r)-\Delta v z_v(q)\right]<br>]</p>
-<p>先把深度值项放在一起：</p>
-<p>[<br>z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)<br>]</p>
-<p>再把导数项放在一起：</p>
-<p>[<br>-<br>\Delta u z_u(p)<br>-<br>\Delta u z_u(q)<br>-<br>\Delta v z_v(p)<br>-<br>\Delta v z_v(q)<br>]</p>
+<script type="math/tex; mode=display">
+H_0+H_1+V_0+V_1</script><p>代入定义：</p>
+<script type="math/tex; mode=display">
+=
+\left[z(r)-z(p)-\Delta u z_u(p)\right]
++
+\left[z(q)-z(s)-\Delta u z_u(q)\right]</script><script type="math/tex; mode=display">
++
+\left[z(s)-z(p)-\Delta v z_v(p)\right]
++
+\left[z(q)-z(r)-\Delta v z_v(q)\right]</script><p>先把深度值项放在一起：</p>
+<script type="math/tex; mode=display">
+z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)</script><p>再把导数项放在一起：</p>
+<script type="math/tex; mode=display">
+-
+\Delta u z_u(p)
+-
+\Delta u z_u(q)
+-
+\Delta v z_v(p)
+-
+\Delta v z_v(q)</script><p>因此：</p>
+<script type="math/tex; mode=display">
+H_0+H_1+V_0+V_1</script><script type="math/tex; mode=display">
+=
+\left[
+z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)
+\right]</script><script type="math/tex; mode=display">
+-
+\left[
+\Delta u z_u(p)
++
+\Delta u z_u(q)
++
+\Delta v z_v(p)
++
+\Delta v z_v(q)
+\right]</script><p>看第一组：</p>
+<script type="math/tex; mode=display">
+z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)</script><p>重新排列：</p>
+<script type="math/tex; mode=display">
+=
+\left[z(r)-z(r)\right]
++
+\left[-z(s)+z(s)\right]
++
+\left[z(q)+z(q)\right]
++
+\left[-z(p)-z(p)\right]</script><p>抵消：</p>
+<script type="math/tex; mode=display">
+z(r)-z(r)=0</script><script type="math/tex; mode=display">
+-z(s)+z(s)=0</script><p>所以剩下：</p>
+<script type="math/tex; mode=display">
+2z(q)-2z(p)</script><p>即：</p>
+<script type="math/tex; mode=display">
+z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)
+=
+2[z(q)-z(p)]</script><p>第二组：</p>
+<script type="math/tex; mode=display">
+\Delta u z_u(p)
++
+\Delta u z_u(q)
++
+\Delta v z_v(p)
++
+\Delta v z_v(q)</script><p>提取同类项：</p>
+<script type="math/tex; mode=display">
+=
+\Delta u [z_u(p)+z_u(q)]
++
+\Delta v [z_v(p)+z_v(q)]</script><p>所以：</p>
+<script type="math/tex; mode=display">
+H_0+H_1+V_0+V_1
+=
+2[z(q)-z(p)]
+-
+\left[
+\Delta u [z_u(p)+z_u(q)]
++
+\Delta v [z_v(p)+z_v(q)]
+\right]</script><p>两边乘以 $\frac{1}{2}$：</p>
+<script type="math/tex; mode=display">
+\frac{1}{2}
+(H_0+H_1+V_0+V_1)</script><script type="math/tex; mode=display">
+=
+z(q)-z(p)
+-
+\frac{1}{2}
+\left[
+\Delta u [z_u(p)+z_u(q)]
++
+\Delta v [z_v(p)+z_v(q)]
+\right]</script><p>右边正是公式 2 的 $R(p,q)$。</p>
 <p>因此：</p>
-<p>[<br>H_0+H_1+V_0+V_1<br>]</p>
-<p>[<br>=<br>\left[<br>z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)<br>\right]<br>]</p>
-<p>[<br>-<br>\left[<br>\Delta u z_u(p)<br>+<br>\Delta u z_u(q)<br>+<br>\Delta v z_v(p)<br>+<br>\Delta v z_v(q)<br>\right]<br>]</p>
-<p>看第一组：</p>
-<p>[<br>z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)<br>]</p>
-<p>重新排列：</p>
-<p>[<br>=<br>\left[z(r)-z(r)\right]<br>+<br>\left[-z(s)+z(s)\right]<br>+<br>\left[z(q)+z(q)\right]<br>+<br>\left[-z(p)-z(p)\right]<br>]</p>
-<p>抵消：</p>
-<p>[<br>z(r)-z(r)=0<br>]</p>
-<p>[<br>-z(s)+z(s)=0<br>]</p>
-<p>所以剩下：</p>
-<p>[<br>2z(q)-2z(p)<br>]</p>
-<p>即：</p>
-<p>[<br>z(r)-z(p)+z(q)-z(s)+z(s)-z(p)+z(q)-z(r)<br>=<br>2[z(q)-z(p)]<br>]</p>
-<p>第二组：</p>
-<p>[<br>\Delta u z_u(p)<br>+<br>\Delta u z_u(q)<br>+<br>\Delta v z_v(p)<br>+<br>\Delta v z_v(q)<br>]</p>
-<p>提取同类项：</p>
-<p>[<br>=<br>\Delta u [z_u(p)+z_u(q)]<br>+<br>\Delta v [z_v(p)+z_v(q)]<br>]</p>
-<p>所以：</p>
-<p>[<br>H_0+H_1+V_0+V_1<br>=<br>2[z(q)-z(p)]<br>-<br>\left[<br>\Delta u [z_u(p)+z_u(q)]<br>+<br>\Delta v [z_v(p)+z_v(q)]<br>\right]<br>]</p>
-<p>两边乘以 (\frac{1}{2})：</p>
-<p>[<br>\frac{1}{2}<br>(H_0+H_1+V_0+V_1)<br>]</p>
-<p>[<br>=<br>z(q)-z(p)<br>-<br>\frac{1}{2}<br>\left[<br>\Delta u [z_u(p)+z_u(q)]<br>+<br>\Delta v [z_v(p)+z_v(q)]<br>\right]<br>]</p>
-<p>右边正是公式 2 的 (R(p,q))。</p>
-<p>因此：</p>
-<p>[<br>R(p,q)<br>=<br>\frac{1}{2}<br>\left[<br>H_0+H_1+V_0+V_1<br>\right]<br>]</p>
-<p>这一步的本质：</p>
+<script type="math/tex; mode=display">
+R(p,q)
+=
+\frac{1}{2}
+\left[
+H_0+H_1+V_0+V_1
+\right]</script><p>这一步的本质：</p>
 <blockquote>
 <p>把一个二维余项，拆成矩形四条边上的四个一维余项的平均。</p>
 </blockquote>
 <hr>
-<h2 id="8-附录推导：将四个一维余项写成二阶导积分"><a href="#8-附录推导：将四个一维余项写成二阶导积分" class="headerlink" title="8. 附录推导：将四个一维余项写成二阶导积分"></a>8. 附录推导：将四个一维余项写成二阶导积分</h2><h3 id="8-1-推导-H-0"><a href="#8-1-推导-H-0" class="headerlink" title="8.1 推导 (H_0)"></a>8.1 推导 (H_0)</h3><p>[<br>H_0<br>=<br>z(r)-z(p)-\Delta u z_u(p)<br>]</p>
-<p>展开点：</p>
-<p>[<br>r=(u_1,v_0),\qquad p=(u_0,v_0)<br>]</p>
-<p>所以：</p>
-<p>[<br>H_0<br>=<br>z(u_1,v_0)-z(u_0,v_0)-\Delta u z_u(u_0,v_0)<br>]</p>
-<p>固定 (v=v_0)，定义一维函数：</p>
-<p>[<br>f(u)=z(u,v_0)<br>]</p>
-<p>则：</p>
-<p>[<br>f(u_1)=z(u_1,v_0)<br>]</p>
-<p>[<br>f(u_0)=z(u_0,v_0)<br>]</p>
-<p>[<br>f’(u_0)=z_u(u_0,v_0)<br>]</p>
-<p>[<br>f’’(u)=z_{uu}(u,v_0)<br>]</p>
-<p>令：</p>
-<p>[<br>a=u_0,\qquad b=u_1,\qquad h=\Delta u=u_1-u_0<br>]</p>
-<p>由一维左端点余项公式：</p>
-<p>[<br>f(b)-f(a)-h f’(a)<br>=<br>\int_a^b (b-t)f’’(t)\,dt<br>]</p>
-<p>代入：</p>
-<p>[<br>H<em>0<br>=<br>\int</em>{u<em>0}^{u_1}<br>(u_1-u)z</em>{uu}(u,v_0)\,du<br>]</p>
-<hr>
-<h3 id="8-2-推导-H-1"><a href="#8-2-推导-H-1" class="headerlink" title="8.2 推导 (H_1)"></a>8.2 推导 (H_1)</h3><p>[<br>H_1<br>=<br>z(q)-z(s)-\Delta u z_u(q)<br>]</p>
-<p>展开点：</p>
-<p>[<br>q=(u_1,v_1),\qquad s=(u_0,v_1)<br>]</p>
-<p>所以：</p>
-<p>[<br>H_1<br>=<br>z(u_1,v_1)-z(u_0,v_1)-\Delta u z_u(u_1,v_1)<br>]</p>
-<p>固定 (v=v_1)，定义：</p>
-<p>[<br>f(u)=z(u,v_1)<br>]</p>
-<p>则：</p>
-<p>[<br>f(u_1)=z(u_1,v_1)<br>]</p>
-<p>[<br>f(u_0)=z(u_0,v_1)<br>]</p>
-<p>[<br>f’(u_1)=z_u(u_1,v_1)<br>]</p>
-<p>[<br>f’’(u)=z_{uu}(u,v_1)<br>]</p>
-<p>这里用右端点余项公式：</p>
-<p>[<br>f(b)-f(a)-h f’(b)<br>=<br>-<br>\int_a^b (t-a)f’’(t)\,dt<br>]</p>
-<p>代入：</p>
-<p>[<br>H<em>1<br>=<br>-<br>\int</em>{u<em>0}^{u_1}<br>(u-u_0)z</em>{uu}(u,v_1)\,du<br>]</p>
-<hr>
-<h3 id="8-3-推导-V-0"><a href="#8-3-推导-V-0" class="headerlink" title="8.3 推导 (V_0)"></a>8.3 推导 (V_0)</h3><p>[<br>V_0<br>=<br>z(s)-z(p)-\Delta v z_v(p)<br>]</p>
-<p>展开点：</p>
-<p>[<br>s=(u_0,v_1),\qquad p=(u_0,v_0)<br>]</p>
-<p>所以：</p>
-<p>[<br>V_0<br>=<br>z(u_0,v_1)-z(u_0,v_0)-\Delta v z_v(u_0,v_0)<br>]</p>
-<p>固定 (u=u_0)，定义：</p>
-<p>[<br>f(v)=z(u_0,v)<br>]</p>
-<p>则：</p>
-<p>[<br>f(v_1)=z(u_0,v_1)<br>]</p>
-<p>[<br>f(v_0)=z(u_0,v_0)<br>]</p>
-<p>[<br>f’(v_0)=z_v(u_0,v_0)<br>]</p>
-<p>[<br>f’’(v)=z_{vv}(u_0,v)<br>]</p>
-<p>使用左端点余项公式：</p>
-<p>[<br>V<em>0<br>=<br>\int</em>{v<em>0}^{v_1}<br>(v_1-v)z</em>{vv}(u_0,v)\,dv<br>]</p>
-<hr>
-<h3 id="8-4-推导-V-1"><a href="#8-4-推导-V-1" class="headerlink" title="8.4 推导 (V_1)"></a>8.4 推导 (V_1)</h3><p>[<br>V_1<br>=<br>z(q)-z(r)-\Delta v z_v(q)<br>]</p>
-<p>展开点：</p>
-<p>[<br>q=(u_1,v_1),\qquad r=(u_1,v_0)<br>]</p>
-<p>所以：</p>
-<p>[<br>V_1<br>=<br>z(u_1,v_1)-z(u_1,v_0)-\Delta v z_v(u_1,v_1)<br>]</p>
-<p>固定 (u=u_1)，定义：</p>
-<p>[<br>f(v)=z(u_1,v)<br>]</p>
-<p>使用右端点余项公式：</p>
-<p>[<br>V<em>1<br>=<br>-<br>\int</em>{v<em>0}^{v_1}<br>(v-v_0)z</em>{vv}(u_1,v)\,dv<br>]</p>
-<hr>
-<h2 id="9-从二阶导积分到-phi"><a href="#9-从二阶导积分到-phi" class="headerlink" title="9. 从二阶导积分到 (\phi)"></a>9. 从二阶导积分到 (\phi)</h2><p>论文定义一个局部不连续性密度：</p>
-<p>[<br>\phi(u,v)<br>=<br>\sqrt{<br>z<em>{uu}^2(u,v)+z</em>{vv}^2(u,v)<br>}<br>]</p>
-<p>因为：</p>
-<p>[<br>z<em>{uu}^2\leq z</em>{uu}^2+z_{vv}^2<br>]</p>
-<p>两边开方：</p>
-<p>[<br>|z<em>{uu}|<br>\leq<br>\sqrt{z</em>{uu}^2+z_{vv}^2}<br>]</p>
-<p>所以：</p>
-<p>[<br>|z_{uu}|\leq \phi<br>]</p>
-<p>同理：</p>
-<p>[<br>|z_{vv}|\leq \phi<br>]</p>
-<p>这意味着：</p>
+<h2 id="8-附录推导：将四个一维余项写成二阶导积分"><a href="#8-附录推导：将四个一维余项写成二阶导积分" class="headerlink" title="8. 附录推导：将四个一维余项写成二阶导积分"></a>8. 附录推导：将四个一维余项写成二阶导积分</h2><h3 id="8-1-推导-H-0"><a href="#8-1-推导-H-0" class="headerlink" title="8.1 推导 $H_0$"></a>8.1 推导 $H_0$</h3><script type="math/tex; mode=display">
+H_0
+=
+z(r)-z(p)-\Delta u z_u(p)</script><p>展开点：</p>
+<script type="math/tex; mode=display">
+r=(u_1,v_0),\qquad p=(u_0,v_0)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+H_0
+=
+z(u_1,v_0)-z(u_0,v_0)-\Delta u z_u(u_0,v_0)</script><p>固定 $v=v_0$，定义一维函数：</p>
+<script type="math/tex; mode=display">
+f(u)=z(u,v_0)</script><p>则：</p>
+<script type="math/tex; mode=display">
+f(u_1)=z(u_1,v_0)</script><script type="math/tex; mode=display">
+f(u_0)=z(u_0,v_0)</script><script type="math/tex; mode=display">
+f'(u_0)=z_u(u_0,v_0)</script><script type="math/tex; mode=display">
+f''(u)=z_{uu}(u,v_0)</script><p>令：</p>
+<script type="math/tex; mode=display">
+a=u_0,\qquad b=u_1,\qquad h=\Delta u=u_1-u_0</script><p>由一维左端点余项公式：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(a)
+=
+\int_a^b (b-t)f''(t)\,dt</script><p>代入：</p>
+<script type="math/tex; mode=display">
+H_0
+=
+\int_{u_0}^{u_1}
+(u_1-u)z_{uu}(u,v_0)\,du</script><hr>
+<h3 id="8-2-推导-H-1"><a href="#8-2-推导-H-1" class="headerlink" title="8.2 推导 $H_1$"></a>8.2 推导 $H_1$</h3><script type="math/tex; mode=display">
+H_1
+=
+z(q)-z(s)-\Delta u z_u(q)</script><p>展开点：</p>
+<script type="math/tex; mode=display">
+q=(u_1,v_1),\qquad s=(u_0,v_1)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+H_1
+=
+z(u_1,v_1)-z(u_0,v_1)-\Delta u z_u(u_1,v_1)</script><p>固定 $v=v_1$，定义：</p>
+<script type="math/tex; mode=display">
+f(u)=z(u,v_1)</script><p>则：</p>
+<script type="math/tex; mode=display">
+f(u_1)=z(u_1,v_1)</script><script type="math/tex; mode=display">
+f(u_0)=z(u_0,v_1)</script><script type="math/tex; mode=display">
+f'(u_1)=z_u(u_1,v_1)</script><script type="math/tex; mode=display">
+f''(u)=z_{uu}(u,v_1)</script><p>这里用右端点余项公式：</p>
+<script type="math/tex; mode=display">
+f(b)-f(a)-h f'(b)
+=
+-
+\int_a^b (t-a)f''(t)\,dt</script><p>代入：</p>
+<script type="math/tex; mode=display">
+H_1
+=
+-
+\int_{u_0}^{u_1}
+(u-u_0)z_{uu}(u,v_1)\,du</script><hr>
+<h3 id="8-3-推导-V-0"><a href="#8-3-推导-V-0" class="headerlink" title="8.3 推导 $V_0$"></a>8.3 推导 $V_0$</h3><script type="math/tex; mode=display">
+V_0
+=
+z(s)-z(p)-\Delta v z_v(p)</script><p>展开点：</p>
+<script type="math/tex; mode=display">
+s=(u_0,v_1),\qquad p=(u_0,v_0)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+V_0
+=
+z(u_0,v_1)-z(u_0,v_0)-\Delta v z_v(u_0,v_0)</script><p>固定 $u=u_0$，定义：</p>
+<script type="math/tex; mode=display">
+f(v)=z(u_0,v)</script><p>则：</p>
+<script type="math/tex; mode=display">
+f(v_1)=z(u_0,v_1)</script><script type="math/tex; mode=display">
+f(v_0)=z(u_0,v_0)</script><script type="math/tex; mode=display">
+f'(v_0)=z_v(u_0,v_0)</script><script type="math/tex; mode=display">
+f''(v)=z_{vv}(u_0,v)</script><p>使用左端点余项公式：</p>
+<script type="math/tex; mode=display">
+V_0
+=
+\int_{v_0}^{v_1}
+(v_1-v)z_{vv}(u_0,v)\,dv</script><hr>
+<h3 id="8-4-推导-V-1"><a href="#8-4-推导-V-1" class="headerlink" title="8.4 推导 $V_1$"></a>8.4 推导 $V_1$</h3><script type="math/tex; mode=display">
+V_1
+=
+z(q)-z(r)-\Delta v z_v(q)</script><p>展开点：</p>
+<script type="math/tex; mode=display">
+q=(u_1,v_1),\qquad r=(u_1,v_0)</script><p>所以：</p>
+<script type="math/tex; mode=display">
+V_1
+=
+z(u_1,v_1)-z(u_1,v_0)-\Delta v z_v(u_1,v_1)</script><p>固定 $u=u_1$，定义：</p>
+<script type="math/tex; mode=display">
+f(v)=z(u_1,v)</script><p>使用右端点余项公式：</p>
+<script type="math/tex; mode=display">
+V_1
+=
+-
+\int_{v_0}^{v_1}
+(v-v_0)z_{vv}(u_1,v)\,dv</script><hr>
+<h2 id="9-从二阶导积分到-phi"><a href="#9-从二阶导积分到-phi" class="headerlink" title="9. 从二阶导积分到 $\phi$"></a>9. 从二阶导积分到 $\phi$</h2><p>论文定义一个局部不连续性密度：</p>
+<script type="math/tex; mode=display">
+\phi(u,v)
+=
+\sqrt{
+z_{uu}^2(u,v)+z_{vv}^2(u,v)
+}</script><p>因为：</p>
+<script type="math/tex; mode=display">
+z_{uu}^2\leq z_{uu}^2+z_{vv}^2</script><p>两边开方：</p>
+<script type="math/tex; mode=display">
+|z_{uu}|
+\leq
+\sqrt{z_{uu}^2+z_{vv}^2}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+|z_{uu}|\leq \phi</script><p>同理：</p>
+<script type="math/tex; mode=display">
+|z_{vv}|\leq \phi</script><p>这意味着：</p>
 <blockquote>
-<p>(\phi) 同时上界了两个方向上的二阶变化。</p>
+<p>$\phi$ 同时上界了两个方向上的二阶变化。</p>
 </blockquote>
 <hr>
-<h2 id="10-从-R-p-q-到路径积分上界"><a href="#10-从-R-p-q-到路径积分上界" class="headerlink" title="10. 从 (R(p,q)) 到路径积分上界"></a>10. 从 (R(p,q)) 到路径积分上界</h2><p>前面已经得到：</p>
-<p>[<br>R(p,q)<br>=<br>\frac{1}{2}<br>(H_0+H_1+V_0+V_1)<br>]</p>
-<p>取绝对值：</p>
-<p>[<br>|R(p,q)|<br>=<br>\left|<br>\frac{1}{2}<br>(H_0+H_1+V_0+V_1)<br>\right|<br>]</p>
-<p>常数 (\frac{1}{2}) 提出来：</p>
-<p>[<br>|R(p,q)|<br>=<br>\frac{1}{2}<br>|H_0+H_1+V_0+V_1|<br>]</p>
-<p>用三角不等式：</p>
-<p>[<br>|a+b+c+d|<br>\leq<br>|a|+|b|+|c|+|d|<br>]</p>
-<p>所以：</p>
-<p>[<br>|R(p,q)|<br>\leq<br>\frac{1}{2}<br>\left(<br>|H_0|+|H_1|+|V_0|+|V_1|<br>\right)<br>]</p>
-<p>下面分别控制四项。</p>
-<p>以 (H_0) 为例：</p>
-<p>[<br>H<em>0<br>=<br>\int</em>{u<em>0}^{u_1}<br>(u_1-u)z</em>{uu}(u,v_0)\,du<br>]</p>
-<p>取绝对值：</p>
-<p>[<br>|H<em>0|<br>=<br>\left|<br>\int</em>{u<em>0}^{u_1}<br>(u_1-u)z</em>{uu}(u,v_0)\,du<br>\right|<br>]</p>
-<p>积分的绝对值不超过绝对值的积分：</p>
-<p>[<br>\left|<br>\int f(u)\,du<br>\right|<br>\leq<br>\int |f(u)|\,du<br>]</p>
-<p>所以：</p>
-<p>[<br>|H<em>0|<br>\leq<br>\int</em>{u<em>0}^{u_1}<br>|(u_1-u)z</em>{uu}(u,v_0)|\,du<br>]</p>
-<p>乘积绝对值等于绝对值乘积：</p>
-<p>[<br>|(u<em>1-u)z</em>{uu}(u,v<em>0)|<br>=<br>|u_1-u|\cdot |z</em>{uu}(u,v_0)|<br>]</p>
-<p>所以：</p>
-<p>[<br>|H<em>0|<br>\leq<br>\int</em>{u<em>0}^{u_1}<br>|u_1-u|\cdot |z</em>{uu}(u,v_0)|\,du<br>]</p>
-<p>如果考虑的是单步像素邻域，或者局部归一化步长满足：</p>
-<p>[<br>|\Delta u|\leq 1<br>]</p>
-<p>那么：</p>
-<p>[<br>|u_1-u|\leq 1<br>]</p>
-<p>因此：</p>
-<p>[<br>|H<em>0|<br>\leq<br>\int</em>{u<em>0}^{u_1}<br>|z</em>{uu}(u,v_0)|\,du<br>]</p>
-<p>由于：</p>
-<p>[<br>|z_{uu}(u,v_0)|\leq\phi(u,v_0)<br>]</p>
-<p>得到：</p>
-<p>[<br>|H<em>0|<br>\leq<br>\int</em>{u_0}^{u_1}<br>\phi(u,v_0)\,du<br>]</p>
-<p>这就是底边路径上的 (\phi) 积分。</p>
+<h2 id="10-从-R-p-q-到路径积分上界"><a href="#10-从-R-p-q-到路径积分上界" class="headerlink" title="10. 从 $R(p,q)$ 到路径积分上界"></a>10. 从 $R(p,q)$ 到路径积分上界</h2><p>前面已经得到：</p>
+<script type="math/tex; mode=display">
+R(p,q)
+=
+\frac{1}{2}
+(H_0+H_1+V_0+V_1)</script><p>取绝对值：</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+=
+\left|
+\frac{1}{2}
+(H_0+H_1+V_0+V_1)
+\right|</script><p>常数 $\frac{1}{2}$ 提出来：</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+=
+\frac{1}{2}
+|H_0+H_1+V_0+V_1|</script><p>用三角不等式：</p>
+<script type="math/tex; mode=display">
+|a+b+c+d|
+\leq
+|a|+|b|+|c|+|d|</script><p>所以：</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+\leq
+\frac{1}{2}
+\left(
+|H_0|+|H_1|+|V_0|+|V_1|
+\right)</script><p>下面分别控制四项。</p>
+<p>以 $H_0$ 为例：</p>
+<script type="math/tex; mode=display">
+H_0
+=
+\int_{u_0}^{u_1}
+(u_1-u)z_{uu}(u,v_0)\,du</script><p>取绝对值：</p>
+<script type="math/tex; mode=display">
+|H_0|
+=
+\left|
+\int_{u_0}^{u_1}
+(u_1-u)z_{uu}(u,v_0)\,du
+\right|</script><p>积分的绝对值不超过绝对值的积分：</p>
+<script type="math/tex; mode=display">
+\left|
+\int f(u)\,du
+\right|
+\leq
+\int |f(u)|\,du</script><p>所以：</p>
+<script type="math/tex; mode=display">
+|H_0|
+\leq
+\int_{u_0}^{u_1}
+|(u_1-u)z_{uu}(u,v_0)|\,du</script><p>乘积绝对值等于绝对值乘积：</p>
+<script type="math/tex; mode=display">
+|(u_1-u)z_{uu}(u,v_0)|
+=
+|u_1-u|\cdot |z_{uu}(u,v_0)|</script><p>所以：</p>
+<script type="math/tex; mode=display">
+|H_0|
+\leq
+\int_{u_0}^{u_1}
+|u_1-u|\cdot |z_{uu}(u,v_0)|\,du</script><p>如果考虑的是单步像素邻域，或者局部归一化步长满足：</p>
+<script type="math/tex; mode=display">
+|\Delta u|\leq 1</script><p>那么：</p>
+<script type="math/tex; mode=display">
+|u_1-u|\leq 1</script><p>因此：</p>
+<script type="math/tex; mode=display">
+|H_0|
+\leq
+\int_{u_0}^{u_1}
+|z_{uu}(u,v_0)|\,du</script><p>由于：</p>
+<script type="math/tex; mode=display">
+|z_{uu}(u,v_0)|\leq\phi(u,v_0)</script><p>得到：</p>
+<script type="math/tex; mode=display">
+|H_0|
+\leq
+\int_{u_0}^{u_1}
+\phi(u,v_0)\,du</script><p>这就是底边路径上的 $\phi$ 积分。</p>
 <p>同理：</p>
-<p>[<br>|H<em>1|<br>\leq<br>\int</em>{u_0}^{u_1}<br>\phi(u,v_1)\,du<br>]</p>
-<p>[<br>|V<em>0|<br>\leq<br>\int</em>{v_0}^{v_1}<br>\phi(u_0,v)\,dv<br>]</p>
-<p>[<br>|V<em>1|<br>\leq<br>\int</em>{v_0}^{v_1}<br>\phi(u_1,v)\,dv<br>]</p>
-<p>代回：</p>
-<p>[<br>|R(p,q)|<br>\leq<br>\frac{1}{2}<br>\left[<br>\int<em>{u_0}^{u_1}\phi(u,v_0)\,du<br>+<br>\int</em>{u_0}^{u_1}\phi(u,v_1)\,du<br>\right.<br>]</p>
-<p>[<br>\left.<br>+<br>\int<em>{v_0}^{v_1}\phi(u_0,v)\,dv<br>+<br>\int</em>{v_0}^{v_1}\phi(u_1,v)\,dv<br>\right]<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+|H_1|
+\leq
+\int_{u_0}^{u_1}
+\phi(u,v_1)\,du</script><script type="math/tex; mode=display">
+|V_0|
+\leq
+\int_{v_0}^{v_1}
+\phi(u_0,v)\,dv</script><script type="math/tex; mode=display">
+|V_1|
+\leq
+\int_{v_0}^{v_1}
+\phi(u_1,v)\,dv</script><p>代回：</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+\leq
+\frac{1}{2}
+\left[
+\int_{u_0}^{u_1}\phi(u,v_0)\,du
++
+\int_{u_0}^{u_1}\phi(u,v_1)\,du
+\right.</script><script type="math/tex; mode=display">
+\left.
++
+\int_{v_0}^{v_1}\phi(u_0,v)\,dv
++
+\int_{v_0}^{v_1}\phi(u_1,v)\,dv
+\right]</script><hr>
 <h2 id="11-两条轴对齐路径"><a href="#11-两条轴对齐路径" class="headerlink" title="11. 两条轴对齐路径"></a>11. 两条轴对齐路径</h2><p>定义路径 1：</p>
-<p>[<br>L_1:p\to r\to q<br>]</p>
-<p>先水平，再垂直。</p>
+<script type="math/tex; mode=display">
+L_1:p\to r\to q</script><p>先水平，再垂直。</p>
 <p>它的代价：</p>
-<p>[<br>C<em>1<br>=<br>\int</em>{u<em>0}^{u_1}\phi(u,v_0)\,du<br>+<br>\int</em>{v_0}^{v_1}\phi(u_1,v)\,dv<br>]</p>
-<p>定义路径 2：</p>
-<p>[<br>L_2:p\to s\to q<br>]</p>
-<p>先垂直，再水平。</p>
+<script type="math/tex; mode=display">
+C_1
+=
+\int_{u_0}^{u_1}\phi(u,v_0)\,du
++
+\int_{v_0}^{v_1}\phi(u_1,v)\,dv</script><p>定义路径 2：</p>
+<script type="math/tex; mode=display">
+L_2:p\to s\to q</script><p>先垂直，再水平。</p>
 <p>它的代价：</p>
-<p>[<br>C<em>2<br>=<br>\int</em>{v<em>0}^{v_1}\phi(u_0,v)\,dv<br>+<br>\int</em>{u_0}^{u_1}\phi(u,v_1)\,du<br>]</p>
-<p>将 (C_1+C_2) 展开：</p>
-<p>[<br>C<em>1+C_2<br>=<br>\int</em>{u<em>0}^{u_1}\phi(u,v_0)\,du<br>+<br>\int</em>{v_0}^{v_1}\phi(u_1,v)\,dv<br>]</p>
-<p>[<br>+<br>\int<em>{v_0}^{v_1}\phi(u_0,v)\,dv<br>+<br>\int</em>{u_0}^{u_1}\phi(u,v_1)\,du<br>]</p>
-<p>这正好等于前面四条边积分之和。</p>
+<script type="math/tex; mode=display">
+C_2
+=
+\int_{v_0}^{v_1}\phi(u_0,v)\,dv
++
+\int_{u_0}^{u_1}\phi(u,v_1)\,du</script><p>将 $C_1+C_2$ 展开：</p>
+<script type="math/tex; mode=display">
+C_1+C_2
+=
+\int_{u_0}^{u_1}\phi(u,v_0)\,du
++
+\int_{v_0}^{v_1}\phi(u_1,v)\,dv</script><script type="math/tex; mode=display">
++
+\int_{v_0}^{v_1}\phi(u_0,v)\,dv
++
+\int_{u_0}^{u_1}\phi(u,v_1)\,du</script><p>这正好等于前面四条边积分之和。</p>
 <p>所以：</p>
-<p>[<br>|R(p,q)|<br>\leq<br>\frac{1}{2}(C_1+C_2)<br>]</p>
-<p>因为两个数的平均值不超过它们的最大值：</p>
-<p>[<br>\frac{1}{2}(C_1+C_2)<br>\leq<br>\max(C_1,C_2)<br>]</p>
-<p>于是：</p>
-<p>[<br>|R(p,q)|<br>\leq<br>\max(C_1,C_2)<br>]</p>
-<p>这说明至少存在一条轴对齐路径，它的代价能够控制余项。</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+\leq
+\frac{1}{2}(C_1+C_2)</script><p>因为两个数的平均值不超过它们的最大值：</p>
+<script type="math/tex; mode=display">
+\frac{1}{2}(C_1+C_2)
+\leq
+\max(C_1,C_2)</script><p>于是：</p>
+<script type="math/tex; mode=display">
+|R(p,q)|
+\leq
+\max(C_1,C_2)</script><p>这说明至少存在一条轴对齐路径，它的代价能够控制余项。</p>
 <p>更直观地说：</p>
 <blockquote>
 <p>一阶预测失败的程度，可以由某条路径上累计的不连续性代价解释。</p>
 </blockquote>
 <p>论文进一步将这种路径代价组织成 geodesic cost：</p>
-<p>[<br>d<em>\phi(p,q)<br>=<br>\inf</em>{L\in\mathcal{L}_{p\to q}}<br>\int_L \phi(u,v)\,ds<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+d_\phi(p,q)
+=
+\inf_{L\in\mathcal{L}_{p\to q}}
+\int_L \phi(u,v)\,ds</script><p>其中：</p>
 <ul>
-<li>(L)：从 (p) 到 (q) 的路径；</li>
-<li>(\mathcal{L}_{p\to q})：所有可行路径集合；</li>
-<li>(\inf)：所有路径代价中的下确界，可以先理解成最小值；</li>
-<li>(ds)：路径上的微小长度；</li>
-<li>(\phi(u,v))：这个位置的通行代价。</li>
+<li>$L$：从 $p$ 到 $q$ 的路径；</li>
+<li>$\mathcal{L}_{p\to q}$：所有可行路径集合；</li>
+<li>$\inf$：所有路径代价中的下确界，可以先理解成最小值；</li>
+<li>$ds$：路径上的微小长度；</li>
+<li>$\phi(u,v)$：这个位置的通行代价。</li>
 </ul>
 <hr>
 <h2 id="12-conformal-Riemannian-metric-只需要这样理解"><a href="#12-conformal-Riemannian-metric-只需要这样理解" class="headerlink" title="12. conformal Riemannian metric 只需要这样理解"></a>12. conformal Riemannian metric 只需要这样理解</h2><p>论文提到：</p>
-<p>[<br>g=\phi^2 I_2<br>]</p>
-<p>这是 conformal Riemannian metric。</p>
+<script type="math/tex; mode=display">
+g=\phi^2 I_2</script><p>这是 conformal Riemannian metric。</p>
 <p>你不需要深入学黎曼几何。这里它只是说：</p>
 <blockquote>
-<p>普通图像平面上的每一步距离，都乘上了一个位置相关权重 (\phi)。</p>
+<p>普通图像平面上的每一步距离，都乘上了一个位置相关权重 $\phi$。</p>
 </blockquote>
 <p>普通欧氏小距离：</p>
-<p>[<br>ds=\sqrt{du^2+dv^2}<br>]</p>
-<p>在度量：</p>
-<p>[<br>g=\phi^2 I_2<br>]</p>
-<p>下：</p>
-<p>[<br>ds_g<br>=<br>\sqrt{<br>\begin{bmatrix}<br>du &amp; dv<br>\end{bmatrix}<br>\phi^2 I_2<br>\begin{bmatrix}<br>du\<br>dv<br>\end{bmatrix}<br>}<br>]</p>
-<p>因为：</p>
-<p>[<br>I_2<br>\begin{bmatrix}<br>du\<br>dv<br>\end{bmatrix}<br>=<br>\begin{bmatrix}<br>du\<br>dv<br>\end{bmatrix}<br>]</p>
-<p>所以：</p>
-<p>[<br>ds_g<br>=<br>\sqrt{<br>\phi^2<br>\begin{bmatrix}<br>du &amp; dv<br>\end{bmatrix}<br>\begin{bmatrix}<br>du\<br>dv<br>\end{bmatrix}<br>}<br>]</p>
-<p>矩阵乘法：</p>
-<p>[<br>\begin{bmatrix}<br>du &amp; dv<br>\end{bmatrix}<br>\begin{bmatrix}<br>du\<br>dv<br>\end{bmatrix}<br>=<br>du^2+dv^2<br>]</p>
-<p>所以：</p>
-<p>[<br>ds_g<br>=<br>\sqrt{\phi^2(du^2+dv^2)}<br>]</p>
-<p>如果 (\phi\geq 0)，则：</p>
-<p>[<br>ds_g<br>=<br>\phi\sqrt{du^2+dv^2}<br>]</p>
-<p>也就是：</p>
-<p>[<br>ds_g=\phi ds<br>]</p>
-<p>沿路径积分：</p>
-<p>[<br>\int_L ds_g<br>=<br>\int_L \phi ds<br>]</p>
-<p>这正是论文里的路径代价。</p>
+<script type="math/tex; mode=display">
+ds=\sqrt{du^2+dv^2}</script><p>在度量：</p>
+<script type="math/tex; mode=display">
+g=\phi^2 I_2</script><p>下：</p>
+<script type="math/tex; mode=display">
+ds_g
+=
+\sqrt{
+\begin{bmatrix}
+du & dv
+\end{bmatrix}
+\phi^2 I_2
+\begin{bmatrix}
+du\\
+dv
+\end{bmatrix}
+}</script><p>因为：</p>
+<script type="math/tex; mode=display">
+I_2
+\begin{bmatrix}
+du\\
+dv
+\end{bmatrix}
+=
+\begin{bmatrix}
+du\\
+dv
+\end{bmatrix}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+ds_g
+=
+\sqrt{
+\phi^2
+\begin{bmatrix}
+du & dv
+\end{bmatrix}
+\begin{bmatrix}
+du\\
+dv
+\end{bmatrix}
+}</script><p>矩阵乘法：</p>
+<script type="math/tex; mode=display">
+\begin{bmatrix}
+du & dv
+\end{bmatrix}
+\begin{bmatrix}
+du\\
+dv
+\end{bmatrix}
+=
+du^2+dv^2</script><p>所以：</p>
+<script type="math/tex; mode=display">
+ds_g
+=
+\sqrt{\phi^2(du^2+dv^2)}</script><p>如果 $\phi\geq 0$，则：</p>
+<script type="math/tex; mode=display">
+ds_g
+=
+\phi\sqrt{du^2+dv^2}</script><p>也就是：</p>
+<script type="math/tex; mode=display">
+ds_g=\phi ds</script><p>沿路径积分：</p>
+<script type="math/tex; mode=display">
+\int_L ds_g
+=
+\int_L \phi ds</script><p>这正是论文里的路径代价。</p>
 <p>所以所谓 conformal Riemannian metric，在这里可以理解为：</p>
 <blockquote>
 <p>一张阻力地图。阻力大的地方，空间被拉长；阻力小的地方，空间正常或更近。</p>
 </blockquote>
 <hr>
 <h2 id="13-正文公式-6：动态规划递推"><a href="#13-正文公式-6：动态规划递推" class="headerlink" title="13. 正文公式 6：动态规划递推"></a>13. 正文公式 6：动态规划递推</h2><p>你截图里的公式 6 是：</p>
-<p>[<br>d<em>\phi(p_0,p_K)<br>\leq<br>\inf\left(W(p</em>{K-1}\to p<em>K)\right)<br>+<br>d</em>\phi(p<em>0,p</em>{K-1})<br>\tag{6}<br>]</p>
-<p>这个式子本质上是最短路递推。</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_K)
+\leq
+\inf\left(W(p_{K-1}\to p_K)\right)
++
+d_\phi(p_0,p_{K-1})
+\tag{6}</script><p>这个式子本质上是最短路递推。</p>
 <p>先解释符号。</p>
-<p>[<br>d_\phi(p_0,p_K)<br>]</p>
-<p>表示从起点 (p_0) 到当前点 (p_K) 的最小 geodesic cost。</p>
-<p>[<br>d<em>\phi(p_0,p</em>{K-1})<br>]</p>
-<p>表示从起点 (p<em>0) 到前一个点 (p</em>{K-1}) 的最小 geodesic cost。</p>
-<p>[<br>W(p_{K-1}\to p_K)<br>]</p>
-<p>表示最后一步从 (p_{K-1}) 走到 (p_K) 的代价。</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_K)</script><p>表示从起点 $p_0$ 到当前点 $p_K$ 的最小 geodesic cost。</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_{K-1})</script><p>表示从起点 $p<em>0$ 到前一个点 $p</em>{K-1}$ 的最小 geodesic cost。</p>
+<script type="math/tex; mode=display">
+W(p_{K-1}\to p_K)</script><p>表示最后一步从 $p_{K-1}$ 走到 $p_K$ 的代价。</p>
 <p>右边表示一条具体路线：</p>
-<p>[<br>p<em>0\to \cdots \to p</em>{K-1}\to p_K<br>]</p>
-<p>它的总代价是：</p>
-<p>[<br>d<em>\phi(p_0,p</em>{K-1})<br>+<br>W(p_{K-1}\to p_K)<br>]</p>
-<p>因为 (d_\phi(p_0,p_K)) 是所有路线里的最小代价，所以它不可能比某条具体路线还大。</p>
+<script type="math/tex; mode=display">
+p_0\to \cdots \to p_{K-1}\to p_K</script><p>它的总代价是：</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_{K-1})
++
+W(p_{K-1}\to p_K)</script><p>因为 $d_\phi(p_0,p_K)$ 是所有路线里的最小代价，所以它不可能比某条具体路线还大。</p>
 <p>因此：</p>
-<p>[<br>d<em>\phi(p_0,p_K)<br>\leq<br>d</em>\phi(p<em>0,p</em>{K-1})<br>+<br>W(p_{K-1}\to p_K)<br>]</p>
-<p>如果最后一步有多个可能的前驱或走法，就取最小：</p>
-<p>[<br>d<em>\phi(p_0,p_K)<br>\leq<br>\inf<br>\left[<br>d</em>\phi(p<em>0,p</em>{K-1})<br>+<br>W(p_{K-1}\to p_K)<br>\right]<br>]</p>
-<p>在离散像素图上，更常见的写法是：</p>
-<p>[<br>d<em>\phi(p)<br>=<br>\min</em>{q\in\mathcal{N}(p)}<br>\left[<br>d_\phi(q)+W(q\to p)<br>\right]<br>]</p>
-<p>其中 (\mathcal{N}(p)) 是 (p) 的邻居集合。</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_K)
+\leq
+d_\phi(p_0,p_{K-1})
++
+W(p_{K-1}\to p_K)</script><p>如果最后一步有多个可能的前驱或走法，就取最小：</p>
+<script type="math/tex; mode=display">
+d_\phi(p_0,p_K)
+\leq
+\inf
+\left[
+d_\phi(p_0,p_{K-1})
++
+W(p_{K-1}\to p_K)
+\right]</script><p>在离散像素图上，更常见的写法是：</p>
+<script type="math/tex; mode=display">
+d_\phi(p)
+=
+\min_{q\in\mathcal{N}(p)}
+\left[
+d_\phi(q)+W(q\to p)
+\right]</script><p>其中 $\mathcal{N}(p)$ 是 $p$ 的邻居集合。</p>
 <p>这就是 Dijkstra 或动态规划的思想：</p>
 <blockquote>
 <p>到当前点的最小代价 = 从所有前驱点过来的候选代价里选最小。</p>
 </blockquote>
 <hr>
 <h2 id="14-公式-6-为什么和深度传播有关"><a href="#14-公式-6-为什么和深度传播有关" class="headerlink" title="14. 公式 6 为什么和深度传播有关"></a>14. 公式 6 为什么和深度传播有关</h2><p>前面已经定义：</p>
-<p>[<br>d_\phi(p,q)<br>=<br>\inf_L\int_L\phi ds<br>]</p>
-<p>如果两个点之间要穿过深度边界，则 (\phi) 大，路径代价高。</p>
-<p>如果两个点在同一个平滑表面上，则 (\phi) 小，路径代价低。</p>
+<script type="math/tex; mode=display">
+d_\phi(p,q)
+=
+\inf_L\int_L\phi ds</script><p>如果两个点之间要穿过深度边界，则 $\phi$ 大，路径代价高。</p>
+<p>如果两个点在同一个平滑表面上，则 $\phi$ 小，路径代价低。</p>
 <p>公式 6 就是在离散图上计算这个代价。</p>
 <p>它告诉算法：</p>
 <blockquote>
 <p>信息从哪里传播到哪里比较便宜。</p>
 </blockquote>
 <p>因此，它不是直接估深度，而是在估计：</p>
-<p>[<br>\text{谁应该影响谁}<br>]</p>
-<p>这件事对于 pixel-wise refinement 很关键。</p>
+<script type="math/tex; mode=display">
+\text{谁应该影响谁}</script><p>这件事对于 pixel-wise refinement 很关键。</p>
 <hr>
 <h2 id="15-公式-7：局部预测和更新的直觉"><a href="#15-公式-7：局部预测和更新的直觉" class="headerlink" title="15. 公式 7：局部预测和更新的直觉"></a>15. 公式 7：局部预测和更新的直觉</h2><p>论文在公式 6 后面通常会进入 pixel-wise 更新。</p>
 <p>其核心形式可以抽象为：</p>
-<p>[<br>\hat z(p\mid q,\Delta p)<br>=<br>\alpha(q)^T\Psi(\Delta p)<br>\tag{7-like}<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\hat z(p\mid q,\Delta p)
+=
+\alpha(q)^T\Psi(\Delta p)
+\tag{7-like}</script><p>其中：</p>
 <ul>
-<li>(q)：用来预测的邻居点；</li>
-<li>(p)：被预测的目标点；</li>
-<li>(\Delta p=p-q)：从 (q) 到 (p) 的相对位移；</li>
-<li>(\Psi(\Delta p))：位移的基函数；</li>
-<li>(\alpha(q))：以 (q) 为中心的局部模型系数；</li>
-<li>(\hat z(p\mid q,\Delta p))：从 (q) 的局部模型预测出来的 (p) 的深度。</li>
+<li>$q$：用来预测的邻居点；</li>
+<li>$p$：被预测的目标点；</li>
+<li>$\Delta p=p-q$：从 $q$ 到 $p$ 的相对位移；</li>
+<li>$\Psi(\Delta p)$：位移的基函数；</li>
+<li>$\alpha(q)$：以 $q$ 为中心的局部模型系数；</li>
+<li>$\hat z(p\mid q,\Delta p)$：从 $q$ 的局部模型预测出来的 $p$ 的深度。</li>
 </ul>
 <p>如果用简单多项式基函数：</p>
-<p>[<br>\Psi(\Delta p)<br>=<br>\begin{bmatrix}<br>1\<br>\Delta u\<br>\Delta v\<br>\Delta u^2\<br>\Delta u\Delta v\<br>\Delta v^2<br>\end{bmatrix}<br>]</p>
-<p>那么：</p>
-<p>[<br>\alpha(q)<br>=<br>\begin{bmatrix}<br>\alpha_0\<br>\alpha_1\<br>\alpha_2\<br>\alpha_3\<br>\alpha_4\<br>\alpha_5<br>\end{bmatrix}<br>]</p>
-<p>于是：</p>
-<p>[<br>\alpha(q)^T\Psi(\Delta p)<br>]</p>
-<p>[<br>=<br>\begin{bmatrix}<br>\alpha_0 &amp;<br>\alpha_1 &amp;<br>\alpha_2 &amp;<br>\alpha_3 &amp;<br>\alpha_4 &amp;<br>\alpha_5<br>\end{bmatrix}<br>\begin{bmatrix}<br>1\<br>\Delta u\<br>\Delta v\<br>\Delta u^2\<br>\Delta u\Delta v\<br>\Delta v^2<br>\end{bmatrix}<br>]</p>
-<p>矩阵乘法展开：</p>
-<p>[<br>=<br>\alpha_0<br>+<br>\alpha_1\Delta u<br>+<br>\alpha_2\Delta v<br>+<br>\alpha_3\Delta u^2<br>+<br>\alpha_4\Delta u\Delta v<br>+<br>\alpha_5\Delta v^2<br>]</p>
-<p>这就是一个局部多项式模型。</p>
+<script type="math/tex; mode=display">
+\Psi(\Delta p)
+=
+\begin{bmatrix}
+1\\
+\Delta u\\
+\Delta v\\
+\Delta u^2\\
+\Delta u\Delta v\\
+\Delta v^2
+\end{bmatrix}</script><p>那么：</p>
+<script type="math/tex; mode=display">
+\alpha(q)
+=
+\begin{bmatrix}
+\alpha_0\\
+\alpha_1\\
+\alpha_2\\
+\alpha_3\\
+\alpha_4\\
+\alpha_5
+\end{bmatrix}</script><p>于是：</p>
+<script type="math/tex; mode=display">
+\alpha(q)^T\Psi(\Delta p)</script><script type="math/tex; mode=display">
+=
+\begin{bmatrix}
+\alpha_0 &
+\alpha_1 &
+\alpha_2 &
+\alpha_3 &
+\alpha_4 &
+\alpha_5
+\end{bmatrix}
+\begin{bmatrix}
+1\\
+\Delta u\\
+\Delta v\\
+\Delta u^2\\
+\Delta u\Delta v\\
+\Delta v^2
+\end{bmatrix}</script><p>矩阵乘法展开：</p>
+<script type="math/tex; mode=display">
+=
+\alpha_0
++
+\alpha_1\Delta u
++
+\alpha_2\Delta v
++
+\alpha_3\Delta u^2
++
+\alpha_4\Delta u\Delta v
++
+\alpha_5\Delta v^2</script><p>这就是一个局部多项式模型。</p>
 <p>直觉：</p>
 <blockquote>
-<p>如果 (p) 和 (q) 在同一个局部表面上，那么 (q) 附近的局部模型可以预测 (p) 的深度。</p>
+<p>如果 $p$ 和 $q$ 在同一个局部表面上，那么 $q$ 附近的局部模型可以预测 $p$ 的深度。</p>
 </blockquote>
 <hr>
 <h2 id="16-深度更新：为什么要逐步融合"><a href="#16-深度更新：为什么要逐步融合" class="headerlink" title="16. 深度更新：为什么要逐步融合"></a>16. 深度更新：为什么要逐步融合</h2><p>一种常见更新形式是：</p>
-<p>[<br>z^{(k+1)}(p)<br>=<br>\left(1-\frac{1}{k+1}\right)z^{(k)}(p)<br>+<br>\frac{1}{k+1}<br>\hat z^{(k)}(p)<br>]</p>
-<p>等价于：</p>
-<p>[<br>z^{(k+1)}(p)<br>=<br>\frac{k}{k+1}z^{(k)}(p)<br>+<br>\frac{1}{k+1}<br>\hat z^{(k)}(p)<br>]</p>
-<p>当 (k=1)：</p>
-<p>[<br>z^{(2)}(p)<br>=<br>\frac{1}{2}z^{(1)}(p)<br>+<br>\frac{1}{2}\hat z^{(1)}(p)<br>]</p>
-<p>当 (k=9)：</p>
-<p>[<br>z^{(10)}(p)<br>=<br>\frac{9}{10}z^{(9)}(p)<br>+<br>\frac{1}{10}\hat z^{(9)}(p)<br>]</p>
-<p>所以越往后，新预测的权重越小，更新越稳定。</p>
-<p>它不是一次性把 (z(p)) 替换成邻居预测，而是逐步调整。</p>
+<script type="math/tex; mode=display">
+z^{(k+1)}(p)
+=
+\left(1-\frac{1}{k+1}\right)z^{(k)}(p)
++
+\frac{1}{k+1}
+\hat z^{(k)}(p)</script><p>等价于：</p>
+<script type="math/tex; mode=display">
+z^{(k+1)}(p)
+=
+\frac{k}{k+1}z^{(k)}(p)
++
+\frac{1}{k+1}
+\hat z^{(k)}(p)</script><p>当 $k=1$：</p>
+<script type="math/tex; mode=display">
+z^{(2)}(p)
+=
+\frac{1}{2}z^{(1)}(p)
++
+\frac{1}{2}\hat z^{(1)}(p)</script><p>当 $k=9$：</p>
+<script type="math/tex; mode=display">
+z^{(10)}(p)
+=
+\frac{9}{10}z^{(9)}(p)
++
+\frac{1}{10}\hat z^{(9)}(p)</script><p>所以越往后，新预测的权重越小，更新越稳定。</p>
+<p>它不是一次性把 $z(p)$ 替换成邻居预测，而是逐步调整。</p>
 <p>这能减少错误传播。</p>
 <hr>
 <h2 id="17-将-3-2-的方法串起来"><a href="#17-将-3-2-的方法串起来" class="headerlink" title="17. 将 3.2 的方法串起来"></a>17. 将 3.2 的方法串起来</h2><p>现在可以把 3.2 重组为一条清楚的流程。</p>
 <h3 id="Step-1：已有一个-coarse-metric-depth"><a href="#Step-1：已有一个-coarse-metric-depth" class="headerlink" title="Step 1：已有一个 coarse metric depth"></a>Step 1：已有一个 coarse metric depth</h3><p>segment-wise recovery 给出：</p>
-<p>[<br>z_{\text{coarse}}(p)<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+z_{\text{coarse}}(p)</script><hr>
 <h3 id="Step-2：计算深度图的二阶变化"><a href="#Step-2：计算深度图的二阶变化" class="headerlink" title="Step 2：计算深度图的二阶变化"></a>Step 2：计算深度图的二阶变化</h3><p>计算：</p>
-<p>[<br>z<em>{uu}(p),\qquad z</em>{vv}(p)<br>]</p>
-<p>然后得到：</p>
-<p>[<br>\phi(p)<br>=<br>\sqrt{z<em>{uu}^2(p)+z</em>{vv}^2(p)}<br>]</p>
-<p>(\phi(p)) 越大，说明这里越可能是深度不连续或强曲率区域。</p>
+<script type="math/tex; mode=display">
+z_{uu}(p),\qquad z_{vv}(p)</script><p>然后得到：</p>
+<script type="math/tex; mode=display">
+\phi(p)
+=
+\sqrt{z_{uu}^2(p)+z_{vv}^2(p)}</script><p>$\phi(p)$ 越大，说明这里越可能是深度不连续或强曲率区域。</p>
 <hr>
-<h3 id="Step-3：用-phi-构造路径代价"><a href="#Step-3：用-phi-构造路径代价" class="headerlink" title="Step 3：用 (\phi) 构造路径代价"></a>Step 3：用 (\phi) 构造路径代价</h3><p>连续形式：</p>
-<p>[<br>d_\phi(p,q)<br>=<br>\inf_L<br>\int_L\phi ds<br>]</p>
-<p>离散形式：</p>
-<p>[<br>d<em>\phi(p)<br>=<br>\min</em>{q\in\mathcal{N}(p)}<br>\left[<br>d_\phi(q)+W(q\to p)<br>\right]<br>]</p>
-<p>其中：</p>
-<p>[<br>W(q\to p)<br>\approx<br>\ell(q,p)\phi(p)<br>]</p>
-<p>(\ell(q,p)) 是从 (q) 到 (p) 的步长。</p>
+<h3 id="Step-3：用-phi-构造路径代价"><a href="#Step-3：用-phi-构造路径代价" class="headerlink" title="Step 3：用 $\phi$ 构造路径代价"></a>Step 3：用 $\phi$ 构造路径代价</h3><p>连续形式：</p>
+<script type="math/tex; mode=display">
+d_\phi(p,q)
+=
+\inf_L
+\int_L\phi ds</script><p>离散形式：</p>
+<script type="math/tex; mode=display">
+d_\phi(p)
+=
+\min_{q\in\mathcal{N}(p)}
+\left[
+d_\phi(q)+W(q\to p)
+\right]</script><p>其中：</p>
+<script type="math/tex; mode=display">
+W(q\to p)
+\approx
+\ell(q,p)\phi(p)</script><p>$\ell(q,p)$ 是从 $q$ 到 $p$ 的步长。</p>
 <p>如果是四邻域：</p>
-<p>[<br>\ell(q,p)=1<br>]</p>
-<p>如果是八邻域的对角移动：</p>
-<p>[<br>\ell(q,p)=\sqrt{2}<br>]</p>
-<hr>
-<h3 id="Step-4：选择低代价传播路径"><a href="#Step-4：选择低代价传播路径" class="headerlink" title="Step 4：选择低代价传播路径"></a>Step 4：选择低代价传播路径</h3><p>如果路径穿过边界，(\phi) 大：</p>
-<p>[<br>\int_L\phi ds<br>]</p>
-<p>就大。</p>
-<p>如果路径在平滑表面内，(\phi) 小：</p>
-<p>[<br>\int_L\phi ds<br>]</p>
-<p>就小。</p>
+<script type="math/tex; mode=display">
+\ell(q,p)=1</script><p>如果是八邻域的对角移动：</p>
+<script type="math/tex; mode=display">
+\ell(q,p)=\sqrt{2}</script><hr>
+<h3 id="Step-4：选择低代价传播路径"><a href="#Step-4：选择低代价传播路径" class="headerlink" title="Step 4：选择低代价传播路径"></a>Step 4：选择低代价传播路径</h3><p>如果路径穿过边界，$\phi$ 大：</p>
+<script type="math/tex; mode=display">
+\int_L\phi ds</script><p>就大。</p>
+<p>如果路径在平滑表面内，$\phi$ 小：</p>
+<script type="math/tex; mode=display">
+\int_L\phi ds</script><p>就小。</p>
 <p>所以算法自然倾向于在同一平滑区域内传播。</p>
 <hr>
-<h3 id="Step-5：用邻居局部模型预测目标像素深度"><a href="#Step-5：用邻居局部模型预测目标像素深度" class="headerlink" title="Step 5：用邻居局部模型预测目标像素深度"></a>Step 5：用邻居局部模型预测目标像素深度</h3><p>从邻居 (q) 预测目标点 (p)：</p>
-<p>[<br>\hat z(p\mid q,\Delta p)<br>=<br>\alpha(q)^T\Psi(\Delta p)<br>]</p>
-<hr>
-<h3 id="Step-6：融合预测，更新-depth"><a href="#Step-6：融合预测，更新-depth" class="headerlink" title="Step 6：融合预测，更新 depth"></a>Step 6：融合预测，更新 depth</h3><p>[<br>z^{(k+1)}(p)<br>=<br>\frac{k}{k+1}z^{(k)}(p)<br>+<br>\frac{1}{k+1}<br>\hat z^{(k)}(p)<br>]</p>
-<p>最终得到 refined metric depth。</p>
+<h3 id="Step-5：用邻居局部模型预测目标像素深度"><a href="#Step-5：用邻居局部模型预测目标像素深度" class="headerlink" title="Step 5：用邻居局部模型预测目标像素深度"></a>Step 5：用邻居局部模型预测目标像素深度</h3><p>从邻居 $q$ 预测目标点 $p$：</p>
+<script type="math/tex; mode=display">
+\hat z(p\mid q,\Delta p)
+=
+\alpha(q)^T\Psi(\Delta p)</script><hr>
+<h3 id="Step-6：融合预测，更新-depth"><a href="#Step-6：融合预测，更新-depth" class="headerlink" title="Step 6：融合预测，更新 depth"></a>Step 6：融合预测，更新 depth</h3><script type="math/tex; mode=display">
+z^{(k+1)}(p)
+=
+\frac{k}{k+1}z^{(k)}(p)
++
+\frac{1}{k+1}
+\hat z^{(k)}(p)</script><p>最终得到 refined metric depth。</p>
 <hr>
 <h2 id="18-一张总流程图"><a href="#18-一张总流程图" class="headerlink" title="18. 一张总流程图"></a>18. 一张总流程图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[&quot;RGB image&quot;] --&gt; B[&quot;Relative depth model&quot;]</span><br><span class="line">    B --&gt; C[&quot;Relative depth d&quot;]</span><br><span class="line">    D[&quot;Sparse 3D seeds&quot;] --&gt; E[&quot;Per-segment calibration&quot;]</span><br><span class="line">    C --&gt; E</span><br><span class="line">    E --&gt; F[&quot;Superpixel graph optimization&quot;]</span><br><span class="line">    F --&gt; G[&quot;Coarse metric depth&quot;]</span><br><span class="line">    G --&gt; H[&quot;Compute second derivatives&quot;]</span><br><span class="line">    H --&gt; I[&quot;Discontinuity density phi&quot;]</span><br><span class="line">    I --&gt; J[&quot;Geodesic cost / shortest path&quot;]</span><br><span class="line">    G --&gt; K[&quot;Local depth prediction&quot;]</span><br><span class="line">    J --&gt; K</span><br><span class="line">    K --&gt; L[&quot;Pixel-wise refinement&quot;]</span><br><span class="line">    L --&gt; M[&quot;Final metric depth&quot;]</span><br></pre></td></tr></table></figure>
 <hr>
@@ -1009,20 +1556,28 @@
 <p>它想说明：</p>
 <ol>
 <li>如果两个像素之间的深度变化能被一阶模型解释，则它们可能属于同一平滑表面。</li>
-<li>一阶模型解释不了的误差 (R(p,q))，可以由路径上的二阶变化累计控制。</li>
+<li>一阶模型解释不了的误差 $R(p,q)$，可以由路径上的二阶变化累计控制。</li>
 <li>二阶变化大的地方通常是深度边界或不连续区域。</li>
-<li>所以可以用 (\phi) 作为传播代价。</li>
+<li>所以可以用 $\phi$ 作为传播代价。</li>
 <li>用最小路径代价传播深度，可以减少跨边界错误。</li>
 </ol>
 <p>主线是：</p>
-<p>[<br>\text{Taylor remainder}<br>\Rightarrow<br>\text{second derivative}<br>\Rightarrow<br>\text{discontinuity density}<br>\Rightarrow<br>\text{geodesic cost}<br>\Rightarrow<br>\text{boundary-aware propagation}<br>]</p>
-<hr>
+<script type="math/tex; mode=display">
+\text{Taylor remainder}
+\Rightarrow
+\text{second derivative}
+\Rightarrow
+\text{discontinuity density}
+\Rightarrow
+\text{geodesic cost}
+\Rightarrow
+\text{boundary-aware propagation}</script><hr>
 <h2 id="20-它和真正的深度估计有什么关系"><a href="#20-它和真正的深度估计有什么关系" class="headerlink" title="20. 它和真正的深度估计有什么关系"></a>20. 它和真正的深度估计有什么关系</h2><p>常规深度估计关心：</p>
-<p>[<br>I\rightarrow z<br>]</p>
-<p>也就是模型如何从图像预测深度。</p>
+<script type="math/tex; mode=display">
+I\rightarrow z</script><p>也就是模型如何从图像预测深度。</p>
 <p>这篇文章更关心：</p>
-<p>[<br>d<em>{\text{rel}}+\text{sparse metric anchors}\rightarrow z</em>{\text{metric}}<br>]</p>
-<p>所以它的核心不是视觉表征学习，而是：</p>
+<script type="math/tex; mode=display">
+d_{\text{rel}}+\text{sparse metric anchors}\rightarrow z_{\text{metric}}</script><p>所以它的核心不是视觉表征学习，而是：</p>
 <blockquote>
 <p>如何把稀疏真实尺度信息传播到 dense relative depth 上。</p>
 </blockquote>
@@ -1082,8 +1637,8 @@
 <p>那么后面的尺度恢复只能在错误形状上做校准，不能从根本上修复 depth ordering。</p>
 <hr>
 <h3 id="21-4-superpixel-切错"><a href="#21-4-superpixel-切错" class="headerlink" title="21.4 superpixel 切错"></a>21.4 superpixel 切错</h3><p>如果一个 superpixel 同时包含前景和背景，却共享同一个局部映射：</p>
-<p>[<br>g_i(d)=a_i d+b_i<br>]</p>
-<p>就会把不该共享尺度的像素强行绑定在一起。</p>
+<script type="math/tex; mode=display">
+g_i(d)=a_i d+b_i</script><p>就会把不该共享尺度的像素强行绑定在一起。</p>
 <p>这会造成：</p>
 <ul>
 <li>边界模糊；</li>
@@ -1102,9 +1657,9 @@
 </ul>
 <p>如果图边把这些区域连得太强，尺度会跨真实深度边界传播。</p>
 <hr>
-<h3 id="21-6-phi-本身不可靠"><a href="#21-6-phi-本身不可靠" class="headerlink" title="21.6 (\phi) 本身不可靠"></a>21.6 (\phi) 本身不可靠</h3><p>[<br>\phi=\sqrt{z<em>{uu}^2+z</em>{vv}^2}<br>]</p>
-<p>依赖 coarse depth。</p>
-<p>如果 coarse depth 边界已经错了，(\phi) 也会错。</p>
+<h3 id="21-6-phi-本身不可靠"><a href="#21-6-phi-本身不可靠" class="headerlink" title="21.6 $\phi$ 本身不可靠"></a>21.6 $\phi$ 本身不可靠</h3><script type="math/tex; mode=display">
+\phi=\sqrt{z_{uu}^2+z_{vv}^2}</script><p>依赖 coarse depth。</p>
+<p>如果 coarse depth 边界已经错了，$\phi$ 也会错。</p>
 <p>典型问题：</p>
 <ul>
 <li>噪声导致二阶导乱跳；</li>
@@ -1115,16 +1670,26 @@
 </ul>
 <hr>
 <h3 id="21-7-局部仿射假设不成立"><a href="#21-7-局部仿射假设不成立" class="headerlink" title="21.7 局部仿射假设不成立"></a>21.7 局部仿射假设不成立</h3><p>如果 relative depth 到 metric depth 的误差不是局部 affine，而是复杂非线性：</p>
-<p>[<br>z\neq a_i d+b_i<br>]</p>
-<p>那么再好的图优化也只能传播一个不够准确的模型。</p>
+<script type="math/tex; mode=display">
+z\neq a_i d+b_i</script><p>那么再好的图优化也只能传播一个不够准确的模型。</p>
 <hr>
 <h3 id="21-8-图优化会不会引入更多不确定性"><a href="#21-8-图优化会不会引入更多不确定性" class="headerlink" title="21.8 图优化会不会引入更多不确定性"></a>21.8 图优化会不会引入更多不确定性</h3><p>会，但要说准确一点：它不是单纯“更多”或“更少”，而是<strong>把不确定性的来源从网络预测转移到显式几何传播过程里</strong>。</p>
 <p>纯前馈式数据驱动方法的不确定性主要来自：</p>
-<p>[<br>\text{训练数据分布}<br>+\text{模型容量}<br>+\text{loss bias}<br>+\text{domain gap}<br>+\text{输入图像歧义}<br>]</p>
-<p>例如一个 metric depth network 在训练集里学到了室内相机高度、道路结构、物体尺寸等隐式先验。它推理时很快，只需要一次 forward pass，但当场景分布变了，模型可能会给出很自信但错误的 metric scale。</p>
+<script type="math/tex; mode=display">
+\text{训练数据分布}
++\text{模型容量}
++\text{loss bias}
++\text{domain gap}
++\text{输入图像歧义}</script><p>例如一个 metric depth network 在训练集里学到了室内相机高度、道路结构、物体尺寸等隐式先验。它推理时很快，只需要一次 forward pass，但当场景分布变了，模型可能会给出很自信但错误的 metric scale。</p>
 <p>MTD 这种图优化方法的不确定性主要来自：</p>
-<p>[<br>\text{sparse seed 质量}<br>+\text{seed 分布}<br>+\text{superpixel segmentation}<br>+\text{edge weight 设计}<br>+\text{local affine 假设}<br>+\text{graph smoothness 假设}<br>+\phi\text{ 的可靠性}<br>]</p>
-<p>也就是说，它减少了一部分“学习式模型的 domain uncertainty”，因为它不要求重新训练，也不需要模型从 RGB 里凭空猜真实尺度；但它增加了“优化式传播的不确定性”，因为尺度要沿着你构造的图传播。</p>
+<script type="math/tex; mode=display">
+\text{sparse seed 质量}
++\text{seed 分布}
++\text{superpixel segmentation}
++\text{edge weight 设计}
++\text{local affine 假设}
++\text{graph smoothness 假设}
++\phi\text{ 的可靠性}</script><p>也就是说，它减少了一部分“学习式模型的 domain uncertainty”，因为它不要求重新训练，也不需要模型从 RGB 里凭空猜真实尺度；但它增加了“优化式传播的不确定性”，因为尺度要沿着你构造的图传播。</p>
 <p>可以把两类方法对比如下：</p>
 <div class="table-container">
 <table>
@@ -1183,7 +1748,7 @@
 <li>是 seed 错了？</li>
 <li>是 superpixel 跨边界了？</li>
 <li>是边权把不该连的区域连强了？</li>
-<li>是 (\phi) 没检测到真实深度不连续？</li>
+<li>是 $\phi$ 没检测到真实深度不连续？</li>
 <li>是 local affine mapping 表达不了 relative depth 的非线性误差？</li>
 </ul>
 <p>这些问题在前馈网络里往往被隐藏在参数中，而在图优化框架里更容易被可视化、诊断和替换。</p>
@@ -1194,34 +1759,40 @@
 <li>seed 空间分布不均时的退化情况；</li>
 <li>superpixel 参数变化是否影响很大；</li>
 <li>2D/3D centroid edge weight 的敏感性；</li>
-<li>(\phi) 边界图和真实 depth discontinuity 是否一致；</li>
+<li>$\phi$ 边界图和真实 depth discontinuity 是否一致；</li>
 <li>错误是否会沿图扩散。</li>
 </ol>
 <p>从研究角度看，这里还有一个值得追问的问题：</p>
 <blockquote>
 <p>能不能把 graph optimization 的不确定性显式建模出来？</p>
 </blockquote>
-<p>例如可以给每个 seed 一个置信度 (\sigma_i)，把 anchor fidelity term 改成加权形式：</p>
-<p>[<br>\sum_{i\in Q}\frac{1}{\sigma_i^2}|\theta_i-\hat{\theta}_i|^2<br>]</p>
-<p>seed 越可靠，(\sigma_i) 越小，权重越大；seed 越不可靠，(\sigma_i) 越大，权重越小。</p>
+<p>例如可以给每个 seed 一个置信度 $\sigma_i$，把 anchor fidelity term 改成加权形式：</p>
+<script type="math/tex; mode=display">
+\sum_{i\in Q}\frac{1}{\sigma_i^2}\|\theta_i-\hat{\theta}_i\|^2</script><p>seed 越可靠，$\sigma_i$ 越小，权重越大；seed 越不可靠，$\sigma_i$ 越大，权重越小。</p>
 <p>也可以给边权加入不确定性：</p>
-<p>[<br>w_{ij}=\mathbb{E}[\text{same surface probability between }S_i\text{ and }S_j]<br>]</p>
-<p>而不是只用 centroid distance。这样就能把 RGB 边缘、relative depth discontinuity、normal consistency、semantic boundary、seed residual 等信息都融合进来。</p>
+<script type="math/tex; mode=display">
+w_{ij}=\mathbb{E}[\text{same surface probability between }S_i\text{ and }S_j]</script><p>而不是只用 centroid distance。这样就能把 RGB 边缘、relative depth discontinuity、normal consistency、semantic boundary、seed residual 等信息都融合进来。</p>
 <p>所以，MTD 的图优化设计有很强的可解释性，但它的可靠性依赖于一个核心条件：</p>
-<p>[<br>\text{图上的高权重边}<br>\approx<br>\text{真实 3D 中可以共享尺度的关系}<br>]</p>
-<p>一旦这个近似不成立，图优化就可能引入额外不确定性，甚至把局部错误传播成区域性错误。</p>
+<script type="math/tex; mode=display">
+\text{图上的高权重边}
+\approx
+\text{真实 3D 中可以共享尺度的关系}</script><p>一旦这个近似不成立，图优化就可能引入额外不确定性，甚至把局部错误传播成区域性错误。</p>
 <hr>
 <h2 id="22-图优化方法和纯前馈数据驱动方法的关系"><a href="#22-图优化方法和纯前馈数据驱动方法的关系" class="headerlink" title="22. 图优化方法和纯前馈数据驱动方法的关系"></a>22. 图优化方法和纯前馈数据驱动方法的关系</h2><p>这篇论文的定位可以更准确地写成：</p>
-<p>[<br>\text{feed-forward relative depth prior}<br>+<br>\text{optimization-based metric calibration}<br>]</p>
-<p>也就是说，它并不是完全反对数据驱动。它仍然依赖 depth foundation model 给出 dense relative depth：</p>
-<p>[<br>d<em>{\text{rel}}(p)=F</em>{\text{depth}}(I)(p)<br>]</p>
-<p>这个 (F_{\text{depth}}) 本身就是典型的数据驱动前馈网络。MTD 真正替换掉的是：</p>
-<p>[<br>\text{从 RGB 直接学习 metric scale}<br>]</p>
-<p>这部分被改成了：</p>
-<p>[<br>\text{由 sparse metric seeds 显式校准 metric scale}<br>]</p>
-<p>所以它不是“图优化 vs 深度网络”的二选一，而是一个混合结构：</p>
-<p>[<br>\underbrace{\text{network}}<em>{\text{提供 relative geometry}}<br>+<br>\underbrace{\text{graph optimization}}</em>{\text{传播 metric scale}}<br>]</p>
-<p>这种混合结构的优点是：</p>
+<script type="math/tex; mode=display">
+\text{feed-forward relative depth prior}
++
+\text{optimization-based metric calibration}</script><p>也就是说，它并不是完全反对数据驱动。它仍然依赖 depth foundation model 给出 dense relative depth：</p>
+<script type="math/tex; mode=display">
+d_{\text{rel}}(p)=F_{\text{depth}}(I)(p)</script><p>这个 $F_{\text{depth}}$ 本身就是典型的数据驱动前馈网络。MTD 真正替换掉的是：</p>
+<script type="math/tex; mode=display">
+\text{从 RGB 直接学习 metric scale}</script><p>这部分被改成了：</p>
+<script type="math/tex; mode=display">
+\text{由 sparse metric seeds 显式校准 metric scale}</script><p>所以它不是“图优化 vs 深度网络”的二选一，而是一个混合结构：</p>
+<script type="math/tex; mode=display">
+\underbrace{\text{network}}_{\text{提供 relative geometry}}
++
+\underbrace{\text{graph optimization}}_{\text{传播 metric scale}}</script><p>这种混合结构的优点是：</p>
 <ul>
 <li>relative depth foundation model 负责强泛化的几何排序；</li>
 <li>sparse seeds 负责提供真实单位；</li>
@@ -1231,7 +1802,7 @@
 <p>它的代价是：</p>
 <ul>
 <li>pipeline 更复杂；</li>
-<li>多了 superpixel、edge weight、seed filtering、(\phi) 等超参数或设计选择；</li>
+<li>多了 superpixel、edge weight、seed filtering、$\phi$ 等超参数或设计选择；</li>
 <li>输入质量变得更关键；</li>
 <li>错误模式从“网络预测错”变成“网络预测错 + 图传播错”。</li>
 </ul>
@@ -1253,7 +1824,7 @@
 </li>
 <li><p><strong>Taylor remainder 有什么用？</strong><br>用来解释为什么二阶变化可以作为传播代价。</p>
 </li>
-<li><p><strong>conformal metric 有什么用？</strong><br>把 (\int_L\phi ds) 解释成加权空间里的最短路距离。</p>
+<li><p><strong>conformal metric 有什么用？</strong><br>把 $\int_L\phi ds$ 解释成加权空间里的最短路距离。</p>
 </li>
 </ol>
 <hr>
@@ -1269,7 +1840,7 @@
 <li><a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content/CVPR2026/supplemental/Ma_The_Midas_Touch_CVPR_2026_supplemental.pdf">The Midas Touch for Metric Depth, CVF Open Access supplementary material PDF</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.themoonlight.io/en/review/the-midas-touch-for-metric-depth">The Midas Touch for Metric Depth review, The Moonlight</a></li>
 </ul>
-</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/">视觉基础模型</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E8%A1%A5%E5%85%A8/">深度补全</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E4%BC%98%E5%8C%96/">图优化</a></div><div class="post-share"><div class="social-share" data-image="/img/MTD-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img class="cover" src="/img/2DGS-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</div></div><div class="info-2"><div class="info-item-1">作者：Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, Shenghua Gao 单位：ShanghaiTech University, University of Tübingen, Tübingen AI Center 会议：SIGGRAPH 2024 Conference Papers 链接：arXiv, Project, Code 研究动机 3D Gaussian Splatting 的吸引力在于它把新视角合成做到了高质量、快速训练和实时渲染，但它的几何表达并不天然适合表面重建。3DGS 的基本单元是三维体素状 Gaussian blob，它可以很好地拟合视图相关外观，却会在几何上产生一个矛盾：真实世界的许多物体表面是薄的二维流形，而 3D Gaussian 表示的是有体积的密度分布。颜色可以通过体渲染被拟合出来，但表面在哪里、法向是否一致、不同视角看到的交点是否稳定，并没有被表示方式直接约束。 这篇文章要解决的问题不是单纯提升 PSNR，而是把 Gaussian Splatting...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/14/MTD/" title="MTD: The Midas Touch for Metric Depth"><img class="cover" src="/img/MTD-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">MTD: The Midas Touch for Metric Depth</div></div><div class="info-2"><div class="info-item-1">作者：Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan 单位：College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intelligent Autonomous Systems, Tongji University; National Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Xi’an Jiaotong University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11578 研究动机 相对深度基础模型已经有很强的跨场景泛化能力，例如 MiDaS、DepthAnythingV2、Marigold...</div></div></div></a><a class="pagination-related" href="/2026/05/18/DepthVLM/" title="Unlocking Dense Metric Depth Estimation in VLMs"><img class="cover" src="/img/DepthVLM-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">Unlocking Dense Metric Depth Estimation in VLMs</div></div><div class="info-2"><div class="info-item-1">作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15876 研究动机 这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。 已有路线大致有三类问题：  纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。  一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。  DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量...</div></div></div></a><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2025/03/26/depthprompting/" title="Depth Prompting for Sensor-Agnostic Depth Estimation"><img class="cover" src="/img/depthprompting-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-03-26</div><div class="info-item-2">Depth Prompting for Sensor-Agnostic Depth Estimation</div></div><div class="info-2"><div class="info-item-1">摘要由于系统性的测量偏差，例如密度、感知模式和扫描范围，当前方法在现实世界的应用范围有限。 学习联合表示的输入模式对偏差敏感。 设计了深度提示模块，根据传感器类型或场景配置的新深度分布获得希望的特征表示。 通过将这个模块嵌入基本的单目深度估计模型，可以解决深度扫描范围的限制，提供绝对的带尺度的深度图。 简介目标是构建一个传感器不可知的深度估计模型，能够在各种主动深度传感器上工作。深度提示首先编码稀疏的深度信息，并将其和图像特征进行融合构建一个逐像素的亲和力图。最后对亲和力图和最初的深度图进行细化操作。采用偏差调优技术，只需要对0.1%的模型参数进行微调。 Prompt EngineeringPrompt...</div></div></div></a><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%85%88%E7%BB%99%E7%BB%93%E8%AE%BA%EF%BC%9A%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">0. 先给结论：这篇文章的本质是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9B%BE%E8%AE%BA%E6%9C%80%E5%B0%8F%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">1. 图论最小基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 什么是图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%BE%B9%E6%9D%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 边权是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%9B%BE%E4%BC%98%E5%8C%96%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 图优化在做什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%9B%BE%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9B%B4%E8%A7%89"><span class="toc-number">2.4.</span> <span class="toc-text">1.4 图拉普拉斯直觉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1%E8%83%8C%E6%99%AF%EF%BC%9Arelative-depth-%E5%92%8C-metric-depth"><span class="toc-number">3.</span> <span class="toc-text">2. 深度估计背景：relative depth 和 metric depth</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-relative-depth-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 relative depth 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-metric-depth-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 metric depth 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%B0%BA%E5%BA%A6%E6%81%A2%E5%A4%8D%E5%88%B0%E5%BA%95%E5%9C%A8%E6%81%A2%E5%A4%8D%E4%BB%80%E4%B9%88"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 尺度恢复到底在恢复什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9Asegment-wise-recovery"><span class="toc-number">4.</span> <span class="toc-text">3. 第一阶段：segment-wise recovery</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%BE%93%E5%85%A5%E5%92%8C%E7%9B%AE%E6%A0%87"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 输入和目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-inverse-depth-proxy"><span class="toc-number">4.2.</span> <span class="toc-text">3.1.1 为什么用 inverse depth proxy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%AF%B9%E6%9C%89-seeds-%E7%9A%84-superpixel-%E5%81%9A%E5%B1%80%E9%83%A8%E6%A0%87%E5%AE%9A"><span class="toc-number">4.3.</span> <span class="toc-text">3.2 对有 seeds 的 superpixel 做局部标定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B2%A1%E6%9C%89-seeds-%E7%9A%84-superpixel-%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">4.4.</span> <span class="toc-text">3.3 没有 seeds 的 superpixel 怎么办</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E8%BF%99%E4%B8%AA%E5%9B%BE%E4%BC%98%E5%8C%96%E7%9A%84%E7%9B%B4%E8%A7%89"><span class="toc-number">4.5.</span> <span class="toc-text">3.4 这个图优化的直觉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9Apixel-wise-refinement-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%83%B3%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">4. 第二阶段：pixel-wise refinement 的基本想法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%92%8C%E4%B8%80%E9%98%B6%E4%BD%99%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">5. 泰勒展开和一阶余项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%B8%80%E7%BB%B4%E4%B8%80%E9%98%B6%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 一维一阶泰勒展开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9%E7%9A%84%E7%A7%AF%E5%88%86%E5%BD%A2%E5%BC%8F"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 一维余项的积分形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E5%8F%B3%E7%AB%AF%E7%82%B9%E7%89%88%E6%9C%AC"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 右端点版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%AD%A3%E6%96%87%E5%85%AC%E5%BC%8F-2%EF%BC%9A%E4%BA%8C%E7%BB%B4%E4%B8%80%E9%98%B6%E4%BD%99%E9%A1%B9"><span class="toc-number">7.</span> <span class="toc-text">6. 正文公式 2：二维一阶余项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%99%84%E5%BD%95%E6%8E%A8%E5%AF%BC%EF%BC%9A%E5%B0%86%E4%BA%8C%E7%BB%B4%E4%BD%99%E9%A1%B9%E6%8B%86%E6%88%90%E5%9B%9B%E6%9D%A1%E8%BE%B9%E7%9A%84%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9"><span class="toc-number">8.</span> <span class="toc-text">7. 附录推导：将二维余项拆成四条边的一维余项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%99%84%E5%BD%95%E6%8E%A8%E5%AF%BC%EF%BC%9A%E5%B0%86%E5%9B%9B%E4%B8%AA%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9%E5%86%99%E6%88%90%E4%BA%8C%E9%98%B6%E5%AF%BC%E7%A7%AF%E5%88%86"><span class="toc-number">9.</span> <span class="toc-text">8. 附录推导：将四个一维余项写成二阶导积分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%8E%A8%E5%AF%BC-H-0"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 推导 (H_0)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E6%8E%A8%E5%AF%BC-H-1"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 推导 (H_1)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E6%8E%A8%E5%AF%BC-V-0"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 推导 (V_0)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E6%8E%A8%E5%AF%BC-V-1"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 推导 (V_1)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%BB%8E%E4%BA%8C%E9%98%B6%E5%AF%BC%E7%A7%AF%E5%88%86%E5%88%B0-phi"><span class="toc-number">10.</span> <span class="toc-text">9. 从二阶导积分到 (\phi)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E4%BB%8E-R-p-q-%E5%88%B0%E8%B7%AF%E5%BE%84%E7%A7%AF%E5%88%86%E4%B8%8A%E7%95%8C"><span class="toc-number">11.</span> <span class="toc-text">10. 从 (R(p,q)) 到路径积分上界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E4%B8%A4%E6%9D%A1%E8%BD%B4%E5%AF%B9%E9%BD%90%E8%B7%AF%E5%BE%84"><span class="toc-number">12.</span> <span class="toc-text">11. 两条轴对齐路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-conformal-Riemannian-metric-%E5%8F%AA%E9%9C%80%E8%A6%81%E8%BF%99%E6%A0%B7%E7%90%86%E8%A7%A3"><span class="toc-number">13.</span> <span class="toc-text">12. conformal Riemannian metric 只需要这样理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E6%AD%A3%E6%96%87%E5%85%AC%E5%BC%8F-6%EF%BC%9A%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E9%80%92%E6%8E%A8"><span class="toc-number">14.</span> <span class="toc-text">13. 正文公式 6：动态规划递推</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-%E5%85%AC%E5%BC%8F-6-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%92%8C%E6%B7%B1%E5%BA%A6%E4%BC%A0%E6%92%AD%E6%9C%89%E5%85%B3"><span class="toc-number">15.</span> <span class="toc-text">14. 公式 6 为什么和深度传播有关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-%E5%85%AC%E5%BC%8F-7%EF%BC%9A%E5%B1%80%E9%83%A8%E9%A2%84%E6%B5%8B%E5%92%8C%E6%9B%B4%E6%96%B0%E7%9A%84%E7%9B%B4%E8%A7%89"><span class="toc-number">16.</span> <span class="toc-text">15. 公式 7：局部预测和更新的直觉</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-%E6%B7%B1%E5%BA%A6%E6%9B%B4%E6%96%B0%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%80%90%E6%AD%A5%E8%9E%8D%E5%90%88"><span class="toc-number">17.</span> <span class="toc-text">16. 深度更新：为什么要逐步融合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-%E5%B0%86-3-2-%E7%9A%84%E6%96%B9%E6%B3%95%E4%B8%B2%E8%B5%B7%E6%9D%A5"><span class="toc-number">18.</span> <span class="toc-text">17. 将 3.2 的方法串起来</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-1%EF%BC%9A%E5%B7%B2%E6%9C%89%E4%B8%80%E4%B8%AA-coarse-metric-depth"><span class="toc-number">18.1.</span> <span class="toc-text">Step 1：已有一个 coarse metric depth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-2%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%B7%B1%E5%BA%A6%E5%9B%BE%E7%9A%84%E4%BA%8C%E9%98%B6%E5%8F%98%E5%8C%96"><span class="toc-number">18.2.</span> <span class="toc-text">Step 2：计算深度图的二阶变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-3%EF%BC%9A%E7%94%A8-phi-%E6%9E%84%E9%80%A0%E8%B7%AF%E5%BE%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">18.3.</span> <span class="toc-text">Step 3：用 (\phi) 构造路径代价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-4%EF%BC%9A%E9%80%89%E6%8B%A9%E4%BD%8E%E4%BB%A3%E4%BB%B7%E4%BC%A0%E6%92%AD%E8%B7%AF%E5%BE%84"><span class="toc-number">18.4.</span> <span class="toc-text">Step 4：选择低代价传播路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-5%EF%BC%9A%E7%94%A8%E9%82%BB%E5%B1%85%E5%B1%80%E9%83%A8%E6%A8%A1%E5%9E%8B%E9%A2%84%E6%B5%8B%E7%9B%AE%E6%A0%87%E5%83%8F%E7%B4%A0%E6%B7%B1%E5%BA%A6"><span class="toc-number">18.5.</span> <span class="toc-text">Step 5：用邻居局部模型预测目标像素深度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-6%EF%BC%9A%E8%9E%8D%E5%90%88%E9%A2%84%E6%B5%8B%EF%BC%8C%E6%9B%B4%E6%96%B0-depth"><span class="toc-number">18.6.</span> <span class="toc-text">Step 6：融合预测，更新 depth</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#18-%E4%B8%80%E5%BC%A0%E6%80%BB%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">19.</span> <span class="toc-text">18. 一张总流程图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BA%9B%E5%85%AC%E5%BC%8F%E6%9C%8D%E5%8A%A1%E4%BA%8E%E5%B0%BA%E5%BA%A6%E6%81%A2%E5%A4%8D"><span class="toc-number">20.</span> <span class="toc-text">19. 为什么这些公式服务于尺度恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#20-%E5%AE%83%E5%92%8C%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="toc-number">21.</span> <span class="toc-text">20. 它和真正的深度估计有什么关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#21-%E8%BF%99%E7%A7%8D%E5%9B%BE%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E5%A4%B1%E6%95%88"><span class="toc-number">22.</span> <span class="toc-text">21. 这种图优化方法什么时候会失效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#21-1-sparse-seeds-%E5%A4%AA%E5%B0%91%E6%88%96%E5%88%86%E5%B8%83%E4%B8%8D%E5%9D%87"><span class="toc-number">22.1.</span> <span class="toc-text">21.1 sparse seeds 太少或分布不均</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-2-sparse-seeds-%E6%9C%89%E5%A4%96%E7%82%B9"><span class="toc-number">22.2.</span> <span class="toc-text">21.2 sparse seeds 有外点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-3-relative-depth-%E6%9C%AC%E8%BA%AB%E9%94%99%E4%BA%86"><span class="toc-number">22.3.</span> <span class="toc-text">21.3 relative depth 本身错了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-4-superpixel-%E5%88%87%E9%94%99"><span class="toc-number">22.4.</span> <span class="toc-text">21.4 superpixel 切错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-5-%E5%9B%BE%E8%BE%B9%E6%9D%83%E4%B8%8D%E7%AD%89%E4%BA%8E%E7%9C%9F%E5%AE%9E-3D-%E5%85%B3%E7%B3%BB"><span class="toc-number">22.5.</span> <span class="toc-text">21.5 图边权不等于真实 3D 关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-6-phi-%E6%9C%AC%E8%BA%AB%E4%B8%8D%E5%8F%AF%E9%9D%A0"><span class="toc-number">22.6.</span> <span class="toc-text">21.6 (\phi) 本身不可靠</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-7-%E5%B1%80%E9%83%A8%E4%BB%BF%E5%B0%84%E5%81%87%E8%AE%BE%E4%B8%8D%E6%88%90%E7%AB%8B"><span class="toc-number">22.7.</span> <span class="toc-text">21.7 局部仿射假设不成立</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-8-%E5%9B%BE%E4%BC%98%E5%8C%96%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%BC%95%E5%85%A5%E6%9B%B4%E5%A4%9A%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="toc-number">22.8.</span> <span class="toc-text">21.8 图优化会不会引入更多不确定性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#22-%E5%9B%BE%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E5%92%8C%E7%BA%AF%E5%89%8D%E9%A6%88%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">23.</span> <span class="toc-text">22. 图优化方法和纯前馈数据驱动方法的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#23-%E8%AF%BB%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E6%97%B6%E5%8F%AF%E4%BB%A5%E6%8A%93%E4%BD%8F%E7%9A%84%E4%B8%BB%E7%BA%BF"><span class="toc-number">24.</span> <span class="toc-text">23. 读这篇文章时可以抓住的主线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#24-%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BA%8E%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%E7%9A%84%E7%B2%BE%E7%AE%80%E6%80%BB%E7%BB%93"><span class="toc-number">25.</span> <span class="toc-text">24. 可以用于论文笔记的精简总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#25-%E5%8F%82%E8%80%83%E6%9D%A5%E6%BA%90"><span class="toc-number">26.</span> <span class="toc-text">25. 参考来源</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/06/29/mtd_graph_reading_notes_v2/" title="MTD: 图优化视角下的 Metric Depth 公式推导笔记"><img src="/img/MTD-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MTD: 图优化视角下的 Metric Depth 公式推导笔记"/></a><div class="content"><a class="title" href="/2026/06/29/mtd_graph_reading_notes_v2/" title="MTD: 图优化视角下的 Metric Depth 公式推导笔记">MTD: 图优化视角下的 Metric Depth 公式推导笔记</a><time datetime="2026-06-29T08:11:02.000Z" title="发表于 2026-06-29 16:11:02">2026-06-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img src="/img/2DGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"/></a><div class="content"><a class="title" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a><time datetime="2026-06-15T03:03:22.000Z" title="发表于 2026-06-15 11:03:22">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/10/DreamFusion/" title="DreamFusion: Text-to-3D using 2D Diffusion"><img src="/img/DreamFusion-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DreamFusion: Text-to-3D using 2D Diffusion"/></a><div class="content"><a class="title" href="/2026/06/10/DreamFusion/" title="DreamFusion: Text-to-3D using 2D Diffusion">DreamFusion: Text-to-3D using 2D Diffusion</a><time datetime="2026-06-10T10:41:02.000Z" title="发表于 2026-06-10 18:41:02">2026-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/02/LoRA/" title="LoRA: Low-Rank Adaptation of Large Language Models"><img src="/img/LoRA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LoRA: Low-Rank Adaptation of Large Language Models"/></a><div class="content"><a class="title" href="/2026/06/02/LoRA/" title="LoRA: Low-Rank Adaptation of Large Language Models">LoRA: Low-Rank Adaptation of Large Language Models</a><time datetime="2026-06-02T09:18:54.000Z" title="发表于 2026-06-02 17:18:54">2026-06-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/01/VLM3/" title="VLM3: Vision Language Models Are Native 3D Learners"><img src="/img/VLM3-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VLM3: Vision Language Models Are Native 3D Learners"/></a><div class="content"><a class="title" href="/2026/06/01/VLM3/" title="VLM3: Vision Language Models Are Native 3D Learners">VLM3: Vision Language Models Are Native 3D Learners</a><time datetime="2026-06-01T04:54:26.000Z" title="发表于 2026-06-01 12:54:26">2026-06-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/MTD-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/">视觉基础模型</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E8%A1%A5%E5%85%A8/">深度补全</a><a class="post-meta__tags" href="/tags/%E5%9B%BE%E4%BC%98%E5%8C%96/">图优化</a></div><div class="post-share"><div class="social-share" data-image="/img/MTD-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img class="cover" src="/img/2DGS-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</div></div><div class="info-2"><div class="info-item-1">作者：Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, Shenghua Gao 单位：ShanghaiTech University, University of Tübingen, Tübingen AI Center 会议：SIGGRAPH 2024 Conference Papers 链接：arXiv, Project, Code 研究动机 3D Gaussian Splatting 的吸引力在于它把新视角合成做到了高质量、快速训练和实时渲染，但它的几何表达并不天然适合表面重建。3DGS 的基本单元是三维体素状 Gaussian blob，它可以很好地拟合视图相关外观，却会在几何上产生一个矛盾：真实世界的许多物体表面是薄的二维流形，而 3D Gaussian 表示的是有体积的密度分布。颜色可以通过体渲染被拟合出来，但表面在哪里、法向是否一致、不同视角看到的交点是否稳定，并没有被表示方式直接约束。 这篇文章要解决的问题不是单纯提升 PSNR，而是把 Gaussian Splatting...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/14/MTD/" title="MTD: The Midas Touch for Metric Depth"><img class="cover" src="/img/MTD-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">MTD: The Midas Touch for Metric Depth</div></div><div class="info-2"><div class="info-item-1">作者：Yu Ma, Zizhan Guo, Zuyi Xiong, Haoran Zhang, Yi Feng, Hongbo Zhao, Hanli Wang, Rui Fan 单位：College of Electronic and Information Engineering, Tongji University; Shanghai Research Institute for Intelligent Autonomous Systems, Tongji University; National Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Xi’an Jiaotong University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11578 研究动机 相对深度基础模型已经有很强的跨场景泛化能力，例如 MiDaS、DepthAnythingV2、Marigold...</div></div></div></a><a class="pagination-related" href="/2026/05/18/DepthVLM/" title="Unlocking Dense Metric Depth Estimation in VLMs"><img class="cover" src="/img/DepthVLM-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">Unlocking Dense Metric Depth Estimation in VLMs</div></div><div class="info-2"><div class="info-item-1">作者：Hanxun Yu, Xuan Qu, Yuxin Wang, Jianke Zhu, Lei Ke 单位：Zhejiang University, Tencent Hunyuan LLM, HKUST, Shenzhen Loop Area Institute 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.15876 研究动机 这篇文章要解决的问题很直接：现在的 VLM 已经能做视觉问答、定位、图文理解，但对 3D 几何的掌握仍然偏弱，尤其是不能原生输出像素级 metric depth。 已有路线大致有三类问题：  纯文本监督的 VLM 只把图像作为输入，输出仍然是自回归文本，因此视觉信号没有被密集几何目标约束，很难学到细粒度 3D 结构。  一些空间增强 VLM 依赖外部深度模型或点云模型蒸馏几何知识，容易把外部模型误差带进 VLM，并且不是 VLM 自身的原生能力。  DepthLM 这类方法证明了 VLM 可以预测 metric depth，但它用单像素 query 的方式逐点推理，生成一张密集深度图需要大量...</div></div></div></a><a class="pagination-related" href="/2026/05/14/FocusDepth/" title="FocusDepth: Focusable Monocular Depth Estimation"><img class="cover" src="/img/FocusDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">FocusDepth: Focusable Monocular Depth Estimation</div></div><div class="info-2"><div class="info-item-1">作者：Yuxin Du, Tao Lin, Zile Zhong, Runting Li, Xiyao Chen, Jiting Liu, Chenglin Liu, Ying-Cong Chen, Yuqian Fu, Bo Zhao 单位：School of Artificial Intelligence, Shanghai Jiao Tong University; The Hong Kong University of Science and Technology (Guangzhou); King Abdullah University of Science and Technology 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.11756 研究动机 现有单目深度估计通常是 image-centric 的：输入一张图，输出一张整图深度，训练和评测也主要把所有有效像素的误差聚合起来。这个设定对全局场景理解很合理，但很多真实任务其实不是平均地关心每个像素。 机器人抓取时更关心目标物体和接触边界，AR...</div></div></div></a><a class="pagination-related" href="/2025/03/26/depthprompting/" title="Depth Prompting for Sensor-Agnostic Depth Estimation"><img class="cover" src="/img/depthprompting-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-03-26</div><div class="info-item-2">Depth Prompting for Sensor-Agnostic Depth Estimation</div></div><div class="info-2"><div class="info-item-1">摘要由于系统性的测量偏差，例如密度、感知模式和扫描范围，当前方法在现实世界的应用范围有限。 学习联合表示的输入模式对偏差敏感。 设计了深度提示模块，根据传感器类型或场景配置的新深度分布获得希望的特征表示。 通过将这个模块嵌入基本的单目深度估计模型，可以解决深度扫描范围的限制，提供绝对的带尺度的深度图。 简介目标是构建一个传感器不可知的深度估计模型，能够在各种主动深度传感器上工作。深度提示首先编码稀疏的深度信息，并将其和图像特征进行融合构建一个逐像素的亲和力图。最后对亲和力图和最初的深度图进行细化操作。采用偏差调优技术，只需要对0.1%的模型参数进行微调。 Prompt EngineeringPrompt...</div></div></div></a><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%85%88%E7%BB%99%E7%BB%93%E8%AE%BA%EF%BC%9A%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">0. 先给结论：这篇文章的本质是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9B%BE%E8%AE%BA%E6%9C%80%E5%B0%8F%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">1. 图论最小基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 什么是图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%BE%B9%E6%9D%83%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 边权是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%9B%BE%E4%BC%98%E5%8C%96%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 图优化在做什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%9B%BE%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%9B%B4%E8%A7%89"><span class="toc-number">2.4.</span> <span class="toc-text">1.4 图拉普拉斯直觉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1%E8%83%8C%E6%99%AF%EF%BC%9Arelative-depth-%E5%92%8C-metric-depth"><span class="toc-number">3.</span> <span class="toc-text">2. 深度估计背景：relative depth 和 metric depth</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-relative-depth-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 relative depth 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-metric-depth-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 metric depth 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%B0%BA%E5%BA%A6%E6%81%A2%E5%A4%8D%E5%88%B0%E5%BA%95%E5%9C%A8%E6%81%A2%E5%A4%8D%E4%BB%80%E4%B9%88"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 尺度恢复到底在恢复什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9Asegment-wise-recovery"><span class="toc-number">4.</span> <span class="toc-text">3. 第一阶段：segment-wise recovery</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%BE%93%E5%85%A5%E5%92%8C%E7%9B%AE%E6%A0%87"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 输入和目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-inverse-depth-proxy"><span class="toc-number">4.2.</span> <span class="toc-text">3.1.1 为什么用 inverse depth proxy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%AF%B9%E6%9C%89-seeds-%E7%9A%84-superpixel-%E5%81%9A%E5%B1%80%E9%83%A8%E6%A0%87%E5%AE%9A"><span class="toc-number">4.3.</span> <span class="toc-text">3.2 对有 seeds 的 superpixel 做局部标定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%B2%A1%E6%9C%89-seeds-%E7%9A%84-superpixel-%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">4.4.</span> <span class="toc-text">3.3 没有 seeds 的 superpixel 怎么办</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E8%BF%99%E4%B8%AA%E5%9B%BE%E4%BC%98%E5%8C%96%E7%9A%84%E7%9B%B4%E8%A7%89"><span class="toc-number">4.5.</span> <span class="toc-text">3.4 这个图优化的直觉</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9Apixel-wise-refinement-%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%83%B3%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">4. 第二阶段：pixel-wise refinement 的基本想法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%92%8C%E4%B8%80%E9%98%B6%E4%BD%99%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">5. 泰勒展开和一阶余项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%B8%80%E7%BB%B4%E4%B8%80%E9%98%B6%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 一维一阶泰勒展开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9%E7%9A%84%E7%A7%AF%E5%88%86%E5%BD%A2%E5%BC%8F"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 一维余项的积分形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E5%8F%B3%E7%AB%AF%E7%82%B9%E7%89%88%E6%9C%AC"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 右端点版本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%AD%A3%E6%96%87%E5%85%AC%E5%BC%8F-2%EF%BC%9A%E4%BA%8C%E7%BB%B4%E4%B8%80%E9%98%B6%E4%BD%99%E9%A1%B9"><span class="toc-number">7.</span> <span class="toc-text">6. 正文公式 2：二维一阶余项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%99%84%E5%BD%95%E6%8E%A8%E5%AF%BC%EF%BC%9A%E5%B0%86%E4%BA%8C%E7%BB%B4%E4%BD%99%E9%A1%B9%E6%8B%86%E6%88%90%E5%9B%9B%E6%9D%A1%E8%BE%B9%E7%9A%84%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9"><span class="toc-number">8.</span> <span class="toc-text">7. 附录推导：将二维余项拆成四条边的一维余项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%99%84%E5%BD%95%E6%8E%A8%E5%AF%BC%EF%BC%9A%E5%B0%86%E5%9B%9B%E4%B8%AA%E4%B8%80%E7%BB%B4%E4%BD%99%E9%A1%B9%E5%86%99%E6%88%90%E4%BA%8C%E9%98%B6%E5%AF%BC%E7%A7%AF%E5%88%86"><span class="toc-number">9.</span> <span class="toc-text">8. 附录推导：将四个一维余项写成二阶导积分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%8E%A8%E5%AF%BC-H-0"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 推导 $H_0$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E6%8E%A8%E5%AF%BC-H-1"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 推导 $H_1$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E6%8E%A8%E5%AF%BC-V-0"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 推导 $V_0$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-%E6%8E%A8%E5%AF%BC-V-1"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 推导 $V_1$</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%BB%8E%E4%BA%8C%E9%98%B6%E5%AF%BC%E7%A7%AF%E5%88%86%E5%88%B0-phi"><span class="toc-number">10.</span> <span class="toc-text">9. 从二阶导积分到 $\phi$</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E4%BB%8E-R-p-q-%E5%88%B0%E8%B7%AF%E5%BE%84%E7%A7%AF%E5%88%86%E4%B8%8A%E7%95%8C"><span class="toc-number">11.</span> <span class="toc-text">10. 从 $R(p,q)$ 到路径积分上界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E4%B8%A4%E6%9D%A1%E8%BD%B4%E5%AF%B9%E9%BD%90%E8%B7%AF%E5%BE%84"><span class="toc-number">12.</span> <span class="toc-text">11. 两条轴对齐路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-conformal-Riemannian-metric-%E5%8F%AA%E9%9C%80%E8%A6%81%E8%BF%99%E6%A0%B7%E7%90%86%E8%A7%A3"><span class="toc-number">13.</span> <span class="toc-text">12. conformal Riemannian metric 只需要这样理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E6%AD%A3%E6%96%87%E5%85%AC%E5%BC%8F-6%EF%BC%9A%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E9%80%92%E6%8E%A8"><span class="toc-number">14.</span> <span class="toc-text">13. 正文公式 6：动态规划递推</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-%E5%85%AC%E5%BC%8F-6-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%92%8C%E6%B7%B1%E5%BA%A6%E4%BC%A0%E6%92%AD%E6%9C%89%E5%85%B3"><span class="toc-number">15.</span> <span class="toc-text">14. 公式 6 为什么和深度传播有关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-%E5%85%AC%E5%BC%8F-7%EF%BC%9A%E5%B1%80%E9%83%A8%E9%A2%84%E6%B5%8B%E5%92%8C%E6%9B%B4%E6%96%B0%E7%9A%84%E7%9B%B4%E8%A7%89"><span class="toc-number">16.</span> <span class="toc-text">15. 公式 7：局部预测和更新的直觉</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-%E6%B7%B1%E5%BA%A6%E6%9B%B4%E6%96%B0%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%80%90%E6%AD%A5%E8%9E%8D%E5%90%88"><span class="toc-number">17.</span> <span class="toc-text">16. 深度更新：为什么要逐步融合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-%E5%B0%86-3-2-%E7%9A%84%E6%96%B9%E6%B3%95%E4%B8%B2%E8%B5%B7%E6%9D%A5"><span class="toc-number">18.</span> <span class="toc-text">17. 将 3.2 的方法串起来</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-1%EF%BC%9A%E5%B7%B2%E6%9C%89%E4%B8%80%E4%B8%AA-coarse-metric-depth"><span class="toc-number">18.1.</span> <span class="toc-text">Step 1：已有一个 coarse metric depth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-2%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%B7%B1%E5%BA%A6%E5%9B%BE%E7%9A%84%E4%BA%8C%E9%98%B6%E5%8F%98%E5%8C%96"><span class="toc-number">18.2.</span> <span class="toc-text">Step 2：计算深度图的二阶变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-3%EF%BC%9A%E7%94%A8-phi-%E6%9E%84%E9%80%A0%E8%B7%AF%E5%BE%84%E4%BB%A3%E4%BB%B7"><span class="toc-number">18.3.</span> <span class="toc-text">Step 3：用 $\phi$ 构造路径代价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-4%EF%BC%9A%E9%80%89%E6%8B%A9%E4%BD%8E%E4%BB%A3%E4%BB%B7%E4%BC%A0%E6%92%AD%E8%B7%AF%E5%BE%84"><span class="toc-number">18.4.</span> <span class="toc-text">Step 4：选择低代价传播路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-5%EF%BC%9A%E7%94%A8%E9%82%BB%E5%B1%85%E5%B1%80%E9%83%A8%E6%A8%A1%E5%9E%8B%E9%A2%84%E6%B5%8B%E7%9B%AE%E6%A0%87%E5%83%8F%E7%B4%A0%E6%B7%B1%E5%BA%A6"><span class="toc-number">18.5.</span> <span class="toc-text">Step 5：用邻居局部模型预测目标像素深度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-6%EF%BC%9A%E8%9E%8D%E5%90%88%E9%A2%84%E6%B5%8B%EF%BC%8C%E6%9B%B4%E6%96%B0-depth"><span class="toc-number">18.6.</span> <span class="toc-text">Step 6：融合预测，更新 depth</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#18-%E4%B8%80%E5%BC%A0%E6%80%BB%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">19.</span> <span class="toc-text">18. 一张总流程图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%BA%9B%E5%85%AC%E5%BC%8F%E6%9C%8D%E5%8A%A1%E4%BA%8E%E5%B0%BA%E5%BA%A6%E6%81%A2%E5%A4%8D"><span class="toc-number">20.</span> <span class="toc-text">19. 为什么这些公式服务于尺度恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#20-%E5%AE%83%E5%92%8C%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="toc-number">21.</span> <span class="toc-text">20. 它和真正的深度估计有什么关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#21-%E8%BF%99%E7%A7%8D%E5%9B%BE%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E5%A4%B1%E6%95%88"><span class="toc-number">22.</span> <span class="toc-text">21. 这种图优化方法什么时候会失效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#21-1-sparse-seeds-%E5%A4%AA%E5%B0%91%E6%88%96%E5%88%86%E5%B8%83%E4%B8%8D%E5%9D%87"><span class="toc-number">22.1.</span> <span class="toc-text">21.1 sparse seeds 太少或分布不均</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-2-sparse-seeds-%E6%9C%89%E5%A4%96%E7%82%B9"><span class="toc-number">22.2.</span> <span class="toc-text">21.2 sparse seeds 有外点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-3-relative-depth-%E6%9C%AC%E8%BA%AB%E9%94%99%E4%BA%86"><span class="toc-number">22.3.</span> <span class="toc-text">21.3 relative depth 本身错了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-4-superpixel-%E5%88%87%E9%94%99"><span class="toc-number">22.4.</span> <span class="toc-text">21.4 superpixel 切错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-5-%E5%9B%BE%E8%BE%B9%E6%9D%83%E4%B8%8D%E7%AD%89%E4%BA%8E%E7%9C%9F%E5%AE%9E-3D-%E5%85%B3%E7%B3%BB"><span class="toc-number">22.5.</span> <span class="toc-text">21.5 图边权不等于真实 3D 关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-6-phi-%E6%9C%AC%E8%BA%AB%E4%B8%8D%E5%8F%AF%E9%9D%A0"><span class="toc-number">22.6.</span> <span class="toc-text">21.6 $\phi$ 本身不可靠</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-7-%E5%B1%80%E9%83%A8%E4%BB%BF%E5%B0%84%E5%81%87%E8%AE%BE%E4%B8%8D%E6%88%90%E7%AB%8B"><span class="toc-number">22.7.</span> <span class="toc-text">21.7 局部仿射假设不成立</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#21-8-%E5%9B%BE%E4%BC%98%E5%8C%96%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%BC%95%E5%85%A5%E6%9B%B4%E5%A4%9A%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7"><span class="toc-number">22.8.</span> <span class="toc-text">21.8 图优化会不会引入更多不确定性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#22-%E5%9B%BE%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E5%92%8C%E7%BA%AF%E5%89%8D%E9%A6%88%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">23.</span> <span class="toc-text">22. 图优化方法和纯前馈数据驱动方法的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#23-%E8%AF%BB%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E6%97%B6%E5%8F%AF%E4%BB%A5%E6%8A%93%E4%BD%8F%E7%9A%84%E4%B8%BB%E7%BA%BF"><span class="toc-number">24.</span> <span class="toc-text">23. 读这篇文章时可以抓住的主线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#24-%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BA%8E%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%E7%9A%84%E7%B2%BE%E7%AE%80%E6%80%BB%E7%BB%93"><span class="toc-number">25.</span> <span class="toc-text">24. 可以用于论文笔记的精简总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#25-%E5%8F%82%E8%80%83%E6%9D%A5%E6%BA%90"><span class="toc-number">26.</span> <span class="toc-text">25. 参考来源</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/06/29/mtd_graph_reading_notes_v2/" title="MTD: 图优化视角下的 Metric Depth 公式推导笔记"><img src="/img/MTD-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MTD: 图优化视角下的 Metric Depth 公式推导笔记"/></a><div class="content"><a class="title" href="/2026/06/29/mtd_graph_reading_notes_v2/" title="MTD: 图优化视角下的 Metric Depth 公式推导笔记">MTD: 图优化视角下的 Metric Depth 公式推导笔记</a><time datetime="2026-06-29T08:11:02.000Z" title="发表于 2026-06-29 16:11:02">2026-06-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img src="/img/2DGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"/></a><div class="content"><a class="title" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</a><time datetime="2026-06-15T03:03:22.000Z" title="发表于 2026-06-15 11:03:22">2026-06-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/10/DreamFusion/" title="DreamFusion: Text-to-3D using 2D Diffusion"><img src="/img/DreamFusion-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DreamFusion: Text-to-3D using 2D Diffusion"/></a><div class="content"><a class="title" href="/2026/06/10/DreamFusion/" title="DreamFusion: Text-to-3D using 2D Diffusion">DreamFusion: Text-to-3D using 2D Diffusion</a><time datetime="2026-06-10T10:41:02.000Z" title="发表于 2026-06-10 18:41:02">2026-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/02/LoRA/" title="LoRA: Low-Rank Adaptation of Large Language Models"><img src="/img/LoRA-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LoRA: Low-Rank Adaptation of Large Language Models"/></a><div class="content"><a class="title" href="/2026/06/02/LoRA/" title="LoRA: Low-Rank Adaptation of Large Language Models">LoRA: Low-Rank Adaptation of Large Language Models</a><time datetime="2026-06-02T09:18:54.000Z" title="发表于 2026-06-02 17:18:54">2026-06-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/01/VLM3/" title="VLM3: Vision Language Models Are Native 3D Learners"><img src="/img/VLM3-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VLM3: Vision Language Models Are Native 3D Learners"/></a><div class="content"><a class="title" href="/2026/06/01/VLM3/" title="VLM3: Vision Language Models Are Native 3D Learners">VLM3: Vision Language Models Are Native 3D Learners</a><time datetime="2026-06-01T04:54:26.000Z" title="发表于 2026-06-01 12:54:26">2026-06-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/MTD-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
   const loadMathjax = () => {
     if (!window.MathJax) {
       window.MathJax = {
