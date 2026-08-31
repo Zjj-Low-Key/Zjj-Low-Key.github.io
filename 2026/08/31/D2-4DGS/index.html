@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者： Jijian Zhao 单位： Huazhong University of Science and Technology 会议： 2026 Arxiv 链接： arXiv  研究动机Dynamic 4DGS 通常依赖密集、同步的多相机视频。相机数量减少以后，RGB supervision 很难唯一确定动态场景的 3D geometry：错误位置的 Gaussians 仍然可能解释有限 t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/08/31/D2-4DGS/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者： Jijian Zhao 单位： Huazhong University of Science and Technology 会议： 2026 Arxiv 链接： arXiv  研究动机Dynamic 4DGS 通常依赖密集、同步的多相机视频。相机数量减少以后，RGB supervision 很难唯一确定动态场景的 3D geometry：错误位置的 Gaussians 仍然可能解释有限 t">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/D2-4DGS-0.png">
+<meta property="article:published_time" content="2026-08-31T13:00:11.000Z">
+<meta property="article:modified_time" content="2026-08-31T13:14:00.162Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="3D高斯">
+<meta property="article:tag" content="动态场景">
+<meta property="article:tag" content="稀疏视角">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/D2-4DGS-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting",
+  "url": "https://zjj-low-key.github.io/2026/08/31/D2-4DGS/",
+  "image": "https://zjj-low-key.github.io/img/D2-4DGS-0.png",
+  "datePublished": "2026-08-31T13:00:11.000Z",
+  "dateModified": "2026-08-31T13:14:00.162Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/08/31/D2-4DGS/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/D2-4DGS-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-31T13:00:11.000Z" title="发表于 2026-08-31 21:00:11">2026-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-31T13:14:00.162Z" title="更新于 2026-08-31 21:14:00">2026-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%B0%E8%A7%86%E8%A7%92%E5%90%88%E6%88%90/">新视角合成</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong> Jijian Zhao</p>
+<p><strong>单位：</strong> Huazhong University of Science and Technology</p>
+<p><strong>会议：</strong> 2026 Arxiv</p>
+<p><strong>链接：</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2608.01588">arXiv</a></p>
+<p><img src="/img/D2-4DGS-0.png" alt="D2-4DGS-0" title="D2-4DGS-0"></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p>Dynamic 4DGS 通常依赖密集、同步的多相机视频。相机数量减少以后，RGB supervision 很难唯一确定动态场景的 3D geometry：错误位置的 Gaussians 仍然可能解释有限 training views，最终产生 missing structures、foreground/background blending 和 floating primitives。</p>
+<p>引入 depth prior 是自然选择，但 D²-4DGS 认为 <strong>单一 depth source 都不够</strong>：</p>
+<ul>
+<li>Monocular depth：coverage 稠密，但 scale ambiguous，而且存在局部 bias；</li>
+<li>Multi-view geometric depth：与 reconstruction coordinate system 一致、几何可靠性更高，但在 occlusion、weak texture、limited baseline 和动态区域中 coverage 很差。</li>
+</ul>
+<p>论文真正解决的问题不是“把两张 depth map 融合一下”，而是：</p>
+<blockquote>
+<p><strong>当两个 depth source 的可靠性和 coverage 完全不同，应该让它们在 4DGS optimization 中承担什么不同职责？</strong></p>
+</blockquote>
+<p>D²-4DGS 的答案很明确：先对齐，再做 cross-source verification，然后把 depth 分成不同 reliability level。</p>
+<ul>
+<li>两种来源一致的 <strong>verified anchors</strong>：可以作为强几何证据，用于 pruning 和 depth supervision；</li>
+<li>只有 monocular depth 的区域：只把它当作 <strong>densification proposal</strong>，用于提出“这里可能缺 surface”，但不直接强迫现有 Gaussians 拟合它；</li>
+<li>两种来源冲突的区域：直接丢弃。</li>
+</ul>
+<p>这种“不同置信度的 prior 承担不同优化职责”是整篇论文最重要的设计。</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="1-Dual-source-Depth-Prior-Construction"><a href="#1-Dual-source-Depth-Prior-Construction" class="headerlink" title="1. Dual-source Depth Prior Construction"></a>1. Dual-source Depth Prior Construction</h3><p>对每个时间戳 $t$、相机 $n$：</p>
+<ul>
+<li>monocular depth $D^m_{t,n}$：Depth Anything V2 独立预测；</li>
+<li>geometric depth $D^g_{t,n}$：在同一 timestamp 的同步相机之间运行 COLMAP PatchMatch Stereo。</li>
+</ul>
+<p>这里 <strong>不会跨时间做 MVS</strong>，因此避免把动态物体在不同时间的位置混在一起。</p>
+<p>COLMAP 自带 geometric-consistency filtering，先得到有效 geometric depth mask $M^g_{t,n}$。</p>
+<h3 id="2-用-geometric-depth-对齐-monocular-depth"><a href="#2-用-geometric-depth-对齐-monocular-depth" class="headerlink" title="2. 用 geometric depth 对齐 monocular depth"></a>2. 用 geometric depth 对齐 monocular depth</h3><p>对于每帧、每个 view 独立拟合 positive scale $a<em>{t,n}$ 和 shift $b</em>{t,n}$：</p>
+<script type="math/tex; mode=display">
+(a_{t,n},b_{t,n})=
+\arg\min_{a>0,b}
+\sum_{\mathbf p\in\Omega^g_{t,n}}
+\rho\left(aD^m_{t,n}(\mathbf p)+b-D^g_{t,n}(\mathbf p)\right),</script><p>其中使用 Charbonnier penalty：</p>
+<script type="math/tex; mode=display">
+\rho(x)=\sqrt{x^2+\epsilon_\rho^2}-\epsilon_\rho.</script><p>对齐后的 monocular depth：</p>
+<script type="math/tex; mode=display">
+\bar D^m_{t,n}(\mathbf p)=
+a_{t,n}D^m_{t,n}(\mathbf p)+b_{t,n}.</script><p>注意这里是 <strong>逐帧、逐相机独立 scale-shift calibration</strong>，不是一个 sequence-level global alignment。它解决的是“先把 MDE 放进 reconstruction coordinate system”，但本身不保证跨视角局部几何一致。</p>
+<h3 id="3-Cross-source-Verification"><a href="#3-Cross-source-Verification" class="headerlink" title="3. Cross-source Verification"></a>3. Cross-source Verification</h3><p>在同时具有 MVS depth 的位置，计算相对 discrepancy：</p>
+<script type="math/tex; mode=display">
+e_{t,n}(\mathbf p)=
+\frac{|\bar D^m_{t,n}(\mathbf p)-D^g_{t,n}(\mathbf p)|}
+{D^g_{t,n}(\mathbf p)+\epsilon}.</script><p>只有满足</p>
+<script type="math/tex; mode=display">
+e_{t,n}(\mathbf p)<\tau_c</script><p>的像素才进入 verified region $\Omega^v_{t,n}$。</p>
+<p>最终 dual-source prior 定义成分段形式：</p>
+<script type="math/tex; mode=display">
+D^*_{t,n}(\mathbf p)=
+\begin{cases}
+D^g_{t,n}(\mathbf p), & \mathbf p\in\Omega^v_{t,n},\\
+\bar D^m_{t,n}(\mathbf p), & M^g_{t,n}(\mathbf p)=0\ \land\ \bar D^m_{t,n}(\mathbf p)>0,\\
+\emptyset, & \text{otherwise}.
+\end{cases}</script><p>这一式子就是论文的核心：</p>
+<ul>
+<li>verified overlap：相信 geometric depth；</li>
+<li>MVS 没覆盖：允许 aligned MDE 补 coverage；</li>
+<li>MVS 和 MDE 同时存在但冲突：谁都不信。</li>
+</ul>
+<p>更关键的是，后续模块不会对这两类有效 depth 一视同仁。</p>
+<h3 id="4-Depth-guided-Densification"><a href="#4-Depth-guided-Densification" class="headerlink" title="4. Depth-guided Densification"></a>4. Depth-guided Densification</h3><p>3DGS/4DGS 可以渲染当前 depth：</p>
+<script type="math/tex; mode=display">
+\hat D_{t,n}(\mathbf p)=
+\frac{\sum_i w_i(\mathbf p)z_i(\mathbf p)}
+{A_{t,n}(\mathbf p)+\epsilon},</script><p>其中 $w_i=T_i\alpha_i$ 是 front-to-back compositing weight，$A=\sum_iw_i$ 表示该 pixel 是否已有足够 Gaussian contribution。</p>
+<p>如果当前 rendered depth 无效，或者与 prior 差异很大：</p>
+<script type="math/tex; mode=display">
+\delta_{t,n}(\mathbf p)=
+\frac{|\hat D_{t,n}(\mathbf p)-D^*_{t,n}(\mathbf p)|}
+{D^*_{t,n}(\mathbf p)+\epsilon}>\tau_u,</script><p>则认为这里是 under-reconstructed region。</p>
+<p>对应 pixel 被按照 $D^*$ back-project 到 3D，作为新 Gaussian center 的候选：</p>
+<script type="math/tex; mode=display">
+\mathbf x_{t,n,\mathbf p}=\Pi_n^{-1}(\mathbf p,D^*_{t,n}(\mathbf p)).</script><p>这一步允许 <strong>mono-only depth 参与</strong>。理由是：densification 的角色只是提出“这里可能需要补一个 primitive”，后续 RGB 和多视角优化仍有机会修正它；因此可以容忍更高的不确定性。</p>
+<h3 id="5-Consistency-aware-Pruning"><a href="#5-Consistency-aware-Pruning" class="headerlink" title="5. Consistency-aware Pruning"></a>5. Consistency-aware Pruning</h3><p>Pruning 则更谨慎，只使用 verified anchors 对现有 Gaussian 做几何判断。</p>
+<p>对 Gaussian $g_k$，作者计算它在 verified pixels 上的 contribution-weighted depth inconsistency：</p>
+<script type="math/tex; mode=display">
+\widetilde E_k=
+\frac{\sum_{q\in\mathcal Q_k^v}w_{k,q}
+\frac{|z_{k,q}-D_q^*|}{D_q^*+\epsilon}}
+{\sum_{q\in\mathcal Q_k^v}w_{k,q}+\epsilon}.</script><p>再归一化为 $E_k\in[0,1]$。</p>
+<p>同时计算 visibility-aware opacity contribution $O_k$，最后得到 pruning score：</p>
+<script type="math/tex; mode=display">
+S_k=\lambda_eE_k+\lambda_o(1-O_k),
+\qquad \lambda_e+\lambda_o=1.</script><p>含义是：</p>
+<ul>
+<li>depth inconsistent：几何位置可疑；</li>
+<li>opacity contribution 小：对 rendering 也不重要。</li>
+</ul>
+<p>只有高 pruning score 连续多次出现时才真正删除 Gaussian，避免一次 noisy observation 就误删有效结构。</p>
+<h3 id="6-Verified-depth-RGB-D-Joint-Optimization"><a href="#6-Verified-depth-RGB-D-Joint-Optimization" class="headerlink" title="6. Verified-depth RGB-D Joint Optimization"></a>6. Verified-depth RGB-D Joint Optimization</h3><p>Depth loss 也只在 <strong>verified prior + valid rendered depth</strong> 同时存在的位置计算：</p>
+<script type="math/tex; mode=display">
+r^D_{t,n}(\mathbf p)=
+\frac{\hat D_{t,n}(\mathbf p)-D^*_{t,n}(\mathbf p)}
+{D^*_{t,n}(\mathbf p)+\epsilon},</script><script type="math/tex; mode=display">
+\mathcal L_{depth}=
+\frac{\sum_{\mathbf p\in\Omega^v_{t,n}}
+M^r_{t,n}(\mathbf p)\rho(r^D_{t,n}(\mathbf p))}
+{\sum_{\mathbf p\in\Omega^v_{t,n}}M^r_{t,n}(\mathbf p)+\epsilon}.</script><p>总目标：</p>
+<script type="math/tex; mode=display">
+\mathcal L=\mathcal L_{rgb}+\lambda_d\mathcal L_{depth}.</script><p>因此 <strong>mono-only depth 从不直接进入 depth loss</strong>。它只负责 densification proposal；强监督和 pruning 都必须经过 multi-source verification。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>论文评测三个 dynamic novel-view synthesis benchmark：</p>
+<ul>
+<li><strong>N3DV</strong>：6 scenes；</li>
+<li><strong>Technicolor</strong>：5 scenes；</li>
+<li><strong>ENeRF-Outdoor</strong>：3 scenes。</li>
+</ul>
+<p>每个数据集都测试 <strong>2 / 3 / 4 camera</strong> sparse-view settings。只有指定 cameras 用于训练，其余有效 cameras 全部作为 held-out novel views。</p>
+<p>评价指标包括 PSNR、两种 data range 下的 SSIM，以及 LPIPS。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>所有实验使用 <strong>单张 NVIDIA RTX 4090 24GB</strong>。</p>
+<p>论文明确指出，dual-depth preprocessing 与周期性的 Gaussian structure updates 会增加训练时间，但正文没有给出像 StereoGS 那样完整的 per-scene minutes 对比表。</p>
+<p>因此可以确认单卡 4090 可运行，但不能据此认为方法训练代价与原始 4DGS 相同。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="1-九种-dataset-view-setting-的主结果"><a href="#1-九种-dataset-view-setting-的主结果" class="headerlink" title="1. 九种 dataset-view setting 的主结果"></a>1. 九种 dataset-view setting 的主结果</h3><p>D²-4DGS 在 N3DV、Technicolor、ENeRF-Outdoor 的 2/3/4-view 共 <strong>9 个设置中都取得最高 PSNR</strong>。论文报告相对于每个设置中最好的 competing method，平均提升约 <strong>1.33 dB</strong>。</p>
+<p>例如 4-view：</p>
+<ul>
+<li>N3DV：<strong>24.9534 PSNR</strong>；</li>
+<li>Technicolor：<strong>29.1182 PSNR</strong>；</li>
+<li>ENeRF-Outdoor：<strong>22.0253 PSNR</strong>。</li>
+</ul>
+<p>2-view 时优势尤其明显，因为此时 RGB cross-view constraint 最弱，错误 Gaussian 最容易在 training views 上过拟合。</p>
+<h3 id="2-单一-prior-与-dual-prior"><a href="#2-单一-prior-与-dual-prior" class="headerlink" title="2. 单一 prior 与 dual prior"></a>2. 单一 prior 与 dual prior</h3><p>在 N3DV <code>sear_steak</code> 4-view ablation 中：</p>
+<ul>
+<li>Backbone：25.3987 PSNR；</li>
+<li>Mono only：25.9236；</li>
+<li>MVS only：25.6174；</li>
+<li>Dual w/o alignment：25.8469；</li>
+<li>Dual w/o verification：26.1183；</li>
+<li>Full D²-4DGS：<strong>27.2302</strong>。</li>
+</ul>
+<p>这组结果说明：</p>
+<ol>
+<li>单目和 MVS 单独用都有帮助；</li>
+<li>Mono-only 比 MVS-only 更强，说明 sparse dynamic setting 中 dense coverage 很重要；</li>
+<li>但简单把两种 prior 拼在一起仍然达不到 full model；</li>
+<li><strong>alignment + verification 才是 dual-source fusion 真正有效的前提。</strong></li>
+</ol>
+<h3 id="3-Densification、Pruning、RGB-D-哪个最重要？"><a href="#3-Densification、Pruning、RGB-D-哪个最重要？" class="headerlink" title="3. Densification、Pruning、RGB-D 哪个最重要？"></a>3. Densification、Pruning、RGB-D 哪个最重要？</h3><p>同一场景：</p>
+<ul>
+<li>w/o proposed Densification：26.0384；</li>
+<li>w/o Pruning：26.5217；</li>
+<li>w/o RGB-D depth regularization：26.4472；</li>
+<li>Full：27.2302。</li>
+</ul>
+<p>移除 densification 的下降最大。这说明 sparse-camera dynamic reconstruction 的首要问题之一不是“已有 geometry 不够精”，而是 <strong>某些 surface 根本没有被表示出来</strong>。</p>
+<p>这与 MDE 的优势非常契合：MVS 在弱纹理/遮挡处可能没有 depth，而 dense monocular prediction 至少能提出 missing-surface candidate。</p>
+<h3 id="4-Pruning-signal"><a href="#4-Pruning-signal" class="headerlink" title="4. Pruning signal"></a>4. Pruning signal</h3><p>在 ENeRF-Outdoor <code>actor5_6</code>：</p>
+<ul>
+<li>No pruning：21.1874 PSNR；</li>
+<li>Opacity only：21.5663；</li>
+<li>Depth only：21.9076；</li>
+<li>Joint：<strong>22.2082</strong>。</li>
+</ul>
+<p>Depth inconsistency 比 opacity contribution 单独更有信息，因为一个 Gaussian 即使 photometric contribution 很强，也可能位于错误 depth；两者结合最好。</p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li>最大优点不是“用了两种 depth”，而是 <strong>按可靠性给不同 prior 分配不同权限</strong>。</li>
+<li>MDE 的 dense coverage 被用于结构补全，但不会在未经验证区域直接变成强监督，避免把 MDE error 硬写进 4D geometry。</li>
+<li>Prior 不只作为 loss，还直接控制 Gaussian densification 和 pruning，真正改变 representation structure。</li>
+<li>消融完整地证明 alignment、verification、densification、pruning、RGB-D supervision 都有独立贡献。</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li>Monocular depth 的校准仍然是逐帧 scale-shift；如果 MDE 存在 spatially varying local bias，这个 global affine alignment 本身不能修正。</li>
+<li>在 MVS 完全缺失的区域，densification 只能依赖 aligned monocular depth。论文也承认较大的 MDE error 会降低 structural completion accuracy。</li>
+<li>方法需要同步、已标定的 sparse multi-camera video，适用条件比普通单目视频 4D reconstruction 更严格。</li>
+<li>Dual-depth preprocessing 和 structure update 增加训练成本，而且没有引入额外 temporal motion prior；动态几何的一致性主要仍依赖原 backbone。</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><strong>不同 reliability 的 depth prior 不应该拥有相同的优化权限。</strong></li>
+<li>Verified MDE-MVS overlap → pruning + depth supervision；Mono-only → densification proposal；Conflict → discard。</li>
+<li>对 sparse-view 3DGS/4DGS，prior 的作用不应该只设计成一个 depth loss，还可以直接决定 <strong>在哪里新增 Gaussian、删除哪些 Gaussian</strong>。</li>
+<li>Densification ablation 的下降最大，说明 sparse reconstruction 的关键瓶颈之一是 missing geometry，而不只是已有 surface 的位置误差。</li>
+<li>对单目深度下游研究最值得追问的是：D²-4DGS 用 MVS verification 给 MDE 分配可信度，但仍没有解决 <strong>MDE 自身的 spatial local bias 与 cross-view inconsistency</strong>。这正是可以继续深入的空间。</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/3D%E9%AB%98%E6%96%AF/">3D高斯</a><a class="post-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E5%9C%BA%E6%99%AF/">动态场景</a><a class="post-meta__tags" href="/tags/%E7%A8%80%E7%96%8F%E8%A7%86%E8%A7%92/">稀疏视角</a></div><div class="post-share"><div class="social-share" data-image="/img/D2-4DGS-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"><img class="cover" src="/img/StereoGS-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</div></div><div class="info-2"><div class="info-item-1">作者： Wenhao Yuan, Yiyuan Ge, Deli Cai 单位： South China University of Technology 会议： ECCV 2026 链接： arXiv ｜ Project ｜ Code  研究动机Sparse-view 3DGS 的根本困难不是 renderer 不够强，而是 几何约束太弱。只有少量训练视角时，很多错误的 Gaussian geometry 仍然可以很好地拟合训练 RGB，因此优化很容易出现 overfitting、floaters、错误表面和 novel-view artifacts。 已有方法常用 monocular depth prior 缓解这个问题，但 StereoGS 认为 MDE 在这里有两个天然缺陷：  scale ambiguity：单目 depth 的尺度与 3DGS 世界坐标不天然一致； cross-view inconsistency：每个视角独立推理，同一真实 3D point 在不同图像中的 depth 可能不一致。  即使先用 MVS 获得一个更好的...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"><img class="cover" src="/img/StereoGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-08-31</div><div class="info-item-2">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</div></div><div class="info-2"><div class="info-item-1">作者： Wenhao Yuan, Yiyuan Ge, Deli Cai 单位： South China University of Technology 会议： ECCV 2026 链接： arXiv ｜ Project ｜ Code  研究动机Sparse-view 3DGS 的根本困难不是 renderer 不够强，而是 几何约束太弱。只有少量训练视角时，很多错误的 Gaussian geometry 仍然可以很好地拟合训练 RGB，因此优化很容易出现 overfitting、floaters、错误表面和 novel-view artifacts。 已有方法常用 monocular depth prior 缓解这个问题，但 StereoGS 认为 MDE 在这里有两个天然缺陷：  scale ambiguity：单目 depth 的尺度与 3DGS 世界坐标不天然一致； cross-view inconsistency：每个视角独立推理，同一真实 3D point 在不同图像中的 depth 可能不一致。  即使先用 MVS 获得一个更好的...</div></div></div></a><a class="pagination-related" href="/2024/12/08/3DGS/" title="DIFFERENTIABLE 3D GAUSSIAN SPLATTING"><img class="cover" src="/img/3DGS1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DIFFERENTIABLE 3D GAUSSIAN SPLATTING</div></div><div class="info-2"><div class="info-item-1"> 3D高斯的优势：非结构化、可微、利用快速α混合进行渲染、无需法线 世界坐标系下，高斯由三维协方差矩阵和点（均值）μ表示：  G ( x ) \,=e^{-\frac{1} {2} ( x )^{T} \Sigma^{-1} ( x )} \tag{4}给定视角变换矩阵W，相机坐标系下的协方差矩阵为：  \Sigma^{\prime}=J W \Sigma W^{T} J^{T} \tag{5}其中J是投影变换的仿射近似雅可比矩阵 协方差矩阵只有在半正定的时候才具有物理意义，而如果直接对协方差矩阵使用梯度下降优化，很难保证矩阵的合理性。 由于协方差矩阵是用来描述椭球的形状，因此可以用缩放矩阵S和旋转矩阵R来获得一个对应的协方差矩阵：  \Sigma=R S S^{T} R^{T}\tag{6}OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIANSOptimization优化的参数：位置p，α，协方差矩阵，球谐函数系数  \mathcal{L}=( 1-\lambda)...</div></div></div></a><a class="pagination-related" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img class="cover" src="/img/2DGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-06-15</div><div class="info-item-2">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</div></div><div class="info-2"><div class="info-item-1">作者：Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, Shenghua Gao 单位：ShanghaiTech University, University of Tübingen, Tübingen AI Center 会议：SIGGRAPH 2024 Conference Papers 链接：arXiv, Project, Code 研究动机 3D Gaussian Splatting 的吸引力在于它把新视角合成做到了高质量、快速训练和实时渲染，但它的几何表达并不天然适合表面重建。3DGS 的基本单元是三维体素状 Gaussian blob，它可以很好地拟合视图相关外观，却会在几何上产生一个矛盾：真实世界的许多物体表面是薄的二维流形，而 3D Gaussian 表示的是有体积的密度分布。颜色可以通过体渲染被拟合出来，但表面在哪里、法向是否一致、不同视角看到的交点是否稳定，并没有被表示方式直接约束。 这篇文章要解决的问题不是单纯提升 PSNR，而是把 Gaussian Splatting...</div></div></div></a><a class="pagination-related" href="/2024/12/08/Mip-Splatting/" title="Mip-Splatting: Alias-free 3D Gaussian Splatting"><img class="cover" src="/img/Mip-Splatting1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">Mip-Splatting: Alias-free 3D Gaussian Splatting</div></div><div class="info-2"><div class="info-item-1">3DGS在改变采样率或者改变焦距和相机距离时，会存在严重的膨胀效应和高频伪影 采样理论（奈奎斯特-香农采样理论）对连续信号的采样频率至少是最大频率的两倍，所以在采样之前要对信号施加滤波。 3DGS中的Dilation操作为了防止投影的2DGS小于一个像素，所以投影的2DGS进行了膨胀操作：  {\mathcal G}_{k}^{2 D} ( \mathbf x )=e^{-{\frac{1} {2}} ( \mathbf x-\mathbf p_{k} )^{T}} ( \mathbf\Sigma_{k}^{2 D}+s \, \mathbf I )^{-1} \, ( \mathbf x-\mathbf p_{k} ) \tag{5}Sensitivity to Sampling Rate  对于Zoom-out，原本的object在像素中的占比缩小了，所以为了要膨胀到一个像素的大小，施加的二维膨胀相较于原来更大 对于Zoom-out，原本的object在像素中的占比变大，所以膨胀到一个像素大小所需的二维膨胀就更小 it leads to erosion effects...</div></div></div></a><a class="pagination-related" href="/2026/05/14/Real2Sim/" title="Real2Sim: A Physics-driven and Editable Gaussian Splatting Framework for Autonomous Driving Scenes"><img class="cover" src="/img/Real2Sim-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">Real2Sim: A Physics-driven and Editable Gaussian Splatting Framework for Autonomous Driving Scenes</div></div><div class="info-2"><div class="info-item-1">作者：Kaicong Huang, Talha Azfar, Weisong Shi, Ruimin Ke 单位：Rensselaer Polytechnic Institute; University of Delaware 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.13591 研究动机 自动驾驶系统最缺的不是普通路况，而是可控、可复现、带标签、并且覆盖长尾风险的训练数据。真实道路采集昂贵，碰撞、失控、遮挡、异常交互等 corner cases 又很难大量采到；传统仿真平台虽然可编辑，但视觉域和真实世界存在明显 sim-to-real gap；纯生成模型可以生成高保真图像或视频，却常常缺少跨视角、跨时间的一致性，更难保证车辆碰撞、落地、反弹这类行为满足物理约束。 Real2Sim 想解决的正是这个夹缝问题：能否从真实自动驾驶序列出发，把场景重建成既高保真、又可编辑、还能接入物理模拟的 3D/4D...</div></div></div></a><a class="pagination-related" href="/2026/05/14/RoSplat/" title="RoSplat: Robust Feed-Forward Pixel-wise Gaussian Splatting for Varying Input Views and High-Resolution Rendering"><img class="cover" src="/img/RoSplat-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">RoSplat: Robust Feed-Forward Pixel-wise Gaussian Splatting for Varying Input Views and High-Resolution Rendering</div></div><div class="info-2"><div class="info-item-1">作者：Hoang Chuong Nguyen, Renjie Wu, Jose M. Alvarez, Miaomiao Liu 单位：Australian National University; NVIDIA 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.13093 研究动机 Generalizable 3D Gaussian Splatting 的目标是跳过 per-scene optimization，用少量输入视角直接前馈预测一组 pixel-wise Gaussians，然后完成 novel view synthesis。PixelSplat、MVSplat、DepthSplat、TranSplat 等方法已经证明了这条路线的效率和泛化潜力。 但这篇论文指出，现有 pixel-wise feed-forward GS 有两个很实际的问题。  输入视角数变化会导致过亮。很多模型训练时只用固定数量的输入视角，例如 RealEstate10K 上常用 2 views；测试时如果给 4/8/16 views，同一 3D...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Dual-source-Depth-Prior-Construction"><span class="toc-number">2.1.</span> <span class="toc-text">1. Dual-source Depth Prior Construction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%A8-geometric-depth-%E5%AF%B9%E9%BD%90-monocular-depth"><span class="toc-number">2.2.</span> <span class="toc-text">2. 用 geometric depth 对齐 monocular depth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Cross-source-Verification"><span class="toc-number">2.3.</span> <span class="toc-text">3. Cross-source Verification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Depth-guided-Densification"><span class="toc-number">2.4.</span> <span class="toc-text">4. Depth-guided Densification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Consistency-aware-Pruning"><span class="toc-number">2.5.</span> <span class="toc-text">5. Consistency-aware Pruning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Verified-depth-RGB-D-Joint-Optimization"><span class="toc-number">2.6.</span> <span class="toc-text">6. Verified-depth RGB-D Joint Optimization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B9%9D%E7%A7%8D-dataset-view-setting-%E7%9A%84%E4%B8%BB%E7%BB%93%E6%9E%9C"><span class="toc-number">5.1.</span> <span class="toc-text">1. 九种 dataset-view setting 的主结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8D%95%E4%B8%80-prior-%E4%B8%8E-dual-prior"><span class="toc-number">5.2.</span> <span class="toc-text">2. 单一 prior 与 dual prior</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Densification%E3%80%81Pruning%E3%80%81RGB-D-%E5%93%AA%E4%B8%AA%E6%9C%80%E9%87%8D%E8%A6%81%EF%BC%9F"><span class="toc-number">5.3.</span> <span class="toc-text">3. Densification、Pruning、RGB-D 哪个最重要？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Pruning-signal"><span class="toc-number">5.4.</span> <span class="toc-text">4. Pruning signal</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"><img src="/img/D2-4DGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"/></a><div class="content"><a class="title" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</a><time datetime="2026-08-31T13:00:11.000Z" title="发表于 2026-08-31 21:00:11">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"><img src="/img/StereoGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"/></a><div class="content"><a class="title" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</a><time datetime="2026-08-31T13:00:10.000Z" title="发表于 2026-08-31 21:00:10">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/MoRe/" title="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency"><img src="/img/MoRe-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency"/></a><div class="content"><a class="title" href="/2026/08/31/MoRe/" title="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency">MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency</a><time datetime="2026-08-31T13:00:09.000Z" title="发表于 2026-08-31 21:00:09">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/FoundationGeo/" title="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry"><img src="/img/FoundationGeo-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry"/></a><div class="content"><a class="title" href="/2026/08/31/FoundationGeo/" title="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</a><time datetime="2026-08-31T13:00:08.000Z" title="发表于 2026-08-31 21:00:08">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/24/MoGe3/" title="MoGe-3: Fine-Detail Monocular Geometry Estimation with Self-Guided Sparse Volumetric Refinement"><img src="/img/MoGe3-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MoGe-3: Fine-Detail Monocular Geometry Estimation with Self-Guided Sparse Volumetric Refinement"/></a><div class="content"><a class="title" href="/2026/07/24/MoGe3/" title="MoGe-3: Fine-Detail Monocular Geometry Estimation with Self-Guided Sparse Volumetric Refinement">MoGe-3: Fine-Detail Monocular Geometry Estimation with Self-Guided Sparse Volumetric Refinement</a><time datetime="2026-07-24T11:13:13.000Z" title="发表于 2026-07-24 19:13:13">2026-07-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/D2-4DGS-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
