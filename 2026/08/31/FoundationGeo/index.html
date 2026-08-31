@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjj-low-key.github.io/img/FoundationGeo-0.png">
 <meta property="article:published_time" content="2026-08-31T13:00:08.000Z">
-<meta property="article:modified_time" content="2026-08-31T13:15:43.891Z">
+<meta property="article:modified_time" content="2026-08-31T15:01:09.747Z">
 <meta property="article:author" content="Zhu Jiajun">
 <meta property="article:tag" content="单目深度估计">
 <meta property="article:tag" content="三维几何预测">
@@ -20,7 +20,7 @@
   "url": "https://zjj-low-key.github.io/2026/08/31/FoundationGeo/",
   "image": "https://zjj-low-key.github.io/img/FoundationGeo-0.png",
   "datePublished": "2026-08-31T13:00:08.000Z",
-  "dateModified": "2026-08-31T13:15:43.891Z",
+  "dateModified": "2026-08-31T15:01:09.747Z",
   "author": [
     {
       "@type": "Person",
@@ -161,7 +161,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/FoundationGeo-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-31T13:00:08.000Z" title="发表于 2026-08-31 21:00:08">2026-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-31T13:15:43.891Z" title="更新于 2026-08-31 21:15:43">2026-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong> Muxin Liu, Xiaoyang Lyu, Tianhe Ren, Peng Dai, Xiaoshan Wu, Zhiyue Zhang, Jiaqi Zhang, Jiehong Lin, Shaoshuai Shi, Xiaojuan Qi</p>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/FoundationGeo-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-31T13:00:08.000Z" title="发表于 2026-08-31 21:00:08">2026-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-31T15:01:09.747Z" title="更新于 2026-08-31 23:01:09">2026-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong> Muxin Liu, Xiaoyang Lyu, Tianhe Ren, Peng Dai, Xiaoshan Wu, Zhiyue Zhang, Jiaqi Zhang, Jiehong Lin, Shaoshuai Shi, Xiaojuan Qi</p>
 <p><strong>单位：</strong> The University of Hong Kong, Voyager Research, DiDi Chuxing</p>
 <p><strong>会议：</strong> ECCV 2026</p>
 <p><strong>链接：</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2607.11588">arXiv</a> ｜ <a target="_blank" rel="noopener" href="https://mx-liu6.github.io/FoundationGeo-web/">Project</a> ｜ <a target="_blank" rel="noopener" href="https://github.com/mx-liu6/FoundationGeo">Code</a></p>
@@ -176,6 +176,7 @@
 <blockquote>
 <p>能否保留强 relative geometry backbone，只学习轻量、可解释的 pixel-wise calibration field，把单目几何提升到更稳定的 metric 3D？</p>
 </blockquote>
+<p><img src="/img/FoundationGeo-1.png" alt="FoundationGeo-1" title="FoundationGeo-1"></p>
 <p>论文还指出另一类瓶颈来自数据分布。Metric geometry 与 camera intrinsics 强耦合，如果测试相机的 focal length 落在训练分布之外，模型会形成错误的隐式 focal prior，从而产生系统性 metric scale drift。因此作者不仅改模型，也专门研究 <strong>camera-model coverage</strong>。</p>
 <h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="1-两阶段框架"><a href="#1-两阶段框架" class="headerlink" title="1. 两阶段框架"></a>1. 两阶段框架</h3><p>FoundationGeo 分成两个阶段。</p>
 <p><strong>Stage I：Relative Base Model。</strong> 使用 DINOv3 初始化的 ViT-Large encoder 和轻量上采样 CNN decoder，预测 affine-invariant point map $\hat{\mathbf P}$ 与 reliability mask。训练采用 10.2M 多域样本，并通过 global alignment、multi-scale local patch、surface normal、edge/detail 等损失强化全局结构与局部细节。</p>
@@ -186,6 +187,7 @@
 <li>ray-direction correction field：修正无法被 scale 吸收的方向偏差。</li>
 </ul>
 <p>同时继续保留 relative geometry loss，避免 metric fine-tuning 破坏原有结构先验。</p>
+<p><img src="/img/FoundationGeo-2.png" alt="FoundationGeo-2" title="FoundationGeo-2"></p>
 <h3 id="2-Ray-direction-correction-field"><a href="#2-Ray-direction-correction-field" class="headerlink" title="2. Ray-direction correction field"></a>2. Ray-direction correction field</h3><p>将每个预测点拆成 range 和 unit ray：</p>
 <script type="math/tex; mode=display">
 \hat d_i=\|\hat{\mathbf p}_i\|_2,\qquad
@@ -199,6 +201,7 @@
 {\|\hat{\mathbf r}_i+\delta_{1,i}\mathbf b_{1,i}+\delta_{2,i}\mathbf b_{2,i}\|_2},</script><p>随后恢复原始 range：</p>
 <script type="math/tex; mode=display">
 \hat{\mathbf p}'_i=\hat d_i\hat{\mathbf r}'_i.</script><p>这个设计很重要：<strong>ray field 只改变方向，不改变 range</strong>，因此不会顺便把 metric scale 吸收进去，职责与 scale field 更容易解耦。</p>
+<p><img src="/img/FoundationGeo-12.png" alt="FoundationGeo-12" title="FoundationGeo-12"></p>
 <h3 id="3-Pixel-wise-scale-field"><a href="#3-Pixel-wise-scale-field" class="headerlink" title="3. Pixel-wise scale field"></a>3. Pixel-wise scale field</h3><p>在方向校正之后，每个像素预测独立尺度 $\hat s_i$：</p>
 <script type="math/tex; mode=display">
 \tilde{\mathbf p}_i=\hat s_i\hat{\mathbf p}'_i.</script><p>metric point regression 使用近处权重更大的 $L_1$：</p>
@@ -217,8 +220,14 @@ s_i^*=\frac{\left(\hat{\mathbf p}'_i\right)^{\top}\mathbf p_i}
 <h3 id="4-Focal-Length-Coverage"><a href="#4-Focal-Length-Coverage" class="headerlink" title="4. Focal-Length Coverage"></a>4. Focal-Length Coverage</h3><p>作者统计训练集与测试集 focal distribution，发现 NYUv2、KITTI、iBims-1 与训练分布重叠较多，而 DDAD、ETH3D、HAMMER、DIODE 中存在明显欠覆盖的焦段，对应的 metric performance 也更差。</p>
 <p>因此他们构建 Blender-based FoundationGeo Dataset，在 7 个室内/室外场景中人工设计 camera trajectories，额外渲染约 23.7K images，专门覆盖训练集中不足的 focal regimes。</p>
 <p>这里值得借鉴的是：<strong>synthetic data 不是无差别扩数据，而是针对已诊断出的 camera-distribution failure mode 做定向补充。</strong></p>
+<p><img src="/img/FoundationGeo-3.png" alt="FoundationGeo-3" title="FoundationGeo-3"></p>
 <h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>训练：19 个数据集，总计约 <strong>10.2M frames</strong>，覆盖 indoor、outdoor、driving、synthetic、in-the-wild，GT 来源包括 synthetic rendering、LiDAR、RGB-D sensors 与 SfM reconstruction。</p>
-<p>作者还进行数据过滤，移除严重运动模糊、过曝/欠曝、缺乏有效 near-far ordering 的 top-down views，以及深度标签异常样本。</p>
+<p>训练数据的构成见 Table 1：它同时记录了数据域、帧数、是否合成以及是否有 metric supervision，说明作者是在控制 supervision 来源的前提下扩大分布覆盖，而不是简单混合所有数据。</p>
+<p><img src="/img/FoundationGeo-4.png" alt="FoundationGeo-4" title="FoundationGeo-4"></p>
+<p>作者还进行数据过滤，移除存在严重 domain mismatch、几何线索弱或标注不可靠的样本。</p>
+<p>补充材料中的数据集总览和过滤案例进一步说明了这个数据设计：七个 Blender 场景主要用于补焦距与视角覆盖，过滤阶段则主动移除视角分布或 RGB-depth 对应关系明显不可靠的样本。</p>
+<p><img src="/img/FoundationGeo-13.png" alt="FoundationGeo-13" title="FoundationGeo-13"></p>
+<p><img src="/img/FoundationGeo-14.png" alt="FoundationGeo-14" title="FoundationGeo-14"></p>
 <p>评测遵循统一的 MoGe protocol：</p>
 <ul>
 <li>Relative depth：NYUv2、KITTI、ETH3D、iBims-1、Sintel、DDAD、DIODE、HAMMER；</li>
@@ -238,7 +247,13 @@ s_i^*=\frac{\left(\hat{\mathbf p}'_i\right)^{\top}\mathbf p_i}
 <li>Average $\delta_1$：<strong>80.8</strong>；</li>
 <li>Average Rank：<strong>2.32</strong>。</li>
 </ul>
+<p>主结果 Table 2 的重要细节是：metric depth 的平均值来自 7 个 benchmark，而 relative depth 的平均值来自 8 个 benchmark；Sintel 没有可靠 metric scale，所以不参与前者。</p>
+<p><img src="/img/FoundationGeo-5.png" alt="FoundationGeo-5" title="FoundationGeo-5"></p>
 <p>相比论文重点比较的 MoGe-2（15.7 AbsRel / 76.8 $\delta_1$），FoundationGeo 的主要优势不是所有数据集都绝对第一，而是 <strong>跨域与跨 camera model 的稳定性更好</strong>。</p>
+<p>Boundary sharpness 也被单独评估。Table 3 显示，Base Model 从 3600 tokens 增加到 6000 tokens 后，三个数据集的边界 F1 与平均排名进一步改善；这部分不是 metric scale 对齐，而是相对几何细节质量的证据。</p>
+<p><img src="/img/FoundationGeo-6.png" alt="FoundationGeo-6" title="FoundationGeo-6"></p>
+<p>Fig. 5 则把这种几何质量放到米级 outdoor driving 与厘米级 indoor 场景中观察：模型不仅要给出数值，还要在不同深度量级下保持 point-map 结构和边界细节。</p>
+<p><img src="/img/FoundationGeo-7.png" alt="FoundationGeo-7" title="FoundationGeo-7"></p>
 <p>几个消融结果更能说明论文观点：</p>
 <ol>
 <li>two-stage training 优于直接从头训练 metric geometry：完整数据下从 15.2 / 78.2 改善到 14.8 / 80.8；</li>
@@ -246,6 +261,12 @@ s_i^*=\frac{\left(\hat{\mathbf p}'_i\right)^{\top}\mathbf p_i}
 <li>加入 field-specific supervision 后继续提升，说明 ray 与 scale 的职责解耦有效；</li>
 <li>diverse-focal rendered data 优于 fixed-focal augmentation，尤其能改善 intrinsic distribution mismatch 较明显的数据集。</li>
 </ol>
+<p>四张消融表分别对应组件、full-data/focal 数据、ray-direction correction 和补充材料中的 Stage-II supervision 配置。Table 4 的完整组合将平均 AbsRel 从 22.4 降到 18.8，平均 $\delta_1$ 从 57.7 提高到 69.7；Table 5 中加入 FoundationGeo rendered data 后，完整配置达到 14.8 / 80.8。</p>
+<p><img src="/img/FoundationGeo-8.png" alt="FoundationGeo-8" title="FoundationGeo-8"></p>
+<p><img src="/img/FoundationGeo-9.png" alt="FoundationGeo-9" title="FoundationGeo-9"></p>
+<p><img src="/img/FoundationGeo-10.png" alt="FoundationGeo-10" title="FoundationGeo-10"></p>
+<p>补充 Table 7 还明确区分 synthetic、SfM 与 LiDAR supervision：不同来源并不是都启用同一组 global、patch、normal、metric 和 mask loss，这与作者强调的“按 supervision 可靠性设计训练目标”一致。</p>
+<p><img src="/img/FoundationGeo-11.png" alt="FoundationGeo-11" title="FoundationGeo-11"></p>
 <p>这些实验共同支持一个结论：<strong>relative-to-metric gap 不能只靠更大的 backbone 或一个全局 scale 解决，模型参数化与相机数据分布都很关键。</strong></p>
 <h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
 <li>把 metric error 从“global scale ambiguity”进一步拆成 spatial scale drift 和 ray-direction bias，几何解释更细。</li>

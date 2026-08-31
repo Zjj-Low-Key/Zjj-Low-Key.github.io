@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zjj-low-key.github.io/img/StereoGS-0.png">
 <meta property="article:published_time" content="2026-08-31T13:00:10.000Z">
-<meta property="article:modified_time" content="2026-08-31T13:13:51.420Z">
+<meta property="article:modified_time" content="2026-08-31T15:07:18.155Z">
 <meta property="article:author" content="Zhu Jiajun">
 <meta property="article:tag" content="3D高斯">
 <meta property="article:tag" content="新视角合成">
@@ -20,7 +20,7 @@
   "url": "https://zjj-low-key.github.io/2026/08/31/StereoGS/",
   "image": "https://zjj-low-key.github.io/img/StereoGS-0.png",
   "datePublished": "2026-08-31T13:00:10.000Z",
-  "dateModified": "2026-08-31T13:13:51.420Z",
+  "dateModified": "2026-08-31T15:07:18.155Z",
   "author": [
     {
       "@type": "Person",
@@ -161,7 +161,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/StereoGS-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-31T13:00:10.000Z" title="发表于 2026-08-31 21:00:10">2026-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-31T13:13:51.420Z" title="更新于 2026-08-31 21:13:51">2026-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%B0%E8%A7%86%E8%A7%92%E5%90%88%E6%88%90/">新视角合成</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong> Wenhao Yuan, Yiyuan Ge, Deli Cai</p>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">117</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/StereoGS-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-31T13:00:10.000Z" title="发表于 2026-08-31 21:00:10">2026-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-31T15:07:18.155Z" title="更新于 2026-08-31 23:07:18">2026-08-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%B0%E8%A7%86%E8%A7%92%E5%90%88%E6%88%90/">新视角合成</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong> Wenhao Yuan, Yiyuan Ge, Deli Cai</p>
 <p><strong>单位：</strong> South China University of Technology</p>
 <p><strong>会议：</strong> ECCV 2026</p>
 <p><strong>链接：</strong> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.30545">arXiv</a> ｜ <a target="_blank" rel="noopener" href="https://stringerywh00.github.io/StereoGS_project_page/">Project</a> ｜ <a target="_blank" rel="noopener" href="https://github.com/StringerYwh00/StereoGS">Code</a></p>
@@ -192,6 +192,12 @@
 <li>depth 必须先通过 multi-view geometric consistency filtering，再进入 3DGS。</li>
 </ul>
 <p>补充实验显示，MVSAnywhere initialization 优于 SfM、PDCNet+ 和 MVSFormer variants，说明在 sparse-view 3DGS 中，<strong>initial point distribution 本身就是非常强的性能因素</strong>。</p>
+<p>补充 Table 6 将不同初始化方案的结果放在一起比较，结论不是单纯“点越多越好”，而是经过 multi-view consistency filtering 后，点云的空间分布更适合后续 Gaussian optimization。</p>
+<p><img src="/img/StereoGS-12.png" alt="StereoGS-12" title="StereoGS-12"></p>
+<p>Fig. 8 的 RGB、depth 和 point-cloud 可视化进一步说明：MVSAnywhere 在弱纹理和遮挡附近保留了更多可用结构，而未经筛选的初始化更容易把错误深度带进 3DGS。</p>
+<p><img src="/img/StereoGS-13.png" alt="StereoGS-13" title="StereoGS-13"></p>
+<p>补充 Fig. 14 还展示了不同初始化点云的定性差异；它强化了一个实践判断：初始化阶段的几何覆盖会决定后续优化能否“有东西可修”。</p>
+<p><img src="/img/StereoGS-24.png" alt="StereoGS-24" title="StereoGS-24"></p>
 <h3 id="2-Stereo-Camera-Pair-Construction"><a href="#2-Stereo-Camera-Pair-Construction" class="headerlink" title="2. Stereo Camera Pair Construction"></a>2. Stereo Camera Pair Construction</h3><p>对一个真实 training view，StereoGS 把它作为 left camera，并沿水平方向平移得到一个 virtual right camera。</p>
 <ul>
 <li>Left image：真实 GT image $I_l$；</li>
@@ -210,6 +216,8 @@ M_{valid}=1-(M_{bg}\lor M_{occ}\lor M_{anomaly}).</script><p>其中：</p>
 </ul>
 <p>补充材料的消融很关键：去掉 validity mask 后，LLFF 3-view 从 21.91 PSNR 降到 21.30，DTU 从 21.46 降到 20.82，同时复杂边界区域会出现明显 floaters。</p>
 <p>因此这篇论文真正可复用的不是“用了 FoundationStereo”，而是：<strong>foundation prior 必须带 reliability gating，不能直接把所有输出当 GT。</strong></p>
+<p><img src="/img/StereoGS-17.png" alt="StereoGS-17" title="StereoGS-17"></p>
+<p>Fig. 10 给出了 validity mask 的具体作用：遮挡、背景和异常 disparity 被排除后，stereo depth 才进入几何监督；否则边界附近的错误匹配会直接变成错误的 Gaussian 更新方向。</p>
 <h3 id="4-Stereo-Depth-Regularization"><a href="#4-Stereo-Depth-Regularization" class="headerlink" title="4. Stereo Depth Regularization"></a>4. Stereo Depth Regularization</h3><p>由标准 stereo triangulation：</p>
 <script type="math/tex; mode=display">
 Z_{stereo}=\frac{fd}{\hat D_l},</script><p>其中 $f$ 是 focal length，$d$ 是虚拟双目 baseline。</p>
@@ -235,6 +243,15 @@ g_i=|\nabla_{\alpha_i}\mathcal L|,</script><p>但绝对 gradient 很小，通常
 <li>gradient 大：优化仍需要它，保留更多 opacity。</li>
 </ul>
 <p>默认 $\gamma_{base}=0.99,s=0.5$。论文对 constant、step、linear、raw-gradient exponential 等策略做了消融，relative-gradient exponential 最好。</p>
+<p>补充 Table 9 与 Fig. 11 量化并可视化了 opacity decay 策略：relative-gradient exponential 在保持重要 surface Gaussians 的同时，能更有效压低冗余 primitives。</p>
+<p><img src="/img/StereoGS-18.png" alt="StereoGS-18" title="StereoGS-18"></p>
+<p><img src="/img/StereoGS-19.png" alt="StereoGS-19" title="StereoGS-19"></p>
+<p>Fig. 12、Fig. 13 和 Table 10 分别比较了不同 opacity function 与 gradient 归一化策略；这说明方法的收益来自“按相对重要性衰减”，而不是任意加入一个 opacity reset。</p>
+<p><img src="/img/StereoGS-20.png" alt="StereoGS-20" title="StereoGS-20"></p>
+<p><img src="/img/StereoGS-21.png" alt="StereoGS-21" title="StereoGS-21"></p>
+<p><img src="/img/StereoGS-22.png" alt="StereoGS-22" title="StereoGS-22"></p>
+<p>Table 11 对 virtual-camera 设定做了补充分析，默认 virtual baseline $d=4.0$ 是效果与稳定性之间的折中；baseline 过小会削弱视差，过大则更容易放大遮挡与匹配错误。</p>
+<p><img src="/img/StereoGS-23.png" alt="StereoGS-23" title="StereoGS-23"></p>
 <h3 id="6-总体优化"><a href="#6-总体优化" class="headerlink" title="6. 总体优化"></a>6. 总体优化</h3><p>最终仍保持 3DGS 的 photometric objective，并加入 stereo depth：</p>
 <script type="math/tex; mode=display">
 \mathcal L=\mathcal L_{color}+\mathcal L_{depth},</script><script type="math/tex; mode=display">
@@ -260,6 +277,8 @@ g_i=|\nabla_{\alpha_i}\mathcal L|,</script><p>但绝对 gradient 很小，通常
 <li>StereoGS：LLFF 约 <strong>43.2 min</strong>；DTU 约 <strong>34.6 min</strong>。</li>
 </ul>
 <p>Peak VRAM 分别约 3.6 GB 和 2.5 GB，但额外 FoundationStereo inference 让训练时间显著增加。</p>
+<p>补充 Table 12 同时报告了训练开销与 Gaussian 数量变化，说明减少冗余 primitives 能部分抵消 stereo inference 带来的表示与优化负担，但无法消除额外的训练时间。</p>
+<p><img src="/img/StereoGS-25.png" alt="StereoGS-25" title="StereoGS-25"></p>
 <p>因此“无额外 inference overhead”是成立的，但不能理解为“训练没有额外成本”。</p>
 <h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="1-主结果"><a href="#1-主结果" class="headerlink" title="1. 主结果"></a>1. 主结果</h3><p>LLFF：</p>
 <ul>
@@ -267,13 +286,26 @@ g_i=|\nabla_{\alpha_i}\mathcal L|,</script><p>但绝对 gradient 很小，通常
 <li>6 views：24.92 / 0.853 / 0.104；</li>
 <li>9 views：26.25 / 0.879 / 0.087。</li>
 </ul>
+<p>Table 1 展示了 LLFF 的完整 3/6/9-view 对比：StereoGS 的优势在 3-view 最明显，且随着输入视角增加仍保持稳定领先。</p>
+<p><img src="/img/StereoGS-1.png" alt="StereoGS-1" title="StereoGS-1"></p>
+<p>Fig. 2 把这一结果拆到 fern 与 trex 的 RGB/depth 可视化中：只用 3 个输入视角时，普通 3DGS 的纹理和深度都更容易出现空洞与漂浮点，而 StereoGS 的几何更完整。</p>
+<p><img src="/img/StereoGS-2.png" alt="StereoGS-2" title="StereoGS-2"></p>
 <p>DTU：</p>
 <ul>
 <li>3 views：<strong>21.46 / 0.879 / 0.099</strong>；</li>
 <li>6 views：24.86 / 0.926 / 0.064；</li>
 <li>9 views：26.83 / 0.955 / 0.049。</li>
 </ul>
+<p>Table 2 与 Fig. 3 表明，DTU 的结论与 LLFF 一致：StereoGS 在 3-view 的困难设置下仍能同时改善 PSNR、SSIM 和 LPIPS，并减少无纹理区域的结构破碎。</p>
+<p><img src="/img/StereoGS-3.png" alt="StereoGS-3" title="StereoGS-3"></p>
+<p><img src="/img/StereoGS-4.png" alt="StereoGS-4" title="StereoGS-4"></p>
 <p>Mip-NeRF360 的 12/24-view PSNR 为 20.25 / 24.18；Blender 8-view 标准 variant 为 24.83 PSNR，带论文所用 dropout variant 可到 25.04。</p>
+<p>Table 3 和 Fig. 4 进一步覆盖 Mip-NeRF360 的 12/24-view 设置；在 bicycle、stump 等大范围场景中，stereo regularization 对纹理稀疏区域和细小结构都更有帮助。</p>
+<p><img src="/img/StereoGS-5.png" alt="StereoGS-5" title="StereoGS-5"></p>
+<p><img src="/img/StereoGS-6.png" alt="StereoGS-6" title="StereoGS-6"></p>
+<p>Table 4 与 Fig. 5 则给出 Blender 的 8-view 数值和 drums/materials 可视化，说明该方法并不只对真实户外数据有效。</p>
+<p><img src="/img/StereoGS-7.png" alt="StereoGS-7" title="StereoGS-7"></p>
+<p><img src="/img/StereoGS-8.png" alt="StereoGS-8" title="StereoGS-8"></p>
 <p>整体结果说明 stereo prior 对 view 极稀疏时尤其有效。</p>
 <h3 id="2-三个模块分别贡献什么？"><a href="#2-三个模块分别贡献什么？" class="headerlink" title="2. 三个模块分别贡献什么？"></a>2. 三个模块分别贡献什么？</h3><p>LLFF 3-view 的 component ablation：</p>
 <ul>
@@ -302,7 +334,14 @@ g_i=|\nabla_{\alpha_i}\mathcal L|,</script><p>但绝对 gradient 很小，通常
 <li>Full：<strong>21.46</strong>。</li>
 </ul>
 <p>一个值得注意的结论是：<strong>最强的单项收益并不一定来自 stereo depth loss，而是来自更可靠的 dense initialization 和更合适的 Gaussian pruning。</strong> Stereo regularization 是在好的 optimization state 上进一步修 geometry。</p>
+<p>补充 Table 5 和 Fig. 6 将 LLFF、DTU 的模块组合与几何/渲染结果并列展示：dense initialization 先补足表示，opacity decay 再减少冗余，stereo regularization 最后继续校正跨视角 geometry。</p>
+<p><img src="/img/StereoGS-9.png" alt="StereoGS-9" title="StereoGS-9"></p>
+<p><img src="/img/StereoGS-10.png" alt="StereoGS-10" title="StereoGS-10"></p>
 <h3 id="3-Stereo-model-是否必须是-FoundationStereo？"><a href="#3-Stereo-model-是否必须是-FoundationStereo？" class="headerlink" title="3. Stereo model 是否必须是 FoundationStereo？"></a>3. Stereo model 是否必须是 FoundationStereo？</h3><p>作者替换 LiteAnyStereo、S2M2 后仍然比不使用 stereo depth regularization 更好，说明机制不是完全绑定某一个模型；FoundationStereo 的效果最好。</p>
+<p>补充 Table 7、Table 8 和 Fig. 9 比较了不同 stereo foundation models 及其 valid-pixel 情况：模型替换不会破坏 virtual-stereo 机制，但 stereo 预测的可用覆盖率和匹配质量会直接影响最终上限。</p>
+<p><img src="/img/StereoGS-14.png" alt="StereoGS-14" title="StereoGS-14"></p>
+<p><img src="/img/StereoGS-15.png" alt="StereoGS-15" title="StereoGS-15"></p>
+<p><img src="/img/StereoGS-16.png" alt="StereoGS-16" title="StereoGS-16"></p>
 <p>这支持“virtual stereo supervision”本身具有通用性，但也说明最终性能上限仍依赖外部 stereo model 的 zero-shot robustness。</p>
 <h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
 <li>相比对 monocular depth 做逐帧 scale alignment，stereo prior 从几何上直接提供 absolute-scale binocular constraint。</li>
@@ -313,6 +352,10 @@ g_i=|\nabla_{\alpha_i}\mathcal L|,</script><p>但绝对 gradient 很小，通常
 <h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
 <li>Stereo Depth Regularization 依赖当前 3DGS 渲染出的 virtual right image，因此是一个 <strong>prior 与当前 reconstruction 相互耦合</strong> 的闭环。训练早期右图较差时，stereo prior 也可能受影响。</li>
 <li>Stereo model 在 large textureless region、reflective surface、occlusion 等场景仍会失败，论文也将这些作为 failure cases。</li>
+</ol>
+<p><img src="/img/StereoGS-11.png" alt="StereoGS-11" title="StereoGS-11"></p>
+<p>Fig. 7 的失败案例提醒我们：即使有 validity mask，foundation stereo 也不是几何真值生成器，反光、低纹理和遮挡区域仍需要更谨慎的置信度建模。</p>
+<ol>
 <li>训练时间从几分钟增加到几十分钟，虽然 inference 不变，但 optimization cost 并不轻。</li>
 <li>方法依赖已知 camera calibration，并通过人为 virtual baseline 构造 stereo pair；当 pose/intrinsic 本身有误差时，几何监督质量会直接下降。</li>
 </ol>
