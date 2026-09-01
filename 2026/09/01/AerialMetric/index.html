@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Zhongqiang Song, Guanying Chen, Yuqi Zhang, Yin Zou, Chuanyu Fu, Zhiyuan Yuan, Chuan Huang, Shuguang Cui, Xiaochun Cao 单位：Sun Yat-sen University, Shenzhen Campus；FNii-Shenzhen；SSE, CUHKSZ；SIAS, UES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/09/01/AerialMetric/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Zhongqiang Song, Guanying Chen, Yuqi Zhang, Yin Zou, Chuanyu Fu, Zhiyuan Yuan, Chuan Huang, Shuguang Cui, Xiaochun Cao 单位：Sun Yat-sen University, Shenzhen Campus；FNii-Shenzhen；SSE, CUHKSZ；SIAS, UES">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/AerialMetric-0.png">
+<meta property="article:published_time" content="2026-09-01T08:50:29.000Z">
+<meta property="article:modified_time" content="2026-09-01T09:07:56.832Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="单目深度估计">
+<meta property="article:tag" content="绝对深度估计">
+<meta property="article:tag" content="数据集">
+<meta property="article:tag" content="Benchmark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/AerialMetric-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World",
+  "url": "https://zjj-low-key.github.io/2026/09/01/AerialMetric/",
+  "image": "https://zjj-low-key.github.io/img/AerialMetric-0.png",
+  "datePublished": "2026-09-01T08:50:29.000Z",
+  "dateModified": "2026-09-01T09:07:56.832Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/09/01/AerialMetric/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">118</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/AerialMetric-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-01T08:50:29.000Z" title="发表于 2026-09-01 16:50:29">2026-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-01T09:07:56.832Z" title="更新于 2026-09-01 17:07:56">2026-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">深度估计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Zhongqiang Song, Guanying Chen, Yuqi Zhang, Yin Zou, Chuanyu Fu, Zhiyuan Yuan, Chuan Huang, Shuguang Cui, Xiaochun Cao</p>
+<p><strong>单位：</strong>Sun Yat-sen University, Shenzhen Campus；FNii-Shenzhen；SSE, CUHKSZ；SIAS, UESTC</p>
+<p><strong>会议：</strong>ECCV 2026（arXiv:2606.29716v2，2026）</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2606.29716">论文原文</a>；<a target="_blank" rel="noopener" href="https://kuieless.github.io/AerialMetric-ECCV2026-page/">项目主页</a>；<a target="_blank" rel="noopener" href="https://github.com/kuieless/AerialMetric">代码仓库</a></p>
+<p>这是一篇 <strong>benchmark/dataset + adaptation study</strong>：论文的主要贡献不是重新设计一个单目深度网络，而是回答一个更基础、也更容易被忽略的问题——现有在地面视角上表现很好的 metric depth 模型，为什么一旦被放到无人机的俯视、斜视和高空场景中就失效，以及我们应该怎样测量、适配和保留它们的能力。</p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p>单目 metric depth estimation 的目标，是从一张 RGB 图像直接预测每个像素的绝对深度，例如“这个建筑顶部距离相机 120 m”，而不仅仅是判断哪个物体更近。对 UAV 来说，绝对尺度直接关系到避障、测绘、巡检、三维重建和路径规划，因此只得到 up-to-scale 的相对深度并不够。</p>
+<p>问题在于，当前主流模型的训练分布仍以室内、街景和车载视角为主。无人机图像则同时改变了多个条件：相机可能接近 nadir 俯拍，也可能以较大的俯仰角斜拍；飞行高度会把深度范围推到几十乃至数百米；镜头 FOV、地面纹理密度和可见的几何锚点也与地面视角不同。模型学到的“地面相机先验”因此会把 FOV、透视关系和尺度误判成自己熟悉的样子。</p>
+<p>现有 UAV 数据又难以同时满足三个要求：真实世界、可靠的 metric ground truth、以及对飞行变量的可控解耦。有些数据集只有 RGB，没有深度；有些只有稀疏 LiDAR；有些是合成数据，难以覆盖真实外观；即使有深度，也往往没有把 pitch、altitude 和 FOV 单独控制。因此，模型到底是因为视角、飞行高度还是镜头参数而失败，很难从一个混杂的总分中看出来。</p>
+<p>论文用 Figure 1 把问题压缩成一个很直观的对照：左侧的雷达图显示，许多 ground-domain 模型迁移到航空数据后 $\delta_1$ 急剧下降；右侧的深度图则展示了尺度错误和局部结构错误。对 MoGe2 做航空域适配后，模型在航拍和地面数据上的输出都明显更稳定。这里的关键不是“再堆一个模块”，而是先把 domain gap 变成可测量、可拆分、可复现的实验对象。</p>
+<p><img src="/img/AerialMetric-0.png" alt="AerialMetric-0" title="AerialMetric-0"></p>
+<p>论文的核心问题可以写成：<strong>能否建立一个既有真实 metric supervision、又能控制视角因素、还包含开放世界测试的 UAV benchmark，并用它找到一种不会完全遗忘地面能力的适配方式？</strong> AerialMetric 的答案由四个互补子集和一套 MoGe2-Aerial 适配实验组成。</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="1-用四种数据形态覆盖“真实、可控、可扩展、开放世界”"><a href="#1-用四种数据形态覆盖“真实、可控、可扩展、开放世界”" class="headerlink" title="1. 用四种数据形态覆盖“真实、可控、可扩展、开放世界”"></a>1. 用四种数据形态覆盖“真实、可控、可扩展、开放世界”</h3><p>Figure 2 是整篇论文最重要的路线图。作者没有把所有数据都强行做成同一种来源，而是根据不同目标采用不同的 ground-truth 生成方式：真实航拍数据负责域真实性，受控采集负责因果式变量分析，合成数据负责扩大长尾覆盖，互联网视频负责开放世界泛化测试。</p>
+<p><img src="/img/AerialMetric-1.png" alt="AerialMetric-1" title="AerialMetric-1"></p>
+<p>这种拆分很重要，因为“训练数据”和“诊断数据”不应该承担同一个角色：AerialMetric-Decoupled 专门做测试，AerialMetric-Wild 也不进入训练；真正用于适配的主要是 AerialMetric-Oblique 的训练划分和 AerialMetric-Synthetic，再混入少量地面域数据。</p>
+<h3 id="2-AerialMetric-Oblique：把异构航拍资料变成-metric-depth"><a href="#2-AerialMetric-Oblique：把异构航拍资料变成-metric-depth" class="headerlink" title="2. AerialMetric-Oblique：把异构航拍资料变成 metric depth"></a>2. AerialMetric-Oblique：把异构航拍资料变成 metric depth</h3><p>AerialMetric-Oblique 聚合了 UrbanBIS、GauU-SceneV2、UAVScenes、UrbanScene3D、OpenDroneMap 和 ESRI 等六类公开摄影测量来源，从 25 个子数据集构造出超过 47K 个 image-depth pairs，覆盖 City、Rural 和 Natural 场景。</p>
+<p>不同来源的传感器不一致，作者因此分两条路径生成深度：</p>
+<ol>
+<li>对 UAVScenes 和 GauU-SceneV2，处理 LiDAR 点云并投影到每一帧图像。为减轻稀疏前景造成的 ray penetration artifact，作者先重建连续 mesh，再把与 mesh 表面相差超过 1.0 m 的投影点视为遮挡噪声并删除。</li>
+<li>对 UrbanBIS、UrbanScene3D、ODM 和 ESRI，从 RGB 图像重建高分辨率 3D mesh，再利用相机位姿进行 mesh rasterization，得到与 RGB 像素对齐的 metric depth。这里保留原生分辨率，是为了避免下采样抹掉建筑边缘等高频几何。</li>
+</ol>
+<p>训练测试划分按地理区域隔离：作者从测试区域周围裁掉 50 m buffer 内的帧，并最终从超过 45 个地理区域中整理出约 1.4K 张测试图像。这样做的目的，是避免同一城市或同一重建区域的近邻视图同时出现在训练和测试中，导致零样本结果被空间泄漏夸大。</p>
+<h3 id="3-AerialMetric-Decoupled：把视角因素变成正交实验"><a href="#3-AerialMetric-Decoupled：把视角因素变成正交实验" class="headerlink" title="3. AerialMetric-Decoupled：把视角因素变成正交实验"></a>3. AerialMetric-Decoupled：把视角因素变成正交实验</h3><p>AerialMetric-Decoupled 是一个只用于测试的受控数据集，约 4.6K 个 image-depth pairs 来自 4 个场景：Building、Lawn、Farm 和 Factory。作者用 DJI Matrice 300 RTK 平台采集，并通过正交组合分别改变：</p>
+<ul>
+<li>pitch：$-90^\circ$、$-75^\circ$、$-60^\circ$、$-45^\circ$；</li>
+<li>relative altitude：80 m、120 m；</li>
+<li>FOV：L1 的 $83^\circ$ 与 P1 的 $63^\circ$；</li>
+<li>scene type：建筑、草地、农田和工业厂房。</li>
+</ul>
+<p>每个场景有 16 条飞行轨迹，飞行速度为 10 m/s，触发间隔为空间等距 10 m/frame。RTK 提供厘米级位置对齐；重建时用外围高重叠斜视轨迹改善 mesh 边界质量，只在中心区域投影深度，并把动态实体排除在评测之外。</p>
+<p>Table 2 把这个设计具体化：它不只是“收集了一批无人机图像”，而是把相机和飞行变量写成可以复现实验的网格。对于分析 domain gap 来说，这比单纯增加样本数量更有价值。</p>
+<p><img src="/img/AerialMetric-4.png" alt="AerialMetric-4" title="AerialMetric-4"></p>
+<h3 id="4-AerialMetric-Synthetic：用仿真补足真实采集的长尾"><a href="#4-AerialMetric-Synthetic：用仿真补足真实采集的长尾" class="headerlink" title="4. AerialMetric-Synthetic：用仿真补足真实采集的长尾"></a>4. AerialMetric-Synthetic：用仿真补足真实采集的长尾</h3><p>真实飞行很难连续覆盖高空、极端俯视角和各种 FOV，因此作者构造了约 16K 个合成 RGB-D pairs，并且只把它们用于训练。</p>
+<ul>
+<li>Google Earth Studio 渲染 City、Campus、Factory、Landmark、Park 五类场景，在 70–300 m 高度、4 个 pitch 和 3 个 FOV 下生成约 2K 张 $3840\times2160$ 图像。GES 没有直接的 dense depth export，所以仍通过 DJI Terra 重建 mesh 并投影深度。</li>
+<li>Unreal Engine 4 + AirSim + Cesium 从 Google 3D Tiles 流式加载场景，直接读取 Z-buffer，随机化 80–200 m 高度、pitch 和 FOV，生成更大规模的 RGB-D 数据。</li>
+</ul>
+<p>这里的设计取舍很清楚：仿真深度的几何标签比较干净、变量范围可扩展，但不能取代真实测试。因此论文没有用 Synthetic 作为唯一证据，而是把它当作 real-to-synthetic training augmentation，再用 Oblique、Decoupled 和 Wild 检验迁移是否成立。</p>
+<h3 id="5-AerialMetric-Wild：用多视图和少量地标恢复序列尺度"><a href="#5-AerialMetric-Wild：用多视图和少量地标恢复序列尺度" class="headerlink" title="5. AerialMetric-Wild：用多视图和少量地标恢复序列尺度"></a>5. AerialMetric-Wild：用多视图和少量地标恢复序列尺度</h3><p>AerialMetric-Wild 从超过 600 个互联网 UAV 视频片段中筛选出 100 个高质量序列，每个序列约 11 帧，最终覆盖 80 多个地标、50 个城市和约 30 个国家，约 1.1K 张图像。它的价值在于外观、压缩质量、视角和深度范围都更接近真实部署；它的局限也同样明显：没有传感器级的 metric ground truth。</p>
+<p>作者的尺度恢复流程分三步：</p>
+<ol>
+<li>用 COLMAP 恢复稀疏相机位姿和内参，再用 Depth Anything 3 的多视图模式得到时间一致、但仍然 up-to-scale 的点图 $\mathcal{P}_{rel}$。</li>
+<li>人工选择语义清晰的地标点对，例如建筑边长、道路或车辆，并借助 Google Earth Pro 等工具得到其真实长度。</li>
+<li>对同一序列的多个参考物体求一个全局尺度，再把这个尺度应用到所有帧，而不是给每一帧单独拟合。</li>
+</ol>
+<p>如果第 $i$ 个参考物体的真实长度和重建长度分别是 $L<em>{\mathrm{real}}^{(i)}$ 与 $L</em>{\mathrm{uts}}^{(i)}$，全局尺度为：</p>
+<script type="math/tex; mode=display">
+s = \frac{1}{N}\sum_{i=1}^{N}\frac{L_{\mathrm{real}}^{(i)}}{L_{\mathrm{uts}}^{(i)}}.</script><p>最终的 metric depth 为：</p>
+<script type="math/tex; mode=display">
+D_{\mathrm{metric}} = sD_{\mathrm{uts}}.</script><p>这个公式体现了一个很实用的原则：单目几何的形状可以来自多视图模型，绝对尺度则由少量物理参考恢复；但由于 DA3 推理、地标选择和真实长度测量都有误差，$\mathcal{P}_{metric}$ 必须被称为 <strong>pseudo-metric</strong>，不能与 LiDAR ground truth 等同。论文在补充材料中用留出的高质量摄影测量数据做代理验证，伪标签达到 AbsRel 1.19%、RMSE 2.66 m、$\delta_1$ 99.98%，这支持了它作为开放世界评测集的实用性，却没有消除其标签来源上的不确定性。</p>
+<p>Figure 3 展示了四个子集的外观、深度范围和划分方式。它也提醒我们，AerialMetric 的“规模”并不只是一行总样本数，而是由不同可靠性和不同用途的数据组成。</p>
+<p><img src="/img/AerialMetric-2.png" alt="AerialMetric-2" title="AerialMetric-2"></p>
+<p>Table 1 则从数据模态、Depth GT、3D assets、场景数、图像数和是否解耦 flight parameters 等维度比较了既有数据集。AerialMetric 的组合优势在于同时具备 metric supervision、真实航拍、可控变量和开放世界测试；但不同子集的标签性质不同，使用时不能把它们视作完全同质的数据。</p>
+<p><img src="/img/AerialMetric-3.png" alt="AerialMetric-3" title="AerialMetric-3"></p>
+<h3 id="6-MoGe2-Aerial：适配相对几何，而不只修补尺度头"><a href="#6-MoGe2-Aerial：适配相对几何，而不只修补尺度头" class="headerlink" title="6. MoGe2-Aerial：适配相对几何，而不只修补尺度头"></a>6. MoGe2-Aerial：适配相对几何，而不只修补尺度头</h3><p>为了验证数据是否真的能改善模型，作者选择 MoGe2 作为代表性的 metric depth foundation model，并用 LoRA 做参数高效适配，得到 MoGe2-Aerial。训练数据包括 AerialMetric-Oblique 的训练划分、AerialMetric-Synthetic，以及 Hypersim、DeepMVS 中的 MVS-Synth 和 TartanAir 等 ground-domain 数据；AerialMetric-Decoupled 和 Wild 不用于训练。</p>
+<p>适配策略的动机来自一个很具体的失败模式：MoGe2 的 scale head 虽然单独负责尺度，但如果 backbone 仍然用地面数据学到的 FOV 和透视先验生成了错误的相对点图，那么只训练 scale head 就像试图用一个全局缩放修复已经弯曲的几何。补充实验确实观察到 scale-head-only training 不稳定并出现明显振荡。</p>
+<p>因此作者把 LoRA 注入 ViT 的 qkv、proj、fc1 和 fc2 线性层，用有限容量修正航空域的相对几何和 metric scale，同时尽量保留预训练模型的通用边缘和结构先验。最终配置为 rank $r=96$、$\alpha=192$、dropout 0.1；LoRA 训练只保留 global affine-invariant loss 和 metric scale loss，权重分别为 1.0 和 1.5，并关闭 normal、mask、patch 等 dense local losses。作者的解释是，航空 MVS ground truth 仍可能有局部噪声，有限容量的 LoRA 不应该为了拟合这些噪声而牺牲原模型的局部锐度。</p>
+<p>这让论文的“方法”更像一个可迁移的适配配方：</p>
+<blockquote>
+<p>先用航空数据修正模型对视角、FOV 和尺度的全局几何先验，再用少量 ground-domain data 抵抗灾难性遗忘；不要把航空适配简化为只校准最后一个尺度头。</p>
+</blockquote>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>从使用方式看，四个子集可以分成三层：</p>
+<ol>
+<li><strong>训练层：</strong>Oblique 的训练划分提供真实航空域监督，Synthetic 提供可控的长尾和参数覆盖，地面数据负责维持原有泛化。</li>
+<li><strong>受控测试层：</strong>Decoupled 只用于测试，用正交变量回答“模型对哪个相机/飞行因素敏感”。</li>
+<li><strong>开放世界测试层：</strong>Wild 只用于测试，用伪 metric 标签衡量互联网视频上的跨域泛化。</li>
+</ol>
+<p>这种分层比把所有数据随机打散后报告一个平均值更能支持诊断。尤其是 Decoupled 的测试专属性，使其不容易被训练集记忆直接污染；Wild 的保留则把“看起来像 benchmark 的航拍图”与真实互联网视频区分开来。</p>
+<p>数据集规模可以概括为：总计超过 68K image-depth pairs，其中约 52K 来自真实世界、约 16K 来自合成场景；补充材料统计为 129 个真实场景和 7 个合成环境。需要注意，论文摘要中的 52K/16K 是总体量级，具体子集的图像数在不同表格中以约数或大于号表示，不能把近似值误读为严格精确计数。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文给出的训练和评测设置如下：</p>
+<ul>
+<li>基础模型：MoGe2-L；优化器为 AdamW。</li>
+<li>输入图像长边调整到约 1K，并裁剪到可被 14 整除的尺寸。</li>
+<li>batch size 为 32，LoRA 适配训练 1,800 steps。</li>
+<li>encoder learning rate 为 $1\times10^{-6}$，decoder learning rate 为 $5\times10^{-5}$，使用 polynomial decay。</li>
+<li>补充消融中的 full fine-tuning 和 frozen-ViT 训练超过 9,000 steps，使用 500-step linear warmup 后接 cosine decay。</li>
+<li>LoRA 的 rank 为 96、alpha 为 192、dropout 为 0.1；数据混合采样比例为 Oblique 80%、Synthetic 15%、Ground-domain 5%。</li>
+</ul>
+<p>论文正文和补充材料没有明确报告 GPU 型号、显存、训练总耗时、参数量或推理 FPS。因此，这篇工作能够证明的是“数据和适配策略带来的精度变化”，不能据此推断模型已经满足实时 UAV 部署要求。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="1-航空域性能：零样本迁移确实存在严重断层"><a href="#1-航空域性能：零样本迁移确实存在严重断层" class="headerlink" title="1. 航空域性能：零样本迁移确实存在严重断层"></a>1. 航空域性能：零样本迁移确实存在严重断层</h3><p>评测包含 ZoeDepth-NK、DepthPro、UniDepthV1-L、UniDepthV2-L、MoGe2-L 和 Metric3Dv2-L。预测深度被裁剪到 0.001–400 m，排除无效像素，并报告 AbsRel（越低越好）以及 $\delta_1$、$\delta_2$（越高越好）。实验分别测试不提供 GT intrinsics 和提供 GT intrinsics 两种协议，以区分模型本身的航空域泛化问题与相机内参缺失问题。</p>
+<p>Table 3 的核心信息不是某个孤立的 SOTA 数字，而是零样本模型在航空场景上出现了系统性失效：在不提供 GT intrinsics 时，MoGe2 在 Oblique-City 上的 AbsRel 为 48.4、$\delta_1$ 只有 5.1；而 MoGe2-Aerial 将其改善为 AbsRel 10.3、$\delta_1$ 89.3。Natural 和 Rural 上也分别从 45.9/23.0、56.7/0.3 改善为 16.8/73.6、14.2/81.2（数值顺序为 AbsRel/$\delta_1$）。</p>
+<p>在 Decoupled 上，MoGe2-Aerial 在 Building、Factory 和 Lawn 的不带 GT intrinsics 结果分别达到 $\delta_1=87.6\%$、$90.2\%$ 和 $94.0\%$。提供 GT intrinsics 后，City 的结果进一步达到 AbsRel 8.8、$\delta_1$ 93.8。说明内参确实重要，但它不能单独解释原模型的崩溃；即使给出真内参，未适配模型仍明显不稳定。</p>
+<p><img src="/img/AerialMetric-5.png" alt="AerialMetric-5" title="AerialMetric-5"></p>
+<p>Figure 4 将表格中的差异变成了视觉证据：ZoeDepth 和 DepthPro 在高空场景中常常只输出接近常数的深度，UniDepthV2 与 MoGe2 虽然能恢复更多结构，但仍有明显的尺度偏移或局部倒置；MoGe2-Aerial 的边界、远处道路和植被区域更接近 GT。这里的“更清晰”不是单独的主观观感，而是与 Table 3 中的 metric 误差下降相互印证。</p>
+<p><img src="/img/AerialMetric-6.png" alt="AerialMetric-6" title="AerialMetric-6"></p>
+<h3 id="2-受控因素分析：高度变化比想象中更致命"><a href="#2-受控因素分析：高度变化比想象中更致命" class="headerlink" title="2. 受控因素分析：高度变化比想象中更致命"></a>2. 受控因素分析：高度变化比想象中更致命</h3><p>Figure 5 的雷达图显示，MoGe2-Aerial 在 Building、Factory、Farm 和 Grass 四种场景上的轮廓更接近外扩且规则的形状；零样本模型的轮廓则收缩、扭曲，说明它们对 pitch、altitude 和 FOV 的组合非常敏感。</p>
+<p><img src="/img/AerialMetric-7.png" alt="AerialMetric-7" title="AerialMetric-7"></p>
+<p>Figure 6 给出了更容易比较的平均 $\delta_1$：MoGe2 在 FOV 63°、FOV 83°、80 m 和 120 m 四种汇总设置下分别只有 17.4、22.5、30.6 和 9.6；UniDepthV2 为 20.4、63.6、56.5 和 27.3；MoGe2-Aerial 则为 79.9、89.7、83.2 和 86.2。这里论文正文使用“超过 80%”描述整体稳定性，但图中 FOV 63° 的数值为 79.9%，更严谨的说法应是“接近或保持在 80% 左右”。</p>
+<p><img src="/img/AerialMetric-8.png" alt="AerialMetric-8" title="AerialMetric-8"></p>
+<p>Figure 7 进一步把 altitude 和 pitch 的联合影响拆开。MoGe2 在 120 m 时四个 pitch 的 $\delta_1$ 只有 1.1%、15.6%、21.1% 和 1.0%；在 80 m 时也只有 11.5%–48.8%。MoGe2-Aerial 在相同网格下为 82.9%–89.2%（120 m）和 80.7%–87.2%（80 m），呈现出明显更平坦的性能面。</p>
+<p><img src="/img/AerialMetric-9.png" alt="AerialMetric-9" title="AerialMetric-9"></p>
+<p>这组实验支持一个比“航空数据有效”更具体的结论：<strong>高空和视角变化破坏的主要是模型的全局几何/尺度先验，而不仅是纹理识别能力。</strong>不过 Decoupled 只覆盖四个场景、两个高度、两个 FOV 和四个离散 pitch，因此它证明的是这些采样点上的稳健性，不能直接推出对任意连续飞行参数都稳定。</p>
+<h3 id="3-Farm-是一个有信息量的失败案例"><a href="#3-Farm-是一个有信息量的失败案例" class="headerlink" title="3. Farm 是一个有信息量的失败案例"></a>3. Farm 是一个有信息量的失败案例</h3><p>MoGe2-Aerial 在 Farm 子集上的不带 GT intrinsics $\delta_1$ 为 54.2%，明显低于它在 Building、Factory 和 Lawn 上的结果；UniDepthV2 在 Farm 上反而达到 57.9%，提供 GT intrinsics 后达到 91.0%。作者将其归因于重复的植被纹理和缺少强几何锚点，并推测 UniDepthV2 的预训练数据可能更接近农业环境。</p>
+<p>这段结果值得保留，因为它说明 AerialMetric 不是只为证明作者模型而设计的“容易数据集”：即使适配后的模型整体领先，具体场景仍可能被纹理同质、尺度锚点稀少等因素卡住。至于“预训练语料相似”这一解释，论文把它作为 hypothesis，而不是经过额外因果实验验证的结论。</p>
+<h3 id="4-Wild：从受控-benchmark-走向互联网视频"><a href="#4-Wild：从受控-benchmark-走向互联网视频" class="headerlink" title="4. Wild：从受控 benchmark 走向互联网视频"></a>4. Wild：从受控 benchmark 走向互联网视频</h3><p>AerialMetric-Wild 的标签是 pseudo-metric，所以 Table 4 更适合被理解为“开放世界相对可信度测试”，而不是与 LiDAR 等价的绝对排行榜。在 0–400 m 范围内，MoGe2 的 AbsRel/$\delta_1$ 为 55.26/9.50，MoGe2-Aerial 为 21.34/53.7；在 0–800 m 范围内，二者分别为 55.56/9.70 和 22.28/52.3。$\delta_2$ 也从 21.40/21.60 提升到 85.1/83.9。</p>
+<p>结果表明，适配并没有只记住 Oblique 和 Decoupled 的场景外观，至少在未参与训练的互联网视频上仍然能改善绝对尺度。但标签生成依赖 DA3、多视图重建和人工测量，因此这种提升应表述为“在作者构造的伪 metric 测试协议上得到支持”，而不是宣称已经在完全独立的传感器真值上验证。</p>
+<p><img src="/img/AerialMetric-10.png" alt="AerialMetric-10" title="AerialMetric-10"></p>
+<h3 id="5-地面域：适配后的模型是-competitive，而非全面支配"><a href="#5-地面域：适配后的模型是-competitive，而非全面支配" class="headerlink" title="5. 地面域：适配后的模型是 competitive，而非全面支配"></a>5. 地面域：适配后的模型是 competitive，而非全面支配</h3><p>为了检查航空适配是否造成灾难性遗忘，作者又在 NYUv2、KITTI、ETH3D、iBims、DDAD、DIODE 和 HAMMER 七个地面 benchmark 上测试。Table 5 的结论比较克制：MoGe2-Aerial 在 KITTI、iBims、DIODE 等数据上的部分指标优于零样本 MoGe2，但并非所有 AbsRel 和 $\delta_1$ 都更好。</p>
+<p>例如在不提供 GT intrinsics 时，MoGe2 与 MoGe2-Aerial 在 KITTI 上的结果是 17.6/64.7 与 16.3/68.7，在 DIODE 上是 16.7/67.9 与 15.1/77.0；但在 NYUv2 上 MoGe2 的 6.9/96.7 略优于适配后的 7.1/96.2，在 ETH3D 上也存在 AbsRel 变差。提供 GT intrinsics 时同样是混合结果。因此，“保留地面泛化”是相对于 full fine-tuning 的成功，而不是所有地面数据集上的无条件提升。</p>
+<p><img src="/img/AerialMetric-11.png" alt="AerialMetric-11" title="AerialMetric-11"></p>
+<h3 id="6-消融：LoRA-与数据配比共同决定折中点"><a href="#6-消融：LoRA-与数据配比共同决定折中点" class="headerlink" title="6. 消融：LoRA 与数据配比共同决定折中点"></a>6. 消融：LoRA 与数据配比共同决定折中点</h3><p>Figure 8 展示了不同适配策略在同一批场景上的深度图。只更新 scale head 时，相对几何已经错误，模型无法用尺度偏移完全补救；冻结 ViT 也限制了对航空视角先验的修正；full fine-tuning 虽然航空域分数最高，却破坏了地面域能力。</p>
+<p><img src="/img/AerialMetric-12.png" alt="AerialMetric-12" title="AerialMetric-12"></p>
+<p>Table 6 的数值把这个 trade-off 说得更清楚：full FT 在 Oblique 上达到 AbsRel 6.68、$\delta_1$ 95.60，但 Ground 的 $\delta_1$ 降到 56.70；LoRA $r=96$ 的航空结果为 Oblique 12.45/84.40、Decoupled 13.19/83.90，而 Ground 为 16.30/79.59。LoRA 不追求某一个航空表格的最高分，而是用更小的可训练容量换取跨域保留。$r=128$ 并没有继续变好，Ground $\delta_1$ 反而降到 69.40，说明适配容量不是越大越好。</p>
+<p><img src="/img/AerialMetric-13.png" alt="AerialMetric-13" title="AerialMetric-13"></p>
+<p>Table 7 则说明数据组成同样关键。只用 Oblique，Oblique 的 $\delta_1$ 可以从 MoGe2 的 7.90 提升到 87.4，但 ETH3D 的 $\delta_1$ 从 88.79 掉到 61.50；加入 Synthetic 后 Decoupled 改善到 84.20，但 ETH3D 仍只有 71.54；最后加入只占 5% 的 ground-domain data，ETH3D 恢复到 86.67，同时保留较好的航空表现。换句话说，小比例的旧域数据不是装饰性的 regularizer，而是抑制 catastrophic forgetting 的直接手段。</p>
+<p><img src="/img/AerialMetric-14.png" alt="AerialMetric-14" title="AerialMetric-14"></p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><strong>把数据集做成了诊断工具。</strong> Oblique 负责真实规模和多来源覆盖，Decoupled 负责变量解耦，Synthetic 负责连续扩展，Wild 负责开放世界泛化；四者组合比一个随机混合的大数据集更能解释模型为什么失败。</li>
+<li><strong>metric ground truth 的工程细节较完整。</strong> LiDAR 投影中的遮挡噪声过滤、高分辨率 mesh rasterization、RTK 对齐、中心区域评测和地理隔离划分，都是影响结论可信度的实际环节。</li>
+<li><strong>适配目标抓住了相对几何而非只修尺度。</strong> scale-head-only 的失败说明航空域差异已经进入 backbone 的结构先验；LoRA 更新全局几何相关的线性层，是一个比单独校准尺度更合理的折中。</li>
+<li><strong>消融覆盖了模型策略和数据策略。</strong> full FT、冻结 backbone、scale head、不同 LoRA rank，以及不同训练数据配比共同构成了较完整的适配分析。</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><strong>Wild 的 ground truth 不是传感器真值。</strong> 它依赖 DA3 多视图推理、COLMAP、人工地标和外部地图测量。补充材料的代理验证增强了可信度，但仍不能替代独立 LiDAR/摄影测量真值；而且标签生成模型与评测对象之间可能存在模型归因和误差传递问题。</li>
+<li><strong>受控因素的覆盖仍是离散采样。</strong> Decoupled 只有 4 个场景、2 个高度、2 个 FOV 和 4 个 pitch，无法单独证明任意高度、连续 FOV 或极端天气下的表现。作者也明确指出当前数据对极端天气覆盖有限。</li>
+<li><strong>合成数据的 sim-to-real 边界需要更多验证。</strong> UE4、AirSim、Cesium 和 GES 提供了可扩展的几何控制，但 Synthetic 只用于训练；它究竟在哪些长尾条件下真正改善真实世界，而不是仅仅增加合成分布，仍可以用更细粒度的数据配比实验继续拆分。</li>
+<li><strong>部署成本没有被量化。</strong> 论文没有报告训练 GPU、显存、总时长、参数量和推理速度。MoGe2-L 加上 1K 输入的精度结果很有价值，但不能直接推导出适合机载实时系统。</li>
+<li><strong>“SOTA”应限定在论文协议内理解。</strong> 结果覆盖了代表性 metric depth 模型和作者建立的航空 benchmark；它证明了 AerialMetric 上的适配有效，不等价于已经胜过所有 UAV 深度、立体视觉、多视图或传统摄影测量系统。</li>
+<li><strong>任务仍是单目。</strong> 论文把多视图 metric depth、UAV mapping/reconstruction 和恶劣天气列为未来方向；如果应用本身允许多帧或多相机，单帧模型的尺度稳定性并不是唯一可用的解决路径。</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ol>
+<li><strong>Benchmark 的价值在于解耦问题。</strong> “航空域分数下降”只是现象，把 pitch、altitude 和 FOV 正交采样后，才有机会知道模型到底被哪种几何变化击穿。</li>
+<li><strong>绝对尺度可以是序列级问题。</strong> 多视图模型负责稳定形状，少量具有真实长度的地标负责恢复一个全局尺度；但只要标签不是传感器直接测得，就必须诚实地称为 pseudo-metric。</li>
+<li><strong>错误的相对几何不能靠 scale head 修好。</strong> 当 backbone 仍然把俯视图解释成地面视角时，全局尺度头只能在错误结构上做极端补偿；适配应进入产生相对几何的表示层。</li>
+<li><strong>小比例旧域数据可以保护大范围能力。</strong> 80% Oblique + 15% Synthetic + 5% Ground-domain 的配比说明，适配新域时不一定需要重新训练全部数据，但需要给旧域留下足够的锚点。</li>
+<li><strong>真正的贡献是数据、评测和适配闭环。</strong> AerialMetric 先揭示现有模型的航空 domain gap，再提供可训练数据和受控测试，最后用 LoRA 与跨域消融验证“适配后是否仍然可用”。</li>
+</ol>
+<p>总的来说，AerialMetric 把 UAV 单目 metric depth 从“把地面模型直接拿来测试”推进到一个更完整的研究闭环：用真实摄影测量和 LiDAR 建立规模，用受控飞行变量定位失败原因，用合成数据扩展覆盖，再用开放世界视频检验迁移。MoGe2-Aerial 的结果说明，航空适配确实可以大幅修复尺度和几何稳定性；但这项工作的边界同样清楚——Wild 是伪 metric，受控变量是有限网格，部署成本尚未量化，结论应理解为 benchmark 内的实证，而不是对所有 UAV 场景的普遍保证。</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%95%E7%9B%AE%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">单目深度估计</a><a class="post-meta__tags" href="/tags/%E7%BB%9D%E5%AF%B9%E6%B7%B1%E5%BA%A6%E4%BC%B0%E8%AE%A1/">绝对深度估计</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E9%9B%86/">数据集</a><a class="post-meta__tags" href="/tags/Benchmark/">Benchmark</a></div><div class="post-share"><div class="social-share" data-image="/img/AerialMetric-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"><img class="cover" src="/img/D2-4DGS-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</div></div><div class="info-2"><div class="info-item-1">作者： Jijian Zhao 单位： Huazhong University of Science and Technology 会议： 2026 Arxiv 链接： arXiv  研究动机Dynamic 4DGS 通常依赖密集、同步的多相机视频。相机数量减少以后，RGB supervision 很难唯一确定动态场景的 3D geometry：错误位置的 Gaussians 仍然可能解释有限 training views，最终产生 missing structures、foreground/background blending 和 floating primitives。 引入 depth prior 是自然选择，但 D²-4DGS 认为 单一 depth source 都不够：  Monocular depth：coverage 稠密，但 scale ambiguous，而且存在局部 bias； Multi-view geometric depth：与 reconstruction coordinate system 一致、几何可靠性更高，但在...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/12/06/D4D/" title="D4D: An RGBD diffusion model to boost  monocular depth estimation"><img class="cover" src="/img/D4D.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">D4D: An RGBD diffusion model to boost  monocular depth estimation</div></div><div class="info-2"><div class="info-item-1"> 方法阶段一对NYU和KITTI中的RGBD样本进行预处理，进行归一化以及rescale，分辨率跟第三阶段所采用的model有关 阶段二第二阶段对输入的RGBD进行前向和后向操作训练网络，同时通过S1和S2两种不同的训练配置，得到不同的生成数据，其中$S1$使用$L1$ loss，$β$策略采用线性策略，$S2$使用$L2$ loss，$β$采用余弦策略  S 1 : L 1=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{1}, \; \; \beta=l i n e a r \tag{3} S 2 : L 2=\frac{1} {| \mathcal{P} |} \sum_{p \in\mathcal{P}} | | x_{p}-y_{p} | |_{2}^{2}, \; \; \beta=c o s i n e \tag{4}最终得到的$S3$就是$S1$和$S2$的并集  S 3=( s 1 \cup s 2 ) \; w h e r e  \begin{cases} S 1...</div></div></div></a><a class="pagination-related" href="/2026/05/20/Depth2Pose/" title="Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth"><img class="cover" src="/img/Depth2Pose-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-20</div><div class="info-item-2">Depth2Pose: A Pose-Based Benchmark for Monocular Depth Estimation without Ground-Truth Depth</div></div><div class="info-2"><div class="info-item-1">作者：Viktor Kocur, Sithu Aung, Gabrielle Flood, Yaqing Ding, Lukas Bujnak, Torsten Sattler, Zuzana Kukelova 单位：Comenius University in Bratislava, Czech Technical University in Prague 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.19797 研究动机 评估标准存在局限性： 尽管单目深度估计（MDE）近年来取得了显著进展，并且预测的深度图在 Structure-from-Motion (SfM)、视觉定位和 SLAM 等下游几何任务中扮演着关键输入角色，但现有的 MDE 方法主要仍以深度绝对精度进行评估。通用的评估指标（如 Abs.Rel 或 RMSE）是在整张图像上全局聚合误差的，这并不能直接反映深度在具体的下游三维几何任务中的实用价值。  几何重要性非均匀分布： 在下游几何任务（如 SfM 或...</div></div></div></a><a class="pagination-related" href="/2026/07/20/ARDepth/" title="ARDepth: Auto-regressive Monocular Depth Estimation with Progressive Visual Conditioning"><img class="cover" src="/img/ARDepth-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-07-20</div><div class="info-item-2">ARDepth: Auto-regressive Monocular Depth Estimation with Progressive Visual Conditioning</div></div><div class="info-2"><div class="info-item-1">作者：Zijie Wang, Wei Zhang, Weiming Zhang, Xiao Tan, Weikai Chen, Xiaoxu Li, Guanbin Li 单位：Sun Yat-sen University, Shenzhen Loop Area Institute, Baidu Inc., LightSpeed Studios (Tencent America), Lanzhou University of Technology 会议：2026 Arxiv（Under review） 链接：https://arxiv.org/abs/2607.12433  文中图表均引自原论文；该 arXiv 版本标注为 CC BY 4.0。  研究动机当前零样本单目深度估计常借助扩散模型：把深度视为一张全局连续的场，经由多轮去噪逐步恢复。但真实几何并不总是平滑的——遮挡边界、细杆、表面相交处恰恰是离散且有层级的高频结构。作者认为，统一的全局去噪并没有显式表达“先有整体布局、再有表面与边界”的构造过程。 另一条路是视觉自回归（AR），但把完整深度图拉平成单一长序列的 Flat...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Depth-Anywhere/" title="Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation"><img class="cover" src="/img/Depth_Anywhere.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-06</div><div class="info-item-2">Depth Anywhere: Enhancing 360 Monocular Depth Estimation via Perspective Distillation and Unlabeled Data Augmentation</div></div><div class="info-2"><div class="info-item-1">方法 数据清洗及合理数据掩码生成为了消除不合理像素对训练的影响，使用GroundingSAM将不合理的区域滤除。对于有效像素占比低于20%的图像也进行溢出。 教师模型对无标签图像使用立方体投影，然后用Depth Anything对投影后的patch进行预测，将360度模型的预测结果投影到立方体视图，再和Depth Anything的输出计算Loss。 随机旋转处理由于Depth Anything在立方体的每一个面上进行估计，缺乏对场景的综合理解，所以会出现伪影。 在等矩形坐标系下应用旋转矩阵：  ( \hat{\theta}, \hat{\phi} )=\mathcal{R} \cdot( \theta, \phi). \tag{1}从等矩形到立方体投影，立方体每一个面的视场角等于90度，每一个面都能够看作一个焦距为$w/2$的透视相机，所有的面共用世界坐标系中的中心点。因此每一个相机的外参矩阵能够用一个旋转矩阵定义，则每个面上的像素表示为：  p=K \cdot R_{i}^{T} \cdot q, \tag{2} q=\left[ \begin{matrix} q_{x}...</div></div></div></a><a class="pagination-related" href="/2026/07/24/DepthART/" title="DepthART: Scaling Foundation Monocular Depth to Tiny Models"><img class="cover" src="/img/DepthART-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-07-24</div><div class="info-item-2">DepthART: Scaling Foundation Monocular Depth to Tiny Models</div></div><div class="info-2"><div class="info-item-1">作者：Feng Xue, Wu Chen, Mingshuai Zhao, Guofeng Zhong, Anlong Ming, Haozhe Wang, Dianqiao Lei, Zhaowen Lin, Haiyang Zhang, Nicu Sebe 单位：University of Trento, Beijing University of Posts and Telecommunications, The Hong Kong University of Science and Technology, Tsinghua University 会议：2026 Arxiv 链接：论文 ｜ 项目页 研究动机Depth Anything、Metric3D、UniDepth 等几何基础模型已经证明，大规模混合数据可以带来跨场景相对深度和度量尺度泛化。但把骨干缩小到几百万参数后，这些能力往往不能自动保留。  DepthART 把问题归纳为两个与小容量直接相关的瓶颈：  数据分布偏置更容易被记住。...</div></div></div></a><a class="pagination-related" href="/2026/05/25/DepthAgent/" title="DepthAgent: Towards Better Universal Depth Estimation via Sample-wise Expert Selection"><img class="cover" src="/img/DepthAgent-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-25</div><div class="info-item-2">DepthAgent: Towards Better Universal Depth Estimation via Sample-wise Expert Selection</div></div><div class="info-2"><div class="info-item-1">作者：Jie Zhu, Girish Chandar Ganesan, Xiaoming Liu 单位：Michigan State University, University of North Carolina at Chapel Hill 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.23281 研究动机 这篇文章的出发点很实际：现在单目 metric depth 模型已经很多，而且每个模型都很强，但真实部署时输入并不总是同一种相机。普通透视图、鱼眼图、ERP 全景图在成像几何上差别很大，一个模型即使在平均指标上很强，也不一定能稳定覆盖所有相机域。 已有“通用深度估计”通常试图训练一个统一模型，或者对多个模型做固定规则融合。但本文先指出一个更细的现象：不同 depth expert 的强弱不是随机的，而是和相机几何、场景类型、样本难度强相关。  Table 1 说明了这个现象。透视数据里，Perspective 系模型作为 best single 的比例达到 80.1%；Native ERP 数据里，ERP 系模型作为 best...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">118</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">74</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%94%A8%E5%9B%9B%E7%A7%8D%E6%95%B0%E6%8D%AE%E5%BD%A2%E6%80%81%E8%A6%86%E7%9B%96%E2%80%9C%E7%9C%9F%E5%AE%9E%E3%80%81%E5%8F%AF%E6%8E%A7%E3%80%81%E5%8F%AF%E6%89%A9%E5%B1%95%E3%80%81%E5%BC%80%E6%94%BE%E4%B8%96%E7%95%8C%E2%80%9D"><span class="toc-number">2.1.</span> <span class="toc-text">1. 用四种数据形态覆盖“真实、可控、可扩展、开放世界”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-AerialMetric-Oblique%EF%BC%9A%E6%8A%8A%E5%BC%82%E6%9E%84%E8%88%AA%E6%8B%8D%E8%B5%84%E6%96%99%E5%8F%98%E6%88%90-metric-depth"><span class="toc-number">2.2.</span> <span class="toc-text">2. AerialMetric-Oblique：把异构航拍资料变成 metric depth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-AerialMetric-Decoupled%EF%BC%9A%E6%8A%8A%E8%A7%86%E8%A7%92%E5%9B%A0%E7%B4%A0%E5%8F%98%E6%88%90%E6%AD%A3%E4%BA%A4%E5%AE%9E%E9%AA%8C"><span class="toc-number">2.3.</span> <span class="toc-text">3. AerialMetric-Decoupled：把视角因素变成正交实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-AerialMetric-Synthetic%EF%BC%9A%E7%94%A8%E4%BB%BF%E7%9C%9F%E8%A1%A5%E8%B6%B3%E7%9C%9F%E5%AE%9E%E9%87%87%E9%9B%86%E7%9A%84%E9%95%BF%E5%B0%BE"><span class="toc-number">2.4.</span> <span class="toc-text">4. AerialMetric-Synthetic：用仿真补足真实采集的长尾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-AerialMetric-Wild%EF%BC%9A%E7%94%A8%E5%A4%9A%E8%A7%86%E5%9B%BE%E5%92%8C%E5%B0%91%E9%87%8F%E5%9C%B0%E6%A0%87%E6%81%A2%E5%A4%8D%E5%BA%8F%E5%88%97%E5%B0%BA%E5%BA%A6"><span class="toc-number">2.5.</span> <span class="toc-text">5. AerialMetric-Wild：用多视图和少量地标恢复序列尺度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-MoGe2-Aerial%EF%BC%9A%E9%80%82%E9%85%8D%E7%9B%B8%E5%AF%B9%E5%87%A0%E4%BD%95%EF%BC%8C%E8%80%8C%E4%B8%8D%E5%8F%AA%E4%BF%AE%E8%A1%A5%E5%B0%BA%E5%BA%A6%E5%A4%B4"><span class="toc-number">2.6.</span> <span class="toc-text">6. MoGe2-Aerial：适配相对几何，而不只修补尺度头</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%88%AA%E7%A9%BA%E5%9F%9F%E6%80%A7%E8%83%BD%EF%BC%9A%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB%E7%A1%AE%E5%AE%9E%E5%AD%98%E5%9C%A8%E4%B8%A5%E9%87%8D%E6%96%AD%E5%B1%82"><span class="toc-number">5.1.</span> <span class="toc-text">1. 航空域性能：零样本迁移确实存在严重断层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%97%E6%8E%A7%E5%9B%A0%E7%B4%A0%E5%88%86%E6%9E%90%EF%BC%9A%E9%AB%98%E5%BA%A6%E5%8F%98%E5%8C%96%E6%AF%94%E6%83%B3%E8%B1%A1%E4%B8%AD%E6%9B%B4%E8%87%B4%E5%91%BD"><span class="toc-number">5.2.</span> <span class="toc-text">2. 受控因素分析：高度变化比想象中更致命</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Farm-%E6%98%AF%E4%B8%80%E4%B8%AA%E6%9C%89%E4%BF%A1%E6%81%AF%E9%87%8F%E7%9A%84%E5%A4%B1%E8%B4%A5%E6%A1%88%E4%BE%8B"><span class="toc-number">5.3.</span> <span class="toc-text">3. Farm 是一个有信息量的失败案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Wild%EF%BC%9A%E4%BB%8E%E5%8F%97%E6%8E%A7-benchmark-%E8%B5%B0%E5%90%91%E4%BA%92%E8%81%94%E7%BD%91%E8%A7%86%E9%A2%91"><span class="toc-number">5.4.</span> <span class="toc-text">4. Wild：从受控 benchmark 走向互联网视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%9C%B0%E9%9D%A2%E5%9F%9F%EF%BC%9A%E9%80%82%E9%85%8D%E5%90%8E%E7%9A%84%E6%A8%A1%E5%9E%8B%E6%98%AF-competitive%EF%BC%8C%E8%80%8C%E9%9D%9E%E5%85%A8%E9%9D%A2%E6%94%AF%E9%85%8D"><span class="toc-number">5.5.</span> <span class="toc-text">5. 地面域：适配后的模型是 competitive，而非全面支配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%B6%88%E8%9E%8D%EF%BC%9ALoRA-%E4%B8%8E%E6%95%B0%E6%8D%AE%E9%85%8D%E6%AF%94%E5%85%B1%E5%90%8C%E5%86%B3%E5%AE%9A%E6%8A%98%E4%B8%AD%E7%82%B9"><span class="toc-number">5.6.</span> <span class="toc-text">6. 消融：LoRA 与数据配比共同决定折中点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/01/AerialMetric/" title="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World"><img src="/img/AerialMetric-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World"/></a><div class="content"><a class="title" href="/2026/09/01/AerialMetric/" title="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World">AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World</a><time datetime="2026-09-01T08:50:29.000Z" title="发表于 2026-09-01 16:50:29">2026-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"><img src="/img/D2-4DGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"/></a><div class="content"><a class="title" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</a><time datetime="2026-08-31T13:00:11.000Z" title="发表于 2026-08-31 21:00:11">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"><img src="/img/StereoGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"/></a><div class="content"><a class="title" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</a><time datetime="2026-08-31T13:00:10.000Z" title="发表于 2026-08-31 21:00:10">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/MoRe/" title="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency"><img src="/img/MoRe-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency"/></a><div class="content"><a class="title" href="/2026/08/31/MoRe/" title="MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency">MoRe: Monocular Geometry Refinement via Graph Optimization for Cross-View Consistency</a><time datetime="2026-08-31T13:00:09.000Z" title="发表于 2026-08-31 21:00:09">2026-08-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/FoundationGeo/" title="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry"><img src="/img/FoundationGeo-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry"/></a><div class="content"><a class="title" href="/2026/08/31/FoundationGeo/" title="FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry">FoundationGeo: Learning Spatial Pixel-Wise Fields for Monocular Metric Geometry</a><time datetime="2026-08-31T13:00:08.000Z" title="发表于 2026-08-31 21:00:08">2026-08-31</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/AerialMetric-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
