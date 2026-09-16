@@ -1,0 +1,375 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>$R^3$: 3D Reconstruction via Relative Regression | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Congrong Xu, Huachen Gao, Xingyu Chen, Yuliang Xiu, Jun Gao, Anpei Chen 单位：University of Michigan、Westlake University、NVIDIA 会议：2026 Arxiv（v2） 链接：arXiv:2605.26519 · Project Page · Code 研究动机从一段单目视频恢">
+<meta property="og:type" content="article">
+<meta property="og:title" content="$R^3$: 3D Reconstruction via Relative Regression">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/09/16/R3/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Congrong Xu, Huachen Gao, Xingyu Chen, Yuliang Xiu, Jun Gao, Anpei Chen 单位：University of Michigan、Westlake University、NVIDIA 会议：2026 Arxiv（v2） 链接：arXiv:2605.26519 · Project Page · Code 研究动机从一段单目视频恢">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/R3-0.png">
+<meta property="article:published_time" content="2026-09-16T08:29:49.000Z">
+<meta property="article:modified_time" content="2026-09-16T08:36:23.345Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="三维重建">
+<meta property="article:tag" content="相对姿态">
+<meta property="article:tag" content="流式重建">
+<meta property="article:tag" content="点云重建">
+<meta property="article:tag" content="视觉几何">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/R3-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "$R^3$: 3D Reconstruction via Relative Regression",
+  "url": "https://zjj-low-key.github.io/2026/09/16/R3/",
+  "image": "https://zjj-low-key.github.io/img/R3-0.png",
+  "datePublished": "2026-09-16T08:29:49.000Z",
+  "dateModified": "2026-09-16T08:36:23.345Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/09/16/R3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '$R^3$: 3D Reconstruction via Relative Regression',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">121</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/R3-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">$R^3$: 3D Reconstruction via Relative Regression</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">$R^3$: 3D Reconstruction via Relative Regression</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-16T08:29:49.000Z" title="发表于 2026-09-16 16:29:49">2026-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-16T08:36:23.345Z" title="更新于 2026-09-16 16:36:23">2026-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Congrong Xu, Huachen Gao, Xingyu Chen, Yuliang Xiu, Jun Gao, Anpei Chen</p>
+<p><strong>单位：</strong>University of Michigan、Westlake University、NVIDIA</p>
+<p><strong>会议：</strong>2026 Arxiv（v2）</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2605.26519">arXiv:2605.26519</a> · <a target="_blank" rel="noopener" href="https://kevinxu02.github.io/r3-site/">Project Page</a> · <a target="_blank" rel="noopener" href="https://github.com/KevinXu02/R3">Code</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p>从一段单目视频恢复三维结构，通常要同时得到每帧深度、相机内参和相机位姿。近来的 feed-forward 三维几何模型把这些量直接回归出来，推理速度很快，但一个关键选择会限制它们处理长序列的能力：网络往往要把所有相机放到一个全局坐标系中，再直接预测每一帧的绝对位姿。</p>
+<p>绝对位姿回归的问题并不只是“序列变长后显存变大”。第一，相机在全局坐标中的平移会随着轨迹长度增长，训练时看到的局部运动与推理时的长距离坐标可能逐渐不匹配。第二，第一帧锚定的坐标系把整个序列的误差都压到一个全局参考上，远处帧的误差容易表现为漂移。第三，流式输入不能回看全部历史，若仍然依赖完整序列的全局关系，就必须在准确性、上下文长度和内存之间反复取舍。</p>
+<p>$R^3$（3D Reconstruction via Relative Regression）的出发点是把学习目标换成局部、可组合的几何关系：对于帧 $i$ 和帧 $j$，网络预测相机 $j$ 相对于相机 $i$ 的旋转与平移，而不是直接预测一个固定世界坐标中的绝对位姿。局部相对位姿主要由两帧之间的基线和可见内容决定，与整条视频已经走了多远关系较小，因此更适合作为长序列模型的基本监督单元。</p>
+<p>然而，仅仅把绝对位姿换成相对位姿还不够。一个帧对可能存在运动模糊、遮挡、重复纹理、基线过小或场景切换，所有 pairwise 约束的可靠性并不一样。$R^3$ 因而同时预测旋转置信度和平移置信度，让置信度参与训练损失、全局轨迹融合、关键帧库管理和异常帧拒绝。这样，局部关系不再是彼此孤立的预测，而成为可以按可信程度组装的带权姿态图。</p>
+<p><img src="/img/R3-0.png" alt="R3-0" title="R3-0"></p>
+<p>图 1：论文用局部序列一致性、超长序列重建和流式效率概括方法目标。图中展示了相对回归带来的长序列稳定性与有界内存特征；右侧视觉标注写作 30+ FPS，而论文图注正文写作 20+ FPS，本文不把两者混合成一个未经说明口径的硬指标。</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="1-从全局位姿改成带置信度的相对位姿"><a href="#1-从全局位姿改成带置信度的相对位姿" class="headerlink" title="1. 从全局位姿改成带置信度的相对位姿"></a>1. 从全局位姿改成带置信度的相对位姿</h3><p>论文把一段输入序列记为 ${I_1,\ldots,I_N}$。DA3-Large backbone 为每一帧产生一个 camera token $\mathbf z_i$，并由轻量的相对姿态 MLP 读取一对 token：</p>
+<script type="math/tex; mode=display">
+(\hat{\mathbf q}_{i\to j},\hat{\mathbf t}_{i\to j},
+c^R_{i\to j},c^T_{i\to j})
+=\operatorname{MLP}_{\mathrm{rel}}([\mathbf z_i;\mathbf z_j]).</script><p>其中，$\hat{\mathbf q}<em>{i\to j}$ 是从相机 $i$ 到相机 $j$ 的相对旋转，$\hat{\mathbf t}</em>{i\to j}$ 是在相机 $i$ 坐标系中表达的相机 $j$ 位置，$c^R<em>{i\to j}$ 和 $c^T</em>{i\to j}$ 分别是旋转、平移置信度。两种置信度解耦很重要：某一对帧的朝向可能容易判断，但平移基线很短；也可能平移明显而旋转受动态遮挡影响。一个统一分数会把这两种不确定性混在一起。</p>
+<p>相对关系把 $N$ 帧变成一个有向姿态图。相比只从第一帧连向其他帧的锚定图，$R^3$ 在训练时可监督每个有向帧对，从而获得更多局部几何约束。下面的图和表对应论文对三种 feed-forward 姿态范式的比较。</p>
+<p><img src="/img/R3-1.png" alt="R3-1" title="R3-1"></p>
+<p>图 2：VGGT 只从第一相机向外监督，Pi3 在模型选择的世界坐标中回归绝对位姿，$R^3$ 则对每个有向帧对回归相对姿态，并为边预测置信度。</p>
+<p><img src="/img/R3-2.png" alt="R3-2" title="R3-2"></p>
+<p>表 1：相对位姿、相对损失、全 pair 边和学习到的置信度在三种范式中的配置对比。</p>
+<h3 id="2-先生成局部边，再聚合全局轨迹"><a href="#2-先生成局部边，再聚合全局轨迹" class="headerlink" title="2. 先生成局部边，再聚合全局轨迹"></a>2. 先生成局部边，再聚合全局轨迹</h3><p>网络的输出是局部边，但深度融合和点云重建最终需要所有相机处于同一坐标系。论文先把相对边转成候选全局位姿。若帧 $i$ 的全局位姿已经估计，那么它对新帧 $j$ 提供一个候选：</p>
+<script type="math/tex; mode=display">
+\mathbf q_j^{(i)}=\mathbf q_i\otimes\hat{\mathbf q}_{i\to j},
+\qquad
+\mathbf t_j^{(i)}=\mathbf t_i+\mathbf q_i(\hat{\mathbf t}_{i\to j}).</script><p>随后旋转和位移分别按各自的置信度做 softmax 加权融合：</p>
+<script type="math/tex; mode=display">
+\mathbf t_j=\sum_{i\in\mathcal N_K(j)}
+\tilde c^T_{i\to j}\mathbf t_j^{(i)},
+\qquad
+\mathbf q_j=\operatorname{Norm}\left(
+\sum_{i\in\mathcal N_K(j)}
+\tilde c^R_{i\to j}\mathbf q_j^{(i)}
+\right).</script><p>$\mathcal N_K(j)$ 可以是置信度最高的 $K$ 个参考帧，也可以包含全部可用参考帧。四元数平均前先做符号对齐，避免 $\mathbf q$ 与 $-\mathbf q$ 被错误抵消。附录聚合实验显示，从 Top-1、Top-5 到 Top-10 逐渐扩大参考集，指标持续改善；使用全部参考并加入轻量 pose-graph optimization 后，平均值进一步下降。</p>
+<p><img src="/img/R3-3.png" alt="R3-3" title="R3-3"></p>
+<p>图 3：$R^3$ 的整体流程。多视角 transformer 产生 camera tokens；相对姿态 MLP 为帧对输出旋转、平移和置信度；depth head 产生深度；最后由全局轨迹聚合器和关键帧库支持离线或流式重建。</p>
+<h3 id="3-有界内存的因果流式推理"><a href="#3-有界内存的因果流式推理" class="headerlink" title="3. 有界内存的因果流式推理"></a>3. 有界内存的因果流式推理</h3><p>流式模式下，输入帧一次到达，系统不能保留完整历史。论文维护一个主动上下文：</p>
+<script type="math/tex; mode=display">
+C_t=\{1\}\cup B_t,</script><p>其中第一帧固定轨迹原点，$B_t$ 是动态关键帧库。新帧 $j$ 只有在与当前关键帧足够不同的时候才进入库：</p>
+<script type="math/tex; mode=display">
+\max_{i\in B_t}\cos(\operatorname{tok}_i,\operatorname{tok}_j)<\tau.</script><p>这里使用 backbone 在跨帧交互前的 token 相似度来判断新颖性，避免把连续、近乎重复的画面都存下来。关键帧库达到容量 $M<em>{\max}$ 后，系统计算 token 新颖性与 pair confidence 的联合效用 $u_j=d_jc_j$，移除最不值得保留的条目；第一帧受到保护。论文附录给出的代表性设置包括 $M</em>{\max}=100$，若连续 $\Delta_{\max}=20$ 帧没有加入关键帧则强制接纳一帧。</p>
+<p>这让计算规模由“总历史长度”变成“主动上下文大小”。新帧只和 $C_t$ 中的参考帧计算相对关系，再由置信度加权得到位姿。对突然模糊、遮挡或场景切换的帧，置信度还可以触发缓存失效、跳过关键帧接纳以及抑制该帧位姿。</p>
+<h3 id="4-同一模型兼容-full-context"><a href="#4-同一模型兼容-full-context" class="headerlink" title="4. 同一模型兼容 full-context"></a>4. 同一模型兼容 full-context</h3><p>如果完整视频片段在推理时已经可用，$R^3$ 只需去掉 causal attention mask，就可以让 backbone 同时看到所有帧，并查询每个有向帧对。论文先用一次因果流式过程初始化轨迹，再执行一次轻量的置信度加权 pose-graph refinement。这个 refinement 只处理相对位姿残差和标量置信度，不包含 bundle adjustment、点重投影或深度优化，所以它不是第二套离线模型，而是同一 checkpoint 的测试时上下文开关。</p>
+<h3 id="5-置信度加权训练目标"><a href="#5-置信度加权训练目标" class="headerlink" title="5. 置信度加权训练目标"></a>5. 置信度加权训练目标</h3><p>旋转、平移的监督残差分别写成：</p>
+<script type="math/tex; mode=display">
+\mathcal L_{\mathrm{rot}}(i,j)
+=c^R_{i\to j}\ell_{\mathrm{rot}}^{L_1}(i,j)
+-\alpha\log c^R_{i\to j},</script><script type="math/tex; mode=display">
+\mathcal L_{\mathrm{trans}}(i,j)
+=c^T_{i\to j}\ell_{\mathrm{trans}}^{L_1}(i,j)
+-\alpha\log c^T_{i\to j}.</script><p>$\alpha=0.2$。当 pair 的预测残差较大时，第一项会促使网络降低对应置信度；$-\log c$ 正则项又避免置信度塌缩到零。训练最终学到的是“低残差边高置信、高残差边低置信”的可复用信号，而不是只在测试时临时估计一个分数。总损失为：</p>
+<script type="math/tex; mode=display">
+\mathcal L=\mathcal L_{\mathrm{cam}}+\mathcal L_{\mathrm{depth}}.</script><p>深度分支在每帧内部做 median normalization，以消除场景尺度歧义；合成数据使用真实深度，真实世界序列使用冻结的预训练 DA3 产生监督目标，并学习逐像素深度置信度。也就是说，论文同时在 pair 级和 pixel 级使用了不确定性加权，但真正支撑长序列控制的是旋转/平移 pair confidence。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>论文从四个维度评估：</p>
+<ul>
+<li>相机位姿：Sintel 使用 50 帧片段，TUM-dynamics 与 ScanNet 使用 90 帧片段，报告 ATE、RPE-T 和 RPE-R。</li>
+<li>稀疏视图点图重建：在 7-Scenes 与 NRGBD 上按步长 200、100 采样关键帧，报告 Accuracy、Completeness 和 Normal Consistency 的均值与中位数。</li>
+<li>长序列：7-Scenes 测试长度 200、500、1000；ScanNet/TUM-dynamics 观察输入视图增加时的 ATE；DL3DV-Benchmark 取 25 个、长度 304–439 帧且具有更宽基线和户外场景的片段。</li>
+<li>干扰鲁棒性：遵循 Robust-VGGT 协议，在 ETH3D 与 RobustNeRF 中插入 Small/Medium/Large distractor，三种设置各使用 10 个随机种子。</li>
+</ul>
+<p>训练方面，附录 Table 10 列出 15 个公开数据集：AriaSyntheticENV、ARKitScenes、CO3Dv2、DL3DV、HyperSim、MapFree、MVS-Synth、OmniWorld-Game、ScanNet、ScanNet++、Spring、TartanAir、Dynamic Replica、Virtual KITTI 2 和 WildRGBD。数据源同时覆盖合成、COLMAP、LiDAR/RGB-D 与真实世界视频，目的是让相对关系和深度 head 不只适应单一传感器或室内分布。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>论文主文给出的模型规模是 372M 参数，训练使用 6 张 48GB GPU；作者强调这大约是近期 1B 级 feed-forward 重建模型的三分之一。训练时大部分 DA3-Large backbone 保持冻结，只更新 global attention 层和相对姿态 head，约 110M 参数参与训练。</p>
+<p>训练片段长度为 4–32 views，前期大多数 batch 最多 16 帧，后半程扩展到 32 帧；使用 gradient checkpointing、bf16 和 FlexAttention。在没有 DA3 teacher 时，每张 GPU 的吞吐上限约为 200 views；需要 teacher 时约为 96 views。优化分为两阶段：第一阶段 15k iterations，第二阶段专门训练相对 head 25k iterations，使用 AdamW，学习率从 $10^{-4}$ 经过 cosine schedule 降到 $10^{-5}$，并在第二阶段使用梯度累积。</p>
+<p>论文 Figure 1 的图注将方法概括为 20+ FPS、372M 参数和可扩展到数千帧；同一视觉面板中的文字标注为 30+ FPS。由于论文没有在这两个数字旁给出统一的硬件与测量口径，阅读时应把它们理解成效率示意，而不是可直接复现的单一 benchmark。项目页和代码仓库还会随版本更新提供更具体的推理信息，部署或复现实验应以对应 release 为准。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="1-短序列相机位姿"><a href="#1-短序列相机位姿" class="headerlink" title="1. 短序列相机位姿"></a>1. 短序列相机位姿</h3><p><img src="/img/R3-4.png" alt="R3-4" title="R3-4"></p>
+<p>表 2：离线结果在上、流式结果在下；ATE、RPE-T、RPE-R 均为越低越好，RPE-R 的单位是度。$R^3$ 的 full-context 结果使用同一 checkpoint 关闭 causal mask。</p>
+<p>流式 $R^3$ 在三套数据上的结果为：</p>
+<ul>
+<li>Sintel：ATE 0.115、RPE-T 0.068、RPE-R 0.548；</li>
+<li>TUM-dynamics：ATE 0.018、RPE-T 0.010、RPE-R 0.320；</li>
+<li>ScanNet：ATE 0.038、RPE-T 0.016、RPE-R 0.480。</li>
+</ul>
+<p>它在整体位姿表现上优于多数流式基线，同时模型只有 372M 参数；例如 CUT3R 为 793M，StreamVGGT 为 1.26B。也要保留表格中的细节：Sintel 上 TTT3R 的 RPE-T 为 0.063，略低于 $R^3$ 的 0.068，因此“整体最强”不能被误读为每个单项都第一。full-context 模式下，$R^3$ 在 Sintel/TUM-dynamics/ScanNet 的 ATE 分别为 0.130/0.012/0.037，与 DA3-Large 和 VGGT 的全序列参考结果保持竞争力；Sintel 的相对较弱表现主要与 sintel-temple-3 这一异常序列有关。</p>
+<h3 id="2-点图重建"><a href="#2-点图重建" class="headerlink" title="2. 点图重建"></a>2. 点图重建</h3><p><img src="/img/R3-5.png" alt="R3-5" title="R3-5"></p>
+<p>表 3：7-Scenes 与 NRGBD 上的 sparse-view point-map reconstruction。Accuracy、Completeness 越低越好，Normal Consistency 越高越好。</p>
+<p>在 7-Scenes 上，流式 $R^3$ 的 Accuracy mean/median 为 0.092/0.038，Completeness 为 0.093/0.040，NC 为 0.755/0.868；full-context 切换后，主要 mean 指标改善为 Accuracy 0.081、Completeness 0.070。NRGBD 上流式结果为 0.047/0.022、0.050/0.020、0.883/0.991，仍与最强流式方法接近。这个结果说明相对边的价值不止体现在轨迹表格中：当稀疏关键帧被放进同一坐标系时，更稳定的位姿也会直接改善点图的对齐。</p>
+<h3 id="3-长序列稳定性"><a href="#3-长序列稳定性" class="headerlink" title="3. 长序列稳定性"></a>3. 长序列稳定性</h3><p><img src="/img/R3-6.png" alt="R3-6" title="R3-6"></p>
+<p>图 4：随着输入帧数增加，ScanNet 与 TUM-dynamics 上的 ATE 曲线。若模型发生 OOM，曲线用 OOM 标记。</p>
+<p>图 4 的趋势不是“误差完全不增长”，而是 $R^3$ 的增长更缓且不容易因为历史变长而超出显存。相比之下，若干基线在几百帧后漂移明显，或直接触及 48 GiB 内存上限。论文将这种稳定性归因于对关键帧库的有界访问，以及置信度对边权的筛选。</p>
+<p><img src="/img/R3-7.png" alt="R3-7" title="R3-7"></p>
+<p>图 5：户外长流式片段的定性比较。三行场景中，$R^3$ 的轨迹和 point-map 对齐在数百帧尺度上更完整。</p>
+<p><img src="/img/R3-8.png" alt="R3-8" title="R3-8"></p>
+<p>表 4：7-Scenes 长序列重建。$R^3$ 在长度 200/500/1000 时的 Acc、Comp、NC 分别为 0.021/0.018/0.600、0.022/0.017/0.562、0.022/0.017/0.538，三种长度的数值都保持得很平。</p>
+<p><img src="/img/R3-9.png" alt="R3-9" title="R3-9"></p>
+<p>表 5：DL3DV-Benchmark 的相机轨迹。$R^3$ 的 ATE-norm、ATE-RMSE、Rot RMSE 和 win rate 为 1.16%、0.155、1.79°、24/25。这个测试比主要的室内数据更接近宽基线和户外情况，表明局部相对关系在分布变化下仍能组装出稳定轨迹。</p>
+<h3 id="4-干扰帧与置信度门控"><a href="#4-干扰帧与置信度门控" class="headerlink" title="4. 干扰帧与置信度门控"></a>4. 干扰帧与置信度门控</h3><p><img src="/img/R3-10.png" alt="R3-10" title="R3-10"></p>
+<p>表 6：插入干扰帧后的鲁棒性。裸 $R^3$ 在 ETH3D/RobustNeRF 上的 ATE 为 0.998/0.199；启用 reject 后降为 0.244/0.152，拒绝成功率分别为 1.000/0.986。对比方法 RobustVGGT 需要额外的多遍离线检测，而 $R^3$ 在单次在线过程中复用 pair confidence 完成缓存失效、跳过关键帧和抑制异常位姿。</p>
+<p>这部分实验清楚地展示了置信度的“跨模块复用”：它不是一个只用于画热力图的附加输出，而是将局部几何判断转化为系统控制信号。不过，裸模型在不启用 reject 时并不鲁棒，说明门控规则仍是完整系统的一部分，不能只复现相对 pose head 就宣称获得同样的抗干扰能力。</p>
+<h3 id="5-相对目标的消融"><a href="#5-相对目标的消融" class="headerlink" title="5. 相对目标的消融"></a>5. 相对目标的消融</h3><p><img src="/img/R3-11.png" alt="R3-11" title="R3-11"></p>
+<p>表 7：在相同 backbone、数据和优化预算下，只改变位姿预测目标与损失。full-context 中，Sintel 的 ATE/RPE-T/RPE-R 从 direct baseline 的 0.1583/0.0841/0.9492 降到 0.1370/0.0757/0.7282，ScanNet 从 0.0683/0.0195/0.5143 降到 0.0604/0.0189/0.5039。streaming 中，相对目标把 ScanNet 的三项从 0.063/0.026/1.33 改善为 0.052/0.021/0.93；Sintel 的 ATE 则从 0.141 变为 0.146，略有回退。</p>
+<p>这个控制实验很关键：长序列上的收益不只是因为后面加了关键帧库或 pose-graph refinement，而是相对姿态本身提供了更适合学习的几何先验。另一方面，Sintel streaming ATE 的小幅回退也提醒我们，相对目标不是对所有数据和指标都无条件占优。</p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><strong>学习目标更贴近局部几何。</strong> 预测两帧之间的相对关系，降低了网络直接记忆长距离全局坐标的负担；全局轨迹变成下游可解释的组装过程。</li>
+<li><strong>置信度形成统一控制回路。</strong> 旋转/平移置信度同时用于 loss weighting、候选位姿融合、关键帧保留和 outlier rejection，训练信号与系统行为是一致的。</li>
+<li><strong>流式与离线共用 checkpoint。</strong> 因果 mask 控制是否看全上下文，避免为短片段和长视频维护两套完全不同的模型。</li>
+<li><strong>长序列证据比较完整。</strong> 论文同时给出短序列位姿、稀疏点图、1000 帧重建、DL3DV 宽基线和干扰帧实验，覆盖了精度、内存和鲁棒性三个层面。</li>
+</ol>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li><strong>模型依然不算轻。</strong> 372M 参数、约 110M 可训练参数和 6 张 48GB GPU 的训练配置，对边缘端无人机或机器人平台仍然有明显门槛。</li>
+<li><strong>关键阈值依赖人工设置。</strong> 关键帧新颖性 $\tau$、库容量 $M<em>{\max}$、强制接纳间隔 $\Delta</em>{\max}$ 以及异常拒绝阈值都需要根据数据分布调整，论文没有把它们完全学习化。</li>
+<li><strong>流式模式仍可能漂移。</strong> 因果系统不能重新访问过去 token，远距离视角、遮挡和很长的连续运动会留下残余几何不一致；没有周期性 reset 时尤其如此。</li>
+<li><strong>没有消除全局优化的取舍。</strong> full-context 仍然需要一次 pose-graph refinement，流式系统则用有限主动上下文换取内存上界；相对回归降低了漂移风险，却没有从理论上消除累计误差。</li>
+<li><strong>泛化与扩展空间尚未充分展开。</strong> 论文没有系统探索更大 backbone、更大规模数据、联合 BA 或深度-位姿的全局重优化；主要定量评估仍集中在室内数据，DL3DV 只是一组更宽基线的补充测试。</li>
+</ol>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ul>
+<li><strong>先回归局部边，再组装全局轨迹。</strong> $R^3$ 的核心不是又一个绝对位姿头，而是改变了 feed-forward 三维重建的基本监督单位。</li>
+<li><strong>置信度不是附属分数，而是控制信号。</strong> 旋转和平移的可信程度贯穿训练、融合、内存管理和异常拒绝。</li>
+<li><strong>有界关键帧库把无限历史变成主动上下文。</strong> 通过 token 新颖性和置信度共同决定“留谁、删谁、信谁”。</li>
+<li><strong>一个 causal checkpoint，通过 attention mask 切换兼容 streaming 与 full-context。</strong></li>
+<li><strong>相对回归缓解坐标负担，但不等于没有漂移。</strong> 真正的长序列系统仍需要合理的参考帧选择、置信度门控，以及在必要时进行全局修正。</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a><a class="post-meta__tags" href="/tags/%E7%9B%B8%E5%AF%B9%E5%A7%BF%E6%80%81/">相对姿态</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E5%BC%8F%E9%87%8D%E5%BB%BA/">流式重建</a><a class="post-meta__tags" href="/tags/%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/">点云重建</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E8%A7%89%E5%87%A0%E4%BD%95/">视觉几何</a></div><div class="post-share"><div class="social-share" data-image="/img/R3-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/09/14/MonoInstance/" title="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction"><img class="cover" src="/img/MonoInstance-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction</div></div><div class="info-2"><div class="info-item-1">作者：Wenyuan Zhang, Yixiao Yang, Han Huang, Liang Han, Kanle Shi, Yu-Shen Liu, Zhizhong Han 单位：清华大学软件学院、快手科技、Wayne State University 会议：CVPR 2025 链接：CVF Open Access · Project Page 研究动机NeRF、3D Gaussian Splatting（3DGS）等多视角神经表示通常通过颜色重建损失学习场景。颜色的多视角一致性能够让渲染结果看起来合理，却不能保证几何一定正确，尤其是在纹理弱、遮挡多或存在 shape-radiance ambiguity 的区域。于是，MonoSDF 等方法会加入单目深度和法向先验，帮助优化器恢复更完整的表面。 问题在于，单目先验本身也不完美：模型存在域差异，且每张 RGB 图像被独立预测，同一个椅腿、灯架或建筑边缘在不同视角下可能对应不同的 3D...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/12/08/3DGS/" title="DIFFERENTIABLE 3D GAUSSIAN SPLATTING"><img class="cover" src="/img/3DGS1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DIFFERENTIABLE 3D GAUSSIAN SPLATTING</div></div><div class="info-2"><div class="info-item-1"> 3D高斯的优势：非结构化、可微、利用快速α混合进行渲染、无需法线 世界坐标系下，高斯由三维协方差矩阵和点（均值）μ表示：  G ( x ) \,=e^{-\frac{1} {2} ( x )^{T} \Sigma^{-1} ( x )} \tag{4}给定视角变换矩阵W，相机坐标系下的协方差矩阵为：  \Sigma^{\prime}=J W \Sigma W^{T} J^{T} \tag{5}其中J是投影变换的仿射近似雅可比矩阵 协方差矩阵只有在半正定的时候才具有物理意义，而如果直接对协方差矩阵使用梯度下降优化，很难保证矩阵的合理性。 由于协方差矩阵是用来描述椭球的形状，因此可以用缩放矩阵S和旋转矩阵R来获得一个对应的协方差矩阵：  \Sigma=R S S^{T} R^{T}\tag{6}OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIANSOptimization优化的参数：位置p，α，协方差矩阵，球谐函数系数  \mathcal{L}=( 1-\lambda)...</div></div></div></a><a class="pagination-related" href="/2026/07/08/3DShape2VecSet/" title="3DShape2VecSet: A 3D Shape Representation for Neural Fields and Generative Diffusion Models"><img class="cover" src="/img/3DShape2VecSet-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-07-08</div><div class="info-item-2">3DShape2VecSet: A 3D Shape Representation for Neural Fields and Generative Diffusion Models</div></div><div class="info-2"><div class="info-item-1">作者：Biao Zhang, Jiapeng Tang, Matthias Nießner, Peter Wonka 单位：KAUST, Technical University of Munich 会议：ACM Transactions on Graphics 42(4), SIGGRAPH 2023 链接：arXiv / Project / Code / DOI 研究动机3DShape2VecSet 讨论的是一个很基础但容易被低估的问题：如果要把扩散模型真正搬到 3D 形状生成里，应该在什么表示空间里扩散？ 2D 图像扩散模型可以直接在像素或压缩 latent 上工作，因为图像天然是规则网格。但 3D 形状没有这么统一的表示：voxel 规则但立方级开销太大，point cloud 轻量但缺少连续表面，mesh 结构复杂，neural field 连续且能表达完整表面，却本身像一个无限维函数，不能直接作为扩散模型的固定长度输入。 论文选择的路线是 latent diffusion：先训练一个 shape autoencoder，把 3D 形状压成固定大小...</div></div></div></a><a class="pagination-related" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img class="cover" src="/img/2DGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-06-15</div><div class="info-item-2">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</div></div><div class="info-2"><div class="info-item-1">作者：Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, Shenghua Gao 单位：ShanghaiTech University, University of Tübingen, Tübingen AI Center 会议：SIGGRAPH 2024 Conference Papers 链接：arXiv, Project, Code 研究动机 3D Gaussian Splatting 的吸引力在于它把新视角合成做到了高质量、快速训练和实时渲染，但它的几何表达并不天然适合表面重建。3DGS 的基本单元是三维体素状 Gaussian blob，它可以很好地拟合视图相关外观，却会在几何上产生一个矛盾：真实世界的许多物体表面是薄的二维流形，而 3D Gaussian 表示的是有体积的密度分布。颜色可以通过体渲染被拟合出来，但表面在哪里、法向是否一致、不同视角看到的交点是否稳定，并没有被表示方式直接约束。 这篇文章要解决的问题不是单纯提升 PSNR，而是把 Gaussian Splatting...</div></div></div></a><a class="pagination-related" href="/2024/12/06/Dust3r/" title="DUSt3R: Geometric 3D Vision Made Easy"><img class="cover" src="/img/Dust3r1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">DUSt3R: Geometric 3D Vision Made Easy</div></div><div class="info-2"><div class="info-item-1">相关概念Pointmap将三维点的稠密二维场表示为pointmap $X \in\mathbb{R}^{W \times H \times3}$ ，对应分辨率为$W×H$ 的RGB图像 $I$，$X$描述了图像像素和三维场景点之间的一一对应关系。 假设每一条相机光线只会击中一个三维点，即忽略半透明表面的情况 Cameras and scene给定相机内参矩阵$K \in\mathbb{R}^{3 \times3}$ ，pointmap就能够根据给定的ground-truth 深度图$D \in\mathbb{R}^{W \times H}$ 获得：  X_{i, j}=K^{-1} D_{i, j} \left[ i, j, 1 \right]^{\top}$X^{n,m}$表示相机$n$的pointmap $X^n$在相机$m$坐标系中的表示：  X^{n, m}=P_{m} P_{n}^{-1} h \left( X^{n} \right) \tag{1}其中$P{m}, P{n} \in\mathbb{R}^{3 \times4}$ 是世界坐标系到相机坐标系的位姿，$h...</div></div></div></a><a class="pagination-related" href="/2024/12/08/EWAVolumeSplatting/" title="EWA Volume Splatting"><img class="cover" src="/img/EWA1.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2024-12-08</div><div class="info-item-2">EWA Volume Splatting</div></div><div class="info-2"><div class="info-item-1">elliptical Gaussian kernels 椭圆高斯核 Splatting algorithms interpret volume data as a set of particles that are absorbing and emitting light. 泼溅算法将体素数据解释为一组吸收和发射光的粒子。 Our method is based on a novel framework to compute the footprint function, which relies on the transformation of the volume data to so-called ray space. This transformation is equivalent to perspective projection. By using its local affine approximation at each voxel, we derive an analytic expression for the EWA footprint in...</div></div></div></a><a class="pagination-related" href="/2026/05/18/IVGT/" title="IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation"><img class="cover" src="/img/IVGT-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-18</div><div class="info-item-2">IVGT: Implicit Visual Geometry Transformer for Neural Scene Representation</div></div><div class="info-2"><div class="info-item-1">作者：Yuqi Wu, Tianyu Hu, Wenzhao Zheng, Yuanhui Huang, Haowen Sun, Jie Zhou, Jiwen Lu 单位：Intelligent Vision Group, Tsinghua University 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.16258 研究动机 这篇文章的核心问题是：现有 VGGT/DUSt3R 系列视觉几何基础模型大多输出显式几何，例如每个输入视角上的 depth map 或 pixel-aligned pointmap。这种表示非常适合快速估计相机和粗几何，但它有两个天然限制：  几何只定义在像素采样点上，是离散的、视角绑定的，同一个物理表面可能在多个视角中被重复预测。  如果要得到连续 mesh、任意视角渲染、surface normal 或 SDF 等下游结果，往往还需要额外建模或后处理。   传统 NeRF/SDF 方法能提供连续神经场，但通常依赖已知相机位姿，并且需要每个场景单独优化。IVGT 想把这两条路线接起来：像 VGGT...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">121</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%8E%E5%85%A8%E5%B1%80%E4%BD%8D%E5%A7%BF%E6%94%B9%E6%88%90%E5%B8%A6%E7%BD%AE%E4%BF%A1%E5%BA%A6%E7%9A%84%E7%9B%B8%E5%AF%B9%E4%BD%8D%E5%A7%BF"><span class="toc-number">2.1.</span> <span class="toc-text">1. 从全局位姿改成带置信度的相对位姿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%88%E7%94%9F%E6%88%90%E5%B1%80%E9%83%A8%E8%BE%B9%EF%BC%8C%E5%86%8D%E8%81%9A%E5%90%88%E5%85%A8%E5%B1%80%E8%BD%A8%E8%BF%B9"><span class="toc-number">2.2.</span> <span class="toc-text">2. 先生成局部边，再聚合全局轨迹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9C%89%E7%95%8C%E5%86%85%E5%AD%98%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%B5%81%E5%BC%8F%E6%8E%A8%E7%90%86"><span class="toc-number">2.3.</span> <span class="toc-text">3. 有界内存的因果流式推理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%90%8C%E4%B8%80%E6%A8%A1%E5%9E%8B%E5%85%BC%E5%AE%B9-full-context"><span class="toc-number">2.4.</span> <span class="toc-text">4. 同一模型兼容 full-context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%BD%AE%E4%BF%A1%E5%BA%A6%E5%8A%A0%E6%9D%83%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="toc-number">2.5.</span> <span class="toc-text">5. 置信度加权训练目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9F%AD%E5%BA%8F%E5%88%97%E7%9B%B8%E6%9C%BA%E4%BD%8D%E5%A7%BF"><span class="toc-number">5.1.</span> <span class="toc-text">1. 短序列相机位姿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%82%B9%E5%9B%BE%E9%87%8D%E5%BB%BA"><span class="toc-number">5.2.</span> <span class="toc-text">2. 点图重建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%95%BF%E5%BA%8F%E5%88%97%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="toc-number">5.3.</span> <span class="toc-text">3. 长序列稳定性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B9%B2%E6%89%B0%E5%B8%A7%E4%B8%8E%E7%BD%AE%E4%BF%A1%E5%BA%A6%E9%97%A8%E6%8E%A7"><span class="toc-number">5.4.</span> <span class="toc-text">4. 干扰帧与置信度门控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%9B%B8%E5%AF%B9%E7%9B%AE%E6%A0%87%E7%9A%84%E6%B6%88%E8%9E%8D"><span class="toc-number">5.5.</span> <span class="toc-text">5. 相对目标的消融</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/16/R3/" title="$R^3$: 3D Reconstruction via Relative Regression"><img src="/img/R3-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="$R^3$: 3D Reconstruction via Relative Regression"/></a><div class="content"><a class="title" href="/2026/09/16/R3/" title="$R^3$: 3D Reconstruction via Relative Regression">$R^3$: 3D Reconstruction via Relative Regression</a><time datetime="2026-09-16T08:29:49.000Z" title="发表于 2026-09-16 16:29:49">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/14/MonoInstance/" title="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction"><img src="/img/MonoInstance-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction"/></a><div class="content"><a class="title" href="/2026/09/14/MonoInstance/" title="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction">MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction</a><time datetime="2026-09-14T10:48:02.000Z" title="发表于 2026-09-14 18:48:02">2026-09-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/14/Scalix/" title="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM"><img src="/img/Scalix-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM"/></a><div class="content"><a class="title" href="/2026/09/14/Scalix/" title="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM">Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM</a><time datetime="2026-09-14T10:48:02.000Z" title="发表于 2026-09-14 18:48:02">2026-09-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/01/AerialMetric/" title="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World"><img src="/img/AerialMetric-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World"/></a><div class="content"><a class="title" href="/2026/09/01/AerialMetric/" title="AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World">AerialMetric: Benchmarking and Adapting UAV Monocular Metric Depth Estimation in the Real World</a><time datetime="2026-09-01T08:50:29.000Z" title="发表于 2026-09-01 16:50:29">2026-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"><img src="/img/D2-4DGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"/></a><div class="content"><a class="title" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</a><time datetime="2026-08-31T13:00:11.000Z" title="发表于 2026-08-31 21:00:11">2026-08-31</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/R3-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
