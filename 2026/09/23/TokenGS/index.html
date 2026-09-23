@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens | Zhu Low Key</title><meta name="author" content="Zhu Jiajun"><meta name="copyright" content="Zhu Jiajun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作者：Jiawei Ren, Michal Jan Tyszkiewicz, Jiahui Huang, Zan Gojcic 单位：NVIDIA 会议：CVPR 2026 Highlight（论文为 arXiv v1） 链接：arXiv:2604.15239 · Project Page · Code 研究动机很多前馈式 3DGS 模型按图像像素或 patch 预测高斯，并把中心表示成相机射线上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens">
+<meta property="og:url" content="https://zjj-low-key.github.io/2026/09/23/TokenGS/index.html">
+<meta property="og:site_name" content="Zhu Low Key">
+<meta property="og:description" content="作者：Jiawei Ren, Michal Jan Tyszkiewicz, Jiahui Huang, Zan Gojcic 单位：NVIDIA 会议：CVPR 2026 Highlight（论文为 arXiv v1） 链接：arXiv:2604.15239 · Project Page · Code 研究动机很多前馈式 3DGS 模型按图像像素或 patch 预测高斯，并把中心表示成相机射线上">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zjj-low-key.github.io/img/TokenGS-0.png">
+<meta property="article:published_time" content="2026-09-23T08:55:51.000Z">
+<meta property="article:modified_time" content="2026-09-23T09:21:30.295Z">
+<meta property="article:author" content="Zhu Jiajun">
+<meta property="article:tag" content="3D高斯">
+<meta property="article:tag" content="新视角合成">
+<meta property="article:tag" content="动态场景">
+<meta property="article:tag" content="前馈模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zjj-low-key.github.io/img/TokenGS-0.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens",
+  "url": "https://zjj-low-key.github.io/2026/09/23/TokenGS/",
+  "image": "https://zjj-low-key.github.io/img/TokenGS-0.png",
+  "datePublished": "2026-09-23T08:55:51.000Z",
+  "dateModified": "2026-09-23T09:21:30.295Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhu Jiajun",
+      "url": "https://zjj-low-key.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="https://cdn.icon-icons.com/icons2/1804/PNG/512/iconfinder-517-astronomy-plenet-education-learning-4212897_114939.png"><link rel="canonical" href="https://zjj-low-key.github.io/2026/09/23/TokenGS/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">123</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/TokenGS-0.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Zhu Low Key</span></a><a class="nav-page-title" href="/"><span class="site-name">TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-23T08:55:51.000Z" title="发表于 2026-09-23 16:55:51">2026-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-23T09:21:30.295Z" title="更新于 2026-09-23 17:21:30">2026-09-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/">三维重建</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>作者：</strong>Jiawei Ren, Michal Jan Tyszkiewicz, Jiahui Huang, Zan Gojcic</p>
+<p><strong>单位：</strong>NVIDIA</p>
+<p><strong>会议：</strong>CVPR 2026 Highlight（论文为 arXiv v1）</p>
+<p><strong>链接：</strong><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.15239">arXiv:2604.15239</a> · <a target="_blank" rel="noopener" href="https://research.nvidia.com/labs/toronto-ai/tokengs/">Project Page</a> · <a target="_blank" rel="noopener" href="https://github.com/nv-tlabs/TokenGS">Code</a></p>
+<h2 id="研究动机"><a href="#研究动机" class="headerlink" title="研究动机"></a>研究动机</h2><p>很多前馈式 3DGS 模型按图像像素或 patch 预测高斯，并把中心表示成相机射线上的深度。这种参数化一方面把几何绑在输入像素和相机姿态上：位姿稍有噪声，多视图就可能彼此不一致；另一方面，高斯数量随分辨率和视图数一起增长。论文举例指出，32 张 512×512 图像按像素输出会超过 800 万个基元，其中不少只是重复覆盖同一场景。直接在测试时优化所有高斯参数也可能破坏预训练模型带来的几何先验。</p>
+<p>TokenGS 保留前馈推理，但改变输出端的“单位”：不再为像素分配高斯，而是让一组 learnable Gaussian tokens 直接回归共享场景坐标中的三维中心，再由每个 token 解码局部高斯簇。这样，高斯数量可以作为模型容量旋钮，而不是输入图像分辨率的副产物。</p>
+<p><img src="/img/TokenGS-0.png" alt="TokenGS-0" title="TokenGS-0"></p>
+<p>图 1 汇总了论文展示的几类能力：静态室内/室外重建、较均衡的高斯空间分布，以及动态序列中的运动建模与场景流。与 UniQueR 不同，TokenGS 的实验输入带有相机位姿；它解耦的是高斯中心与像素射线，并不是一个无位姿输入方法。</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><p><strong>从图像 token 解码 Gaussian token。</strong> 输入是带外参的多视图图像。ViT 编码器把图像 patch 与相应的 Plücker 射线位置信息编码为图像 token；Transformer 解码器则接收一组可学习的高斯 token，先对图像 token 做交叉注意力，再在高斯 token 之间自注意力。每个输出 token 预测一组 3DGS 属性，包括直接回归的 XYZ 中心、颜色、不透明度、尺度和旋转。论文的默认 token 可各生成 64 个高斯：1024 个 token 对应约 66K 个高斯，4096 个 token 对应 262K。</p>
+<p><img src="/img/TokenGS-2.png" alt="TokenGS-2" title="TokenGS-2"></p>
+<p>与像素对齐的深度/坐标参数化相比，直接 XYZ 预测让中心可以离开相机射线，从而能把基元放到遮挡或视角外的场景部分。图 3 的单物体示例强调，几种表示都能拟合输入视图，但对不可见区域的几何延伸不同。这个训练不需要点图真值：模型把高斯渲染到监督视图，使用图像重建损失和可见性正则化。可见性项惩罚那些中心落在所有监督视图画面之外、因而无法收到正常渲染梯度的高斯，以减少漂浮点与无效容量。</p>
+<p><img src="/img/TokenGS-3.png" alt="TokenGS-3" title="TokenGS-3"></p>
+<p><strong>动态场景由静态与动态 token 分工。</strong> 动态版本将 token 划分为时间不变的静态部分和带时间条件的动态部分。动态 token 加入目标时间戳（论文称 bullet-time）的嵌入，并采用结构化注意力掩码，使运动部分能够依赖静态场景结构，同时保持跨时间的一致对应。图 4 示意注意力分区；图 8、图 9 则分别展示中间时间戳渲染和动态高斯轨迹。</p>
+<p><img src="/img/TokenGS-4.png" alt="TokenGS-4" title="TokenGS-4"></p>
+<p><strong>测试时扩展不必改网络权重。</strong> 论文给出两个互补策略：一是 context extension，测试时加入比训练时更多的输入视图，但高斯数量不随视图数改变；二是 token tuning，只优化当前场景的高斯 token embedding，冻结网络权重和图像特征。这样做是希望在适应场景的同时保留 decoder 学到的先验，而不是直接把全部高斯自由拟合到少数输入图像上。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>静态场景评估包括 RealEstate10K（双视图重建、位姿噪声、视角外推）和 DL3DV（2、4、6 视图的上下文长度泛化与视角外推）。DL3DV 的 4-view 是论文报告的训练视图数，2-view 和 6-view 用于测试 context extension。动态实验使用 Kubric 4D：以在 RealEstate10K 与 DL3DV 上训练的 4-view 基础模型为起点，增加 256 个动态高斯 token 并在 Kubric 上微调，最终在 16 个 held-out 场景上评估。</p>
+<h2 id="算力"><a href="#算力" class="headerlink" title="算力"></a>算力</h2><p>静态基础模型采用 6 层编码器、24 层解码器，通道维度 1024；为了在 DL3DV 上测试更高分辨率和更多视图，论文还使用 3 层编码器、12 层解码器的设置。训练 batch size 为 64，使用 8 张 NVIDIA A100：先以 1024 个 Gaussian token、256×256 分辨率训练 150K 次迭代，再以 4096 个 token 微调 10K 次。DL3DV 微调分辨率为 448×256。作者报告基础训练约 36 小时，微调通常约 4 小时，具体取决于 token 数和分辨率。</p>
+<p>测试时 token tuning 默认 50 步、学习率 $10^{-4}$；论文也在实验中扫描更多步数。动态 Kubric 阶段另以 256 个动态 token 微调 50K 次。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><strong>双视图重建与基元预算。</strong> RealEstate10K 的表 1 中，1024-token 模型只用约 66K 个高斯便达到 28.02 PSNR / 0.896 SSIM；4096-token 微调版达到 28.41 / 0.903，加入 token tuning 后为 28.82 / 0.910 / 0.130（PSNR / SSIM / LPIPS，262K 高斯）。这说明 token 数可以独立控制压缩与质量；基线仍可能在某些指标上有优势，例如表中 MVSplat 的 LPIPS 为 0.128。</p>
+<p><img src="/img/TokenGS-15.png" alt="TokenGS-15" title="TokenGS-15"></p>
+<p>图 5 的 RE10K 可视化展示了与 GS-LRM 的对比：TokenGS 直接预测 XYZ 后，几何尖刺较少。图 7 进一步在第二个输入相机加入 1–10 度旋转噪声，并画出相对 GS-LRM 的 PSNR 与 LPIPS 差值；随着噪声增大，TokenGS 的相对优势扩大，支持“中心不被射线硬约束会更抗位姿误差”的解释。</p>
+<p><img src="/img/TokenGS-5.png" alt="TokenGS-5" title="TokenGS-5"></p>
+<p><img src="/img/TokenGS-7.png" alt="TokenGS-7" title="TokenGS-7"></p>
+<p><strong>视图数扩展与视角外推。</strong> DL3DV 表 2 中，4-view 训练的模型无需重新训练即可用于 2-view、6-view。6-view 加 token tuning 时，PSNR 达到 24.51，使用 262K 高斯；DepthSplat 为 24.19，但用了 688K 高斯。不过 DepthSplat 的 SSIM / LPIPS 更好（0.823 / 0.147，对比 TokenGS 的 0.792 / 0.295）。所以结果说明的是更灵活的预算与 PSNR 取舍，不是所有图像质量指标都胜出。</p>
+<p><img src="/img/TokenGS-16.png" alt="TokenGS-16" title="TokenGS-16"></p>
+<p>表 3 将目标视图放到输入上下文之外。TokenGS 在 DL3DV 与 RealEstate10K 上的 PSNR 分别为 20.98 和 22.60，均高于表中对照；但在 DL3DV 的 SSIM、LPIPS 上仍落后于带 point-map supervision 的 DepthSplat+PM，在 RealEstate10K 上 LPIPS 也不是最佳。图 6 的定性例子显示，直接 3D 坐标预测有助于把几何延伸到输入相机未覆盖的边界区域。</p>
+<p><img src="/img/TokenGS-17.png" alt="TokenGS-17" title="TokenGS-17"></p>
+<p><img src="/img/TokenGS-6.png" alt="TokenGS-6" title="TokenGS-6"></p>
+<p><strong>动态重建。</strong> Kubric 4D 表 4 中，TokenGS 的 PSNR 为 24.84，高于 BTimer 的 24.45；但 TokenGS 的 SSIM / LPIPS 为 0.821 / 0.287，低于 BTimer 的 0.835 / 0.162。图 8 展示中间时间戳渲染，图 9 可视化动态高斯的轨迹，支持其能显式跟踪运动的主张；定量结果则是 PSNR 与感知指标之间有明显取舍。</p>
+<p><img src="/img/TokenGS-18.png" alt="TokenGS-18" title="TokenGS-18"></p>
+<p><img src="/img/TokenGS-8.png" alt="TokenGS-8" title="TokenGS-8"></p>
+<p><img src="/img/TokenGS-9.png" alt="TokenGS-9" title="TokenGS-9"></p>
+<p>图 10 展示不同 token 的空间分配：单个 token 的高斯倾向于聚集在场景局部，不同 token 也呈现一定的功能分工。附录图 11 消融可见性损失，作者报告该正则带来约 0.4 PSNR 改善并减少不可见区域的漂浮物；图 12 展示增加输入视图或 token tuning 步数的测试时扩展。图 13 对比直接优化 Gaussian 参数与优化 token embedding：前者可能以近邻视图的数值提升为代价损害几何，后者的视觉结构更稳定。图 14 则显示固定视图数下，增加 Gaussian token 通常可提高 PSNR。</p>
+<p><img src="/img/TokenGS-10.png" alt="TokenGS-10" title="TokenGS-10"></p>
+<p><img src="/img/TokenGS-11.png" alt="TokenGS-11" title="TokenGS-11"></p>
+<p><img src="/img/TokenGS-12.png" alt="TokenGS-12" title="TokenGS-12"></p>
+<p><img src="/img/TokenGS-13.png" alt="TokenGS-13" title="TokenGS-13"></p>
+<p><img src="/img/TokenGS-14.png" alt="TokenGS-14" title="TokenGS-14"></p>
+<h2 id="优势与不足"><a href="#优势与不足" class="headerlink" title="优势与不足"></a>优势与不足</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>直接回归规范坐标中的高斯中心，避免把每个中心锁定在某个输入像素的相机射线上，也不依赖点图真值监督。</li>
+<li>Gaussian token 数独立于输入像素数与视图数，提供清楚的压缩—质量控制旋钮。</li>
+<li>token tuning 只调整场景 token embedding，冻结预训练网络和图像特征；结合更多上下文视图时，无需训练多套不同视图数模型。</li>
+<li>静态、动态实验共享 token 解码框架，动态 token 可通过时间条件表达运动并形成可视化场景流。</li>
+</ul>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
+<li>输入需要相机外参；相较无位姿前馈重建，它解决的是输出表示受像素射线束缚的问题，并未消除相机标定/位姿依赖。</li>
+<li>结果不是全面的指标胜出：动态 Kubric 的 SSIM、LPIPS 明显落后 BTimer；视图数扩展与外推实验中也存在 PSNR、SSIM、LPIPS 之间的权衡。</li>
+<li>作者承认大尺度环境和精细几何仍困难；token tuning 需要额外几十步测试时优化，虽然比全高斯优化更受先验约束，但仍增加推理成本。</li>
+</ul>
+<h2 id="记忆点"><a href="#记忆点" class="headerlink" title="记忆点"></a>记忆点</h2><ul>
+<li><strong>固定 token 数，改变场景密度：</strong> 表示预算由模型输出端决定，而不是被输入分辨率和图像数量自动放大。</li>
+<li><strong>解耦不等于免标定：</strong> TokenGS 不让高斯中心跟随像素射线，但仍以相机位姿编码输入几何。</li>
+<li><strong>测试时更新“压缩后的场景状态”：</strong> 只调 token embedding，试图让新视图适配与已学几何先验同时保留。</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/3D%E9%AB%98%E6%96%AF/">3D高斯</a><a class="post-meta__tags" href="/tags/%E6%96%B0%E8%A7%86%E8%A7%92%E5%90%88%E6%88%90/">新视角合成</a><a class="post-meta__tags" href="/tags/%E5%8A%A8%E6%80%81%E5%9C%BA%E6%99%AF/">动态场景</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E9%A6%88%E6%A8%A1%E5%9E%8B/">前馈模型</a></div><div class="post-share"><div class="social-share" data-image="/img/TokenGS-0.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/09/23/UniQueR/" title="UniQueR: Unified Query-based Feedforward 3D Reconstruction"><img class="cover" src="/img/UniQueR-0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">UniQueR: Unified Query-based Feedforward 3D Reconstruction</div></div><div class="info-2"><div class="info-item-1">作者：Chensheng Peng, Quentin Herau, Jiezhi Yang, Yichen Xie, Yihan Hu, Wenzhao Zheng, Matthew Strong, Masayoshi Tomizuka, Wei Zhan 单位：Applied Intuition, University of California, Berkeley, Stanford University 会议：ECCV 2026（收录；论文为 arXiv v2） 链接：arXiv:2603.22851 · Project Page · ECCV 2026 Accepted Papers 研究动机前馈式三维重建已经能从少量图像一次性预测点图或 3D Gaussian Splatting（3DGS），但常见做法仍是“每个像素对应一批三维基元”：几何沿相机射线组织，天然只覆盖输入图像看见的表面。换到遮挡区域或输入视角之外时，模型缺少主动分配几何的自由度，容易留下空洞。UniQueR...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/23/UniQueR/" title="UniQueR: Unified Query-based Feedforward 3D Reconstruction"><img class="cover" src="/img/UniQueR-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-09-23</div><div class="info-item-2">UniQueR: Unified Query-based Feedforward 3D Reconstruction</div></div><div class="info-2"><div class="info-item-1">作者：Chensheng Peng, Quentin Herau, Jiezhi Yang, Yichen Xie, Yihan Hu, Wenzhao Zheng, Matthew Strong, Masayoshi Tomizuka, Wei Zhan 单位：Applied Intuition, University of California, Berkeley, Stanford University 会议：ECCV 2026（收录；论文为 arXiv v2） 链接：arXiv:2603.22851 · Project Page · ECCV 2026 Accepted Papers 研究动机前馈式三维重建已经能从少量图像一次性预测点图或 3D Gaussian Splatting（3DGS），但常见做法仍是“每个像素对应一批三维基元”：几何沿相机射线组织，天然只覆盖输入图像看见的表面。换到遮挡区域或输入视角之外时，模型缺少主动分配几何的自由度，容易留下空洞。UniQueR...</div></div></div></a><a class="pagination-related" href="/2026/06/15/2DGS/" title="2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields"><img class="cover" src="/img/2DGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-06-15</div><div class="info-item-2">2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields</div></div><div class="info-2"><div class="info-item-1">作者：Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, Shenghua Gao 单位：ShanghaiTech University, University of Tübingen, Tübingen AI Center 会议：SIGGRAPH 2024 Conference Papers 链接：arXiv, Project, Code 研究动机 3D Gaussian Splatting 的吸引力在于它把新视角合成做到了高质量、快速训练和实时渲染，但它的几何表达并不天然适合表面重建。3DGS 的基本单元是三维体素状 Gaussian blob，它可以很好地拟合视图相关外观，却会在几何上产生一个矛盾：真实世界的许多物体表面是薄的二维流形，而 3D Gaussian 表示的是有体积的密度分布。颜色可以通过体渲染被拟合出来，但表面在哪里、法向是否一致、不同视角看到的交点是否稳定，并没有被表示方式直接约束。 这篇文章要解决的问题不是单纯提升 PSNR，而是把 Gaussian Splatting...</div></div></div></a><a class="pagination-related" href="/2026/08/31/D2-4DGS/" title="D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting"><img class="cover" src="/img/D2-4DGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-08-31</div><div class="info-item-2">D^2-4DGS: Dual-Depth Guided Sparse-Camera 4D Gaussian Splatting</div></div><div class="info-2"><div class="info-item-1">作者： Jijian Zhao 单位： Huazhong University of Science and Technology 会议： 2026 Arxiv 链接： arXiv  研究动机Dynamic 4DGS 通常依赖密集、同步的多相机视频。相机数量减少以后，RGB supervision 很难唯一确定动态场景的 3D geometry：错误位置的 Gaussians 仍然可能解释有限 training views，最终产生 missing structures、foreground/background blending 和 floating primitives。 引入 depth prior 是自然选择，但 D²-4DGS 认为 单一 depth source 都不够：  Monocular depth：coverage 稠密，但 scale ambiguous，而且存在局部 bias； Multi-view geometric depth：与 reconstruction coordinate system 一致、几何可靠性更高，但在...</div></div></div></a><a class="pagination-related" href="/2026/05/14/RoSplat/" title="RoSplat: Robust Feed-Forward Pixel-wise Gaussian Splatting for Varying Input Views and High-Resolution Rendering"><img class="cover" src="/img/RoSplat-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-05-14</div><div class="info-item-2">RoSplat: Robust Feed-Forward Pixel-wise Gaussian Splatting for Varying Input Views and High-Resolution Rendering</div></div><div class="info-2"><div class="info-item-1">作者：Hoang Chuong Nguyen, Renjie Wu, Jose M. Alvarez, Miaomiao Liu 单位：Australian National University; NVIDIA 会议：2026 Arxiv 链接：https://arxiv.org/abs/2605.13093 研究动机 Generalizable 3D Gaussian Splatting 的目标是跳过 per-scene optimization，用少量输入视角直接前馈预测一组 pixel-wise Gaussians，然后完成 novel view synthesis。PixelSplat、MVSplat、DepthSplat、TranSplat 等方法已经证明了这条路线的效率和泛化潜力。 但这篇论文指出，现有 pixel-wise feed-forward GS 有两个很实际的问题。  输入视角数变化会导致过亮。很多模型训练时只用固定数量的输入视角，例如 RealEstate10K 上常用 2 views；测试时如果给 4/8/16 views，同一 3D...</div></div></div></a><a class="pagination-related" href="/2026/08/31/StereoGS/" title="StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors"><img class="cover" src="/img/StereoGS-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-08-31</div><div class="info-item-2">StereoGS: Sparse-View 3D Gaussian Splatting via Stereo Priors</div></div><div class="info-2"><div class="info-item-1">作者： Wenhao Yuan, Yiyuan Ge, Deli Cai 单位： South China University of Technology 会议： ECCV 2026 链接： arXiv ｜ Project ｜ Code  研究动机Sparse-view 3DGS 的根本困难不是 renderer 不够强，而是 几何约束太弱。只有少量训练视角时，很多错误的 Gaussian geometry 仍然可以很好地拟合训练 RGB，因此优化很容易出现 overfitting、floaters、错误表面和 novel-view artifacts。 已有方法常用 monocular depth prior 缓解这个问题，但 StereoGS 认为 MDE 在这里有两个天然缺陷：  scale ambiguity：单目 depth 的尺度与 3DGS 世界坐标不天然一致； cross-view inconsistency：每个视角独立推理，同一真实 3D point 在不同图像中的 depth 可能不一致。  即使先用 MVS 获得一个更好的...</div></div></div></a><a class="pagination-related" href="/2026/03/11/WildRayZer/" title="WildRayZer: Self-supervised Large View Synthesis in Dynamic Environments"><img class="cover" src="/img/WildRayZer-0.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2026-03-11</div><div class="info-item-2">WildRayZer: Self-supervised Large View Synthesis in Dynamic Environments</div></div><div class="info-2"><div class="info-item-1">作者：Xuweiyi Chen, Wentao Zhou, Zezhou Cheng 单位：University of Virginia 会议：2026 CVPR 链接：https://wild-rayzer.cs.virginia.edu/ 研究动机现有自监督新视角合成方法均基于三维场景静态假设 核心方法 1.构造动态数据集通过挖掘网络手持影像构建动态数据集D-RE10K 2.融合DINOV3特征的伪运动标签构建 3.mask动态物体进行render数据集 Dynamic RealEstate-10K D-RE10K-iPhone RealEstate10K  算力4张H100 实验结果    优势与不足优势 完全自监督 拓展了自监督NVS在动态场景中的应用  不足 所预测的运动mask质量仍有待提高，对于特殊的纹理，如人影等仍然work得不好，部分分割与欠分割 并不算是真正的动态场景重建，并不能够将动态的物体重建出来  记忆点 Unposed 用COCO数据集的物体标签直接复制粘贴到图像中，以增强模型对随机物体的鲁棒性 DINOV3特征能够加快收敛，预测结果更加Sharp  </div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zhu Jiajun</div><div class="author-info-description">North-Western polytechnical University</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">123</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Zjj-Low-Key"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Zjj-Low-Key" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhujiajun.npu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="fa-brands fa-qq" style="color: #24292e;"></i></a><a class="social-icon" href="/img/weixin.jpg" target="_blank" title="weixin"><i class="fa-brands fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录读研过程中学习阅读的相关论文书籍与研究内容。部分前期论文阅读记录格式较乱，请多多包涵。后期会尽量统一论文阅读记录的格式。同时也将更新更多有趣的内容。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">核心方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">算力</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">5.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">优势与不足</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.2.</span> <span class="toc-text">不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">记忆点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/23/TokenGS/" title="TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens"><img src="/img/TokenGS-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens"/></a><div class="content"><a class="title" href="/2026/09/23/TokenGS/" title="TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens">TokenGS: Decoupling 3D Gaussian Prediction from Pixels with Learnable Tokens</a><time datetime="2026-09-23T08:55:51.000Z" title="发表于 2026-09-23 16:55:51">2026-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/23/UniQueR/" title="UniQueR: Unified Query-based Feedforward 3D Reconstruction"><img src="/img/UniQueR-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="UniQueR: Unified Query-based Feedforward 3D Reconstruction"/></a><div class="content"><a class="title" href="/2026/09/23/UniQueR/" title="UniQueR: Unified Query-based Feedforward 3D Reconstruction">UniQueR: Unified Query-based Feedforward 3D Reconstruction</a><time datetime="2026-09-23T08:55:51.000Z" title="发表于 2026-09-23 16:55:51">2026-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/16/R3/" title="$R^3$: 3D Reconstruction via Relative Regression"><img src="/img/R3-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="$R^3$: 3D Reconstruction via Relative Regression"/></a><div class="content"><a class="title" href="/2026/09/16/R3/" title="$R^3$: 3D Reconstruction via Relative Regression">$R^3$: 3D Reconstruction via Relative Regression</a><time datetime="2026-09-16T08:29:49.000Z" title="发表于 2026-09-16 16:29:49">2026-09-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/14/MonoInstance/" title="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction"><img src="/img/MonoInstance-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction"/></a><div class="content"><a class="title" href="/2026/09/14/MonoInstance/" title="MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction">MonoInstance: Enhancing Monocular Priors via Multi-view Instance Alignment for Neural Rendering and Reconstruction</a><time datetime="2026-09-14T10:48:02.000Z" title="发表于 2026-09-14 18:48:02">2026-09-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/14/Scalix/" title="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM"><img src="/img/Scalix-0.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM"/></a><div class="content"><a class="title" href="/2026/09/14/Scalix/" title="Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM">Scalix: Uncertainty-Aware Scale-Consistent Monocular SLAM</a><time datetime="2026-09-14T10:48:02.000Z" title="发表于 2026-09-14 18:48:02">2026-09-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/TokenGS-0.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Zhu Jiajun</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my blog !</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'Zjj-Low-Key/Zjj-Low-Key.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
